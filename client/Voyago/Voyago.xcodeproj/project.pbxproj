@@ -6,27 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXContainerItemProxy section */
-		EA7861AA2CA082AC002A3BC8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EA7861912CA082AA002A3BC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EA7861982CA082AA002A3BC8;
-			remoteInfo = Voyago;
-		};
-		EA7861B42CA082AC002A3BC8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EA7861912CA082AA002A3BC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EA7861982CA082AA002A3BC8;
-			remoteInfo = Voyago;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		EA7861992CA082AA002A3BC8 /* Voyago.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Voyago.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA7861A92CA082AC002A3BC8 /* VoyagoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoyagoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA7861B32CA082AC002A3BC8 /* VoyagoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoyagoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -35,34 +16,10 @@
 			path = Voyago;
 			sourceTree = "<group>";
 		};
-		EA7861AC2CA082AC002A3BC8 /* VoyagoTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = VoyagoTests;
-			sourceTree = "<group>";
-		};
-		EA7861B62CA082AC002A3BC8 /* VoyagoUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = VoyagoUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		EA7861962CA082AA002A3BC8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EA7861A62CA082AC002A3BC8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EA7861B02CA082AC002A3BC8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,8 +33,6 @@
 			isa = PBXGroup;
 			children = (
 				EA78619B2CA082AA002A3BC8 /* Voyago */,
-				EA7861AC2CA082AC002A3BC8 /* VoyagoTests */,
-				EA7861B62CA082AC002A3BC8 /* VoyagoUITests */,
 				EA78619A2CA082AA002A3BC8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				EA7861992CA082AA002A3BC8 /* Voyago.app */,
-				EA7861A92CA082AC002A3BC8 /* VoyagoTests.xctest */,
-				EA7861B32CA082AC002A3BC8 /* VoyagoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,6 +55,7 @@
 				EA7861952CA082AA002A3BC8 /* Sources */,
 				EA7861962CA082AA002A3BC8 /* Frameworks */,
 				EA7861972CA082AA002A3BC8 /* Resources */,
+				EA08A2792CD7850C00D9C3E6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -117,52 +71,6 @@
 			productReference = EA7861992CA082AA002A3BC8 /* Voyago.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EA7861A82CA082AC002A3BC8 /* VoyagoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = EA7861C02CA082AC002A3BC8 /* Build configuration list for PBXNativeTarget "VoyagoTests" */;
-			buildPhases = (
-				EA7861A52CA082AC002A3BC8 /* Sources */,
-				EA7861A62CA082AC002A3BC8 /* Frameworks */,
-				EA7861A72CA082AC002A3BC8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				EA7861AB2CA082AC002A3BC8 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				EA7861AC2CA082AC002A3BC8 /* VoyagoTests */,
-			);
-			name = VoyagoTests;
-			packageProductDependencies = (
-			);
-			productName = VoyagoTests;
-			productReference = EA7861A92CA082AC002A3BC8 /* VoyagoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		EA7861B22CA082AC002A3BC8 /* VoyagoUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = EA7861C32CA082AC002A3BC8 /* Build configuration list for PBXNativeTarget "VoyagoUITests" */;
-			buildPhases = (
-				EA7861AF2CA082AC002A3BC8 /* Sources */,
-				EA7861B02CA082AC002A3BC8 /* Frameworks */,
-				EA7861B12CA082AC002A3BC8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				EA7861B52CA082AC002A3BC8 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				EA7861B62CA082AC002A3BC8 /* VoyagoUITests */,
-			);
-			name = VoyagoUITests;
-			packageProductDependencies = (
-			);
-			productName = VoyagoUITests;
-			productReference = EA7861B32CA082AC002A3BC8 /* VoyagoUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,14 +83,6 @@
 				TargetAttributes = {
 					EA7861982CA082AA002A3BC8 = {
 						CreatedOnToolsVersion = 16.0;
-					};
-					EA7861A82CA082AC002A3BC8 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = EA7861982CA082AA002A3BC8;
-					};
-					EA7861B22CA082AC002A3BC8 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = EA7861982CA082AA002A3BC8;
 					};
 				};
 			};
@@ -201,8 +101,6 @@
 			projectRoot = "";
 			targets = (
 				EA7861982CA082AA002A3BC8 /* Voyago */,
-				EA7861A82CA082AC002A3BC8 /* VoyagoTests */,
-				EA7861B22CA082AC002A3BC8 /* VoyagoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -215,21 +113,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EA7861A72CA082AC002A3BC8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EA7861B12CA082AC002A3BC8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EA08A2792CD7850C00D9C3E6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EA7861952CA082AA002A3BC8 /* Sources */ = {
@@ -239,34 +144,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EA7861A52CA082AC002A3BC8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		EA7861AF2CA082AC002A3BC8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		EA7861AB2CA082AC002A3BC8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = EA7861982CA082AA002A3BC8 /* Voyago */;
-			targetProxy = EA7861AA2CA082AC002A3BC8 /* PBXContainerItemProxy */;
-		};
-		EA7861B52CA082AC002A3BC8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = EA7861982CA082AA002A3BC8 /* Voyago */;
-			targetProxy = EA7861B42CA082AC002A3BC8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		EA7861BB2CA082AC002A3BC8 /* Debug */ = {
@@ -306,7 +184,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -369,7 +247,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -398,7 +276,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Voyago/Preview Content\"";
 				DEVELOPMENT_TEAM = AGM86K5294;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -411,6 +291,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.Voyago;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -427,7 +311,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Voyago/Preview Content\"";
 				DEVELOPMENT_TEAM = AGM86K5294;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -440,81 +326,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.Voyago;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		EA7861C12CA082AC002A3BC8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AGM86K5294;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.VoyagoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Voyago.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Voyago";
-			};
-			name = Debug;
-		};
-		EA7861C22CA082AC002A3BC8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AGM86K5294;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.VoyagoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Voyago.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Voyago";
-			};
-			name = Release;
-		};
-		EA7861C42CA082AC002A3BC8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AGM86K5294;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.VoyagoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Voyago;
-			};
-			name = Debug;
-		};
-		EA7861C52CA082AC002A3BC8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = AGM86K5294;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.ghunaim.yazan.VoyagoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Voyago;
 			};
 			name = Release;
 		};
@@ -535,24 +353,6 @@
 			buildConfigurations = (
 				EA7861BE2CA082AC002A3BC8 /* Debug */,
 				EA7861BF2CA082AC002A3BC8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		EA7861C02CA082AC002A3BC8 /* Build configuration list for PBXNativeTarget "VoyagoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				EA7861C12CA082AC002A3BC8 /* Debug */,
-				EA7861C22CA082AC002A3BC8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		EA7861C32CA082AC002A3BC8 /* Build configuration list for PBXNativeTarget "VoyagoUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				EA7861C42CA082AC002A3BC8 /* Debug */,
-				EA7861C52CA082AC002A3BC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
