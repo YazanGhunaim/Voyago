@@ -1,3 +1,4 @@
+"""AI client to interact with LLMs"""
 import os
 
 import openai
@@ -10,12 +11,22 @@ load_dotenv()
 
 
 class AIClient:
+    """provides an interface to interact with LLMs"""
+
     MODEL = "gpt-4o-mini"
 
     def __init__(self):
+        """see class doc"""
         self._client = openai.OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
     def send_recommendation_query(self, query: RecommendationQuery) -> SightRecommendation | str:
+        """
+        Takes in a RecommendationsQuery model using openAi's completion parsing
+        returns a SightRecommendation model
+
+        :param query: RecommendationQuery provided by user
+        :return: SightRecommendation or a failure message
+        """
         try:
             completion = self._client.beta.chat.completions.parse(
                 model="gpt-4o-2024-08-06",
