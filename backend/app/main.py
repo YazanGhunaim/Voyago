@@ -9,4 +9,5 @@ if __name__ == "__main__":
     client = AIClient()
     recommendation_query = RecommendationQuery(destination="Japan", count=5)
     response = client.send_recommendation_query(query=recommendation_query)
-    print(response.recommendations)
+    for rec in response.recommendations:
+        print(f"Fetching picture for {rec}")
