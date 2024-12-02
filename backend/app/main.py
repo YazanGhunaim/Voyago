@@ -7,7 +7,9 @@ log = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     client = AIClient()
-    recommendation_query = RecommendationQuery(destination="Japan", count=5)
+    recommendation_query = RecommendationQuery(destination="Japan", days=14)
     response = client.send_recommendation_query(query=recommendation_query)
     for rec in response.recommendations:
-        print(f"Fetching picture for {rec}")
+        print(f"sight recommended: {rec.sight}, brief: {rec.brief}")
+
+    print(f"plan: \n{response.plan}")
