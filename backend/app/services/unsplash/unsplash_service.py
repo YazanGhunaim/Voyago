@@ -12,18 +12,10 @@ load_dotenv()
 
 
 class UnsplashService:
-    """Singleton service class
+    """Unsplash service class
 
     Provides interface to communicate with the Unsplash API
     """
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        """see class doc"""
-        if not cls._instance:
-            cls._instance = super(UnsplashService, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
         """see class doc"""
         self.client_id = os.getenv("UNSPLASH_KEY")  # secret access key
@@ -47,7 +39,7 @@ class UnsplashService:
 
             data = response.json()
             images = [photo["urls"]["regular"] for photo in data["results"]]  # get images
-            return images if response.ok == 200 else []
+            return images if response.ok else []
         except HTTPException as e:
             log.error(f"Error fetching photo for {sight}, failed with exception: {e}")
             return []

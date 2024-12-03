@@ -11,11 +11,11 @@ if __name__ == "__main__":
     client = AIClient()
     unsplash = UnsplashService()
 
-    recommendation_query = RecommendationQuery(destination="Zimbabwe", days=3)
+    recommendation_query = RecommendationQuery(destination="Tokyo", days=2)
     response = client.send_recommendation_query(query=recommendation_query)
 
     recommended_sights = [recommendation.sight for recommendation in response.recommendations]
-    images = {sight: unsplash.fetch_image_for(sight=sight, count=2) for sight in recommended_sights}
+    images = {sight: unsplash.fetch_image_for(sight=sight, count=3) for sight in recommended_sights}
 
     pprint(f"plan: \n{response.plan}")
     pprint(images)
