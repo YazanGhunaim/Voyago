@@ -11,7 +11,7 @@ if __name__ == "__main__":
     client = AIClient()
     unsplash = UnsplashService()
 
-    recommendation_query = RecommendationQuery(destination="Tokyo", days=2)
+    recommendation_query = RecommendationQuery(destination="Korea", days=2)
     response = client.send_recommendation_query(query=recommendation_query)
 
     recommended_sights = [recommendation.sight for recommendation in response.recommendations]
