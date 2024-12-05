@@ -1,14 +1,12 @@
 """Service class to communicate with the unsplash API"""
-import os
 from http.client import HTTPException
 from logging import getLogger
 
 import requests
-from dotenv import load_dotenv
+
+from app.config.config import get_config
 
 log = getLogger(__name__)
-# TODO: create BaseSetting pydantic class
-load_dotenv()
 
 
 class UnsplashService:
@@ -16,9 +14,11 @@ class UnsplashService:
 
     Provides interface to communicate with the Unsplash API
     """
+
     def __init__(self):
         """see class doc"""
-        self.client_id = os.getenv("UNSPLASH_KEY")  # secret access key
+        self.config = get_config()
+        self.client_id = self.config.unsplash_key  # secret access key
 
     def fetch_image_for(self, sight: str, count: int = 5) -> list[str]:
         """fetches image for a given sight

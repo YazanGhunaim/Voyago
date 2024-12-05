@@ -1,14 +1,11 @@
 """AI client to interact with LLMs"""
-import os
 
 import openai
-from dotenv import load_dotenv
 from openai import LengthFinishReasonError
 
+from app.config.config import get_config
 from app.models.recommendations import Itinerary, RecommendationQuery
 from app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
-
-load_dotenv()
 
 
 class AIClient:
@@ -18,7 +15,8 @@ class AIClient:
 
     def __init__(self):
         """see class doc"""
-        self._client = openai.OpenAI(api_key=os.getenv("OPENAI_KEY"))
+        self.config = get_config()
+        self._client = openai.OpenAI(api_key=self.config.openai_key)
 
     def send_recommendation_query(self, query: RecommendationQuery) -> Itinerary | str:
         """
