@@ -1,11 +1,15 @@
 """AI client to interact with LLMs"""
 
+from logging import getLogger
+
 import openai
 from openai import LengthFinishReasonError
 
 from app.config.config import get_config
 from app.models.recommendations import Itinerary, RecommendationQuery
 from app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
+
+log = getLogger(__name__)
 
 
 class AIClient:
@@ -43,10 +47,11 @@ class AIClient:
             )
             sight_recommendations = completion.choices[0].message
             if sight_recommendations.refusal:
-                # TODO: Handle refusal
                 return sight_recommendations.refusal
             return sight_recommendations.parsed
         except LengthFinishReasonError as e:
-            print(f"Too many tokens: {e}")
+            log.error(f"Token limit exceeded: {e}")
+            return "Response too lengthy... please try again with a shorter query."
         except Exception as e:
-            print(f"Failed with exception: {e}")
+            log.error(f"An unexpected error occurred: {e}")
+            return "An error occurred. Please try again later."

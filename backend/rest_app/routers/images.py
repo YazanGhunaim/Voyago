@@ -1,3 +1,4 @@
+"""REST endpoints for images/"""
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/images", tags=["Images"])
