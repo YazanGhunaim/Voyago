@@ -10,8 +10,13 @@ class SightRecommendation(BaseModel):
 
 class Itinerary(BaseModel):
     """model of what is expected from the LLM to return"""
-    recommendations: list[SightRecommendation]
     plan: str
+    recommendations: list[SightRecommendation]
+
+
+class TripPlan(Itinerary):
+    """model of a full trip plan provided to users"""
+    images: dict[str, list[str]]
 
 
 class RecommendationQuery(BaseModel):

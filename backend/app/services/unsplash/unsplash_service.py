@@ -43,3 +43,6 @@ class UnsplashService:
         except HTTPException as e:
             log.error(f"Error fetching photo for {sight}, failed with exception: {e}")
             return []
+        except Exception as e:
+            log.error(f"Unknown error encountered while fetching images for {sight}, failed with exception: {e}")
+            return []
