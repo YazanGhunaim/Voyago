@@ -14,7 +14,7 @@ class Itinerary(BaseModel):
     recommendations: list[SightRecommendation]
 
 
-class TripPlan(Itinerary):
+class VisualItinerary(Itinerary):
     """model of a full trip plan provided to users"""
     images: dict[str, list[str]]
 

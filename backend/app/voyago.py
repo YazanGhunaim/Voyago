@@ -3,7 +3,7 @@ import logging
 
 from app.completions.client import AIClient
 from app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, VoyagoError
-from app.models.recommendations import Itinerary, RecommendationQuery, TripPlan
+from app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
 from app.services.unsplash.unsplash_service import UnsplashService
 
 log = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class Voyago:
         }
         return images
 
-    def generate_trip_plan(self, query: RecommendationQuery) -> TripPlan:
+    def generate_visual_itinerary(self, query: RecommendationQuery) -> VisualItinerary:
         """generates a full trip plan for the user
 
         :param query: The recommendation query from the user
@@ -59,7 +59,7 @@ class Voyago:
             raise TripPlanGenerationError(f"Trip plan generation failed due to an empty itinerary.")
 
         images = self._get_images(itinerary=itinerary)
-        plan = TripPlan(**itinerary.model_dump(), images=images)
+        plan = VisualItinerary(**itinerary.model_dump(), images=images)
 
         return plan
 
@@ -72,6 +72,6 @@ if __name__ == "__main__":
     voyago = Voyago(client=client, unsplash=unsplash)
 
     recommendation_query = RecommendationQuery(destination="Portugal", days=2)
-    plan = voyago.generate_trip_plan(query=recommendation_query)
+    plan = voyago.generate_visual_itinerary(query=recommendation_query)
 
     pprint(plan.model_dump())

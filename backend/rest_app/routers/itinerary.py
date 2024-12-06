@@ -1,18 +1,24 @@
-from fastapi import APIRouter
+"""Itinerary related routes"""
 
-from app.completions.client import AIClient
-from app.models.recommendations import RecommendationQuery, TripPlan
-from app.services.unsplash.unsplash_service import UnsplashService
-from app.voyago import Voyago
+from fastapi import APIRouter, Depends, status
+from starlette.exceptions import HTTPException
+
+from app.dependencies import get_voyago
+from app.exceptions import TripPlanGenerationError
+from app.models.recommendations import RecommendationQuery, VisualItinerary
 
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
-# TODO: make voyago object a dependency
-@router.post("", response_model=TripPlan)
-def get_itinerary_for(query: RecommendationQuery):
-    client = AIClient()
-    unsplash = UnsplashService()
-    voyago = Voyago(client=client, unsplash=unsplash)
+@router.post("", response_model=VisualItinerary)
+def get_visual_itinerary(query: RecommendationQuery, voyago=Depends(get_voyago)):
+    """Gets a visualized itinerary
 
-    return voyago.generate_trip_plan(query=query).model_dump()
+    :param query: RecommendationQuery
+    :param voyago: Dependency voyago object
+    :return: VisualItinerary
+    """
+    try:
+        return voyago.generate_visual_itinerary(query=query).model_dump()
+    except TripPlanGenerationError as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")
