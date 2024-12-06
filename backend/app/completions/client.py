@@ -1,11 +1,16 @@
 """AI client to interact with LLMs"""
 
+from logging import getLogger
+
 import openai
 from openai import LengthFinishReasonError
 
 from app.config.config import get_config
+from app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, VoyagoError
 from app.models.recommendations import Itinerary, RecommendationQuery
 from app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
+
+log = getLogger(__name__)
 
 
 class AIClient:
@@ -18,13 +23,13 @@ class AIClient:
         self.config = get_config()
         self._client = openai.OpenAI(api_key=self.config.openai_key)
 
-    def send_recommendation_query(self, query: RecommendationQuery) -> Itinerary | str:
+    def send_recommendation_query(self, query: RecommendationQuery) -> Itinerary:
         """
         Takes in a RecommendationsQuery model using openAi's completion parsing
         returns a SightRecommendation model
 
         :param query: RecommendationQuery provided by user
-        :return: SightRecommendation or a failure message
+        :return: SightRecommendation or a None if error occurred
         """
         try:
             completion = self._client.beta.chat.completions.parse(
@@ -43,10 +48,11 @@ class AIClient:
             )
             sight_recommendations = completion.choices[0].message
             if sight_recommendations.refusal:
-                # TODO: Handle refusal
-                return sight_recommendations.refusal
+                raise ClientRefusalError(f"LLM Refused to process query: {sight_recommendations.refusal}")
             return sight_recommendations.parsed
         except LengthFinishReasonError as e:
-            print(f"Too many tokens: {e}")
+            log.error(f"Token limit exceeded: {e}")
+            raise ClientTokenLimitExceededError(f"Token limit exceeded: {e}")
         except Exception as e:
-            print(f"Failed with exception: {e}")
+            log.error(f"An unexpected error occurred: {e}")
+            raise VoyagoError(e) from e
