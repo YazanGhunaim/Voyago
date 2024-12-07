@@ -1,7 +1,7 @@
 """images related endpoints"""
 from fastapi import APIRouter, Depends
 
-from app.dependencies import get_voyago
+from backend.app.dependencies import get_voyago
 
 router = APIRouter(prefix="/images", tags=["Images"])
 

@@ -1,10 +1,11 @@
 """Voyago class"""
 import logging
 
-from app.completions.client import AIClient
-from app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, VoyagoError
-from app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
-from app.services.unsplash.unsplash_service import UnsplashService
+from backend.app.completions.client import AIClient
+from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, \
+    VoyagoError
+from backend.app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
+from backend.app.services.unsplash.unsplash_service import UnsplashService
 
 log = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ from logging import getLogger
 
 import requests
 
-from app.config.config import get_config
+from backend.app.config.config import get_config
 
 log = getLogger(__name__)
 
