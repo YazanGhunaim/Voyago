@@ -45,6 +45,18 @@ class Voyago:
         }
         return images
 
+    def get_image_collection(self, topic: str = "travel", count: int = 10, page: int = 1) -> list[str]:
+        """gets a collection of images for a curated topic, to be used in feed view
+
+        :param topic: topic for requested collection
+        :param count: number of images requested
+        :param page: page number [pagination]
+        :return: list of image url's
+        """
+        log.info(f"Getting image collection for the {topic}.")
+        images = self.unsplash.fetch_image_collection_for(topic=topic, count=count, page=page)
+        return images
+
     def generate_visual_itinerary(self, query: RecommendationQuery) -> VisualItinerary:
         """generates a full trip plan for the user
 
@@ -69,6 +81,7 @@ if __name__ == "__main__":
 
     client = AIClient()
     unsplash = UnsplashService()
+
     voyago = Voyago(client=client, unsplash=unsplash)
 
     recommendation_query = RecommendationQuery(destination="Portugal", days=2)
