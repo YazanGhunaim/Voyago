@@ -32,7 +32,7 @@ class Voyago:
             log.error(f"Error occurred while getting itinerary: {e}")
             return None
 
-    def _get_images(self, itinerary: Itinerary) -> dict[str, list[str]]:
+    def _get_images_from_itinerary(self, itinerary: Itinerary) -> dict[str, list[str]]:
         """private method for getting images of sights in a specific itinerary
 
         :param itinerary: The itinerary model holding the sights
@@ -41,12 +41,23 @@ class Voyago:
         log.info("Getting images for the sights in the itinerary.")
         recommended_sights = [recommendation.sight for recommendation in itinerary.recommendations]
         images = {
-            sight: self.unsplash.fetch_image_for(sight=sight, count=3)
+            sight: self.get_images(query=sight, count=3)
             for sight in recommended_sights
         }
         return images
 
-    def get_image_collection(self, topic: str = "travel", count: int = 10, page: int = 1) -> list[str]:
+    def get_images(self, query: str, count: int, page: int = 1) -> list[str]:
+        """gets images based on a query
+
+        :param query: search terms
+        :param count: number of images per page
+        :param page: page number [pagination]
+        :return: list of image url's
+        """
+        images = self.unsplash.fetch_image_for(query=query, count=count, page=page)
+        return images
+
+    def get_image_collection(self, topic: str, count: int = 10, page: int = 1) -> list[str]:
         """gets a collection of images for a curated topic, to be used in feed view
 
         :param topic: topic for requested collection
@@ -71,7 +82,7 @@ class Voyago:
             log.error("Failed to generate a trip plan because no itinerary was generated.")
             raise TripPlanGenerationError(f"Trip plan generation failed due to an empty itinerary.")
 
-        images = self._get_images(itinerary=itinerary)
+        images = self._get_images_from_itinerary(itinerary=itinerary)
         plan = VisualItinerary(**itinerary.model_dump(), images=images)
 
         return plan

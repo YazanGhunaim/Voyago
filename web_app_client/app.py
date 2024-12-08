@@ -4,7 +4,7 @@ import streamlit as st
 from backend.app.dependencies import get_voyago
 
 voyago = get_voyago()
-images = voyago.get_image_collection()
+images = voyago.get_images(query="travel europe sightseeing cities", count=20)
 
 st.set_page_config(page_title="Voyago", layout="wide")
 
