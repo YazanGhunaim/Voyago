@@ -27,7 +27,7 @@ class UnsplashService:
         """fetches image for a given sight
 
         :param query: sight/destination terms
-        :param count: number of images requested
+        :param count: number of images requested (max 10)
         :param page: page number [pagination purposes]
         :return: list of image url's
         """
@@ -56,7 +56,7 @@ class UnsplashService:
         """fetches an image collection for a curated topic
 
         :param topic: topic requested for image collection
-        :param count: number of images requested
+        :param count: number of images requested (max 10)
         :param page: page number [pagination purposes]
         :return: list of image url's
         """

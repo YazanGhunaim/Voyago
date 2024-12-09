@@ -50,7 +50,7 @@ class Voyago:
         """gets images based on a query
 
         :param query: search terms
-        :param count: number of images per page
+        :param count: number of images requested
         :param page: page number [pagination]
         :return: list of image url's
         """
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     voyago = Voyago(client=client, unsplash=unsplash)
 
-    recommendation_query = RecommendationQuery(destination="Portugal", days=2)
+    recommendation_query = RecommendationQuery(destination="Vienna", days=3)
     plan = voyago.generate_visual_itinerary(query=recommendation_query)
 
     pprint(plan.model_dump())

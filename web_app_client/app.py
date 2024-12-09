@@ -8,7 +8,9 @@ images = voyago.get_images(query="travel europe sightseeing cities", count=20)
 
 st.set_page_config(page_title="Voyago", layout="wide")
 
-st.title("Welcome to Voyago")
+with st.sidebar:
+    st.title("Welcome to Voyago")
+
 st.subheader("Image Feed:")
 
 columns = st.columns(3)
