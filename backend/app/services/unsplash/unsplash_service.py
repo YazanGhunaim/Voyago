@@ -4,7 +4,7 @@ from logging import getLogger
 
 import requests
 
-from app.config.config import get_config
+from backend.app.config.config import get_config
 
 log = getLogger(__name__)
 
@@ -23,17 +23,19 @@ class UnsplashService:
         self.client_id = self.config.unsplash_key  # secret access key
         self.base_url = self.config.unsplash_base_url
 
-    def fetch_image_for(self, sight: str, count: int = 5) -> list[str]:
+    def fetch_image_for(self, query: str, count: int = 5, page: int = 1) -> list[str]:
         """fetches image for a given sight
 
-        :param sight: sight/destination name
-        :param count: number of images requested
+        :param query: sight/destination terms
+        :param count: number of images requested (max 10)
+        :param page: page number [pagination purposes]
         :return: list of image url's
         """
         try:
             params = {
-                "query": sight,
+                "query": query,
                 "per_page": count,
+                "page": page,
                 "client_id": self.client_id
             }
 
@@ -44,17 +46,17 @@ class UnsplashService:
             images = [photo["urls"]["regular"] for photo in data["results"]]  # get images
             return images if response.ok else []
         except HTTPException as e:
-            log.error(f"Error fetching photo for {sight}, failed with exception: {e}")
+            log.error(f"Error fetching photo for {query}, failed with exception: {e}")
             return []
         except Exception as e:
-            log.error(f"Unknown error encountered while fetching images for {sight}, failed with exception: {e}")
+            log.error(f"Unknown error encountered while fetching images for {query}, failed with exception: {e}")
             return []
 
     def fetch_image_collection_for(self, topic: str, count: int = 10, page: int = 1) -> list[str]:
         """fetches an image collection for a curated topic
 
         :param topic: topic requested for image collection
-        :param count: number of images requested
+        :param count: number of images requested (max 10)
         :param page: page number [pagination purposes]
         :return: list of image url's
         """

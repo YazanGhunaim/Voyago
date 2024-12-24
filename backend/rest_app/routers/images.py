@@ -1,9 +1,20 @@
 """images related endpoints"""
 from fastapi import APIRouter, Depends
 
-from app.dependencies import get_voyago
+from backend.app.dependencies import get_voyago
 
 router = APIRouter(prefix="/images", tags=["Images"])
+
+
+@router.get("")
+def get_images_for(
+        query: str,
+        count: int = 10,
+        page: int = 1,
+        voyago=Depends(get_voyago)
+) -> list[str]:
+    """:returns Lists of image url's"""
+    return voyago.get_images(query=query, count=count, page=page)
 
 
 @router.get("/collection")
