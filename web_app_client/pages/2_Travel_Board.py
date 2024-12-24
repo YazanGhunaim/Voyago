@@ -6,7 +6,7 @@ from backend.app.models.recommendations import RecommendationQuery
 
 voyago = get_voyago()
 
-st.title("Generate itinerary")
+st.title("Generate Travel Board")
 
 with st.form("Trip plan"):
     st.write("Whats your plan?")

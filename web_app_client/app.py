@@ -1,21 +1,31 @@
 """streamlit app entry point"""
 import streamlit as st
-
-from backend.app.dependencies import get_voyago
-
-voyago = get_voyago()
-images = voyago.get_images(query="travel europe sightseeing cities", count=20)
+from streamlit_extras.bottom_container import bottom
+from streamlit_extras.row import row
+from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Voyago", layout="wide")
 
-with st.sidebar:
-    st.title("Welcome to Voyago")
+st.title("Welcome To Voyago!")
 
-st.subheader("Image Feed:")
+st.subheader("""
+Voyago aims to ease the process of trip planning.
+By telling us where and how long you want to go,
+Voyago will prepare a visual itinerary for you in seconds!
+""")
 
-columns = st.columns(3)
-for index, image_url in enumerate(images):
-    col = columns[index % 3]
-    with col:
-        # TODO: caption is metadata
-        st.image(image_url, caption="Image from URL", use_container_width=True)
+row1 = row(2, vertical_align="center")
+switch_to_feed = row1.button(label="Go to feed.", use_container_width=True)
+switch_to_board = row1.button(label="Go to travel board.", use_container_width=True)
+
+if switch_to_feed:
+    switch_page("Feed")
+if switch_to_board:
+    switch_page("Travel Board")
+
+with bottom():
+    st.warning("Due to our limited image repositories and budget, "
+               "some sights images might be misleading and not accurate. "
+               "The more obscure | less known the place the higher the probability"
+               "getting a faulty image."
+               , icon="⚠️")
