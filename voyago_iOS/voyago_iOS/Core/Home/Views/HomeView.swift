@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -24,6 +24,21 @@ struct HomeView: View {
                 .padding(.horizontal)
             }
             .navigationTitle("Voyago")
+        }
+        .onAppear {
+            Task {
+                let service = VoyagoService()
+                let result = await service.fetchImages(for: "Prague", count: 10, page: 1)
+
+                switch result {
+                case .success(let images):
+                    for image in images {
+                        print("Image URL: \(image)")
+                    }
+                case .failure(let error):
+                    print("Failed to fetch images: \(error)")
+                }
+            }
         }
     }
 }
