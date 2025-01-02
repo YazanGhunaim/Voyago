@@ -13,13 +13,17 @@ typealias ImageURLS = [String]
 class VoyagoService: APIClient {
     private let session: URLSession
 
-    init(session: URLSession = .shared) {
+    // singleton
+    static let shared = VoyagoService()
+
+    private init(session: URLSession = .shared) {
         self.session = session
     }
 
     func fetch<T>(url: String, parameters: [String: String]? = nil) async
         -> Result<T, APIError> where T: Decodable
     {
+        // construct url
         guard var urlComponents = URLComponents(string: url) else {
             return .failure(APIError.invalidURL)
         }
@@ -68,7 +72,10 @@ class VoyagoService: APIClient {
             "page": "\(page)",
         ]
 
-        return await fetch(
-            url: "http://127.0.0.1:8000/images", parameters: parameters)
+        let res: Result<ImageURLS, APIError> = await fetch(
+            url: "http://127.0.0.1:8000/images", parameters: parameters
+        )
+
+        return res
     }
 }

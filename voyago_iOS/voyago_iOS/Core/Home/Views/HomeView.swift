@@ -5,40 +5,32 @@
 //  Created by Yazan Ghunaim on 12/25/24.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct HomeView: View {
+    @State private var viewModel = HomeViewModel()
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(1..<20) { _ in
-                        Rectangle()
-                            .fill(.indigo)
-                            .frame(width: 180, height: 250)
-                            .cornerRadius(15)
+        if !self.viewModel.succeeded {
+            NavigationStack {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(self.viewModel.images, id: \.self) { image in
+                            KFImage(URL(string: image))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 150, height: 200)
+                                .clipShape(.rect(cornerRadius: 5))
+                        }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+                .navigationTitle("Voyago")
             }
-            .navigationTitle("Voyago")
-        }
-        .onAppear {
-            Task {
-                let service = VoyagoService()
-                let result = await service.fetchImages(for: "Prague", count: 10, page: 1)
-
-                switch result {
-                case .success(let images):
-                    for image in images {
-                        print("Image URL: \(image)")
-                    }
-                case .failure(let error):
-                    print("Failed to fetch images: \(error)")
-                }
-            }
+        } else {
+            ProgressView()
         }
     }
 }
