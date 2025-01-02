@@ -13,7 +13,7 @@ struct HomeView: View {
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
-        if !self.viewModel.succeeded {
+        if self.viewModel.succeeded {
             NavigationStack {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 20) {
