@@ -26,10 +26,10 @@ class HomeViewModel {
         switch result {
         case .success(let images):
             self.images = images
-            self.succeeded.toggle()
+            self.succeeded = true
         case .failure(let error):
             print("DEBUG: failed to fetch images with error: \(error)")
-            self.succeeded.toggle()
+            self.succeeded = false
         }
     }
 }
