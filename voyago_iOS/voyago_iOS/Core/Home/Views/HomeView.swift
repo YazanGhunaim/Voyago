@@ -56,6 +56,7 @@ struct HomeScrollView: View {
             .padding(.horizontal)
         }
         .navigationTitle("Voyago")
+        .scrollIndicators(.hidden)
         .refreshable {
             self.viewModel.reset()
             await self.viewModel.getMoreImages()
