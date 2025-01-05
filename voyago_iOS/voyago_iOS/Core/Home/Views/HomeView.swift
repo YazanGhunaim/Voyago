@@ -35,31 +35,36 @@ struct HomeScrollView: View {
     let columns: [GridItem]
 
     var body: some View {
-        ScrollView {
-            HStack(alignment: .top) {
-                // MARK: Grids
-                ImageGrid(
-                    viewModel: self.viewModel, columns: self.columns,
-                    imageUrls: self.viewModel.firstHalfImageUrls)
-                ImageGrid(
-                    viewModel: self.viewModel, columns: self.columns,
-                    imageUrls: self.viewModel.secondHalfImageUrls)
-            }
-            .overlay(
-                alignment: .bottom,
-                content: {
-                    if self.viewModel.viewState == .Fetching {
-                        ProgressView()
-                    }
+        ZStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                HStack(alignment: .top) {
+                    // MARK: Grids
+                    ImageGrid(
+                        viewModel: self.viewModel, columns: self.columns,
+                        imageUrls: self.viewModel.firstHalfImageUrls)
+                    ImageGrid(
+                        viewModel: self.viewModel, columns: self.columns,
+                        imageUrls: self.viewModel.secondHalfImageUrls)
                 }
-            )
-            .padding(.horizontal)
-        }
-        .navigationTitle("Voyago")
-        .scrollIndicators(.hidden)
-        .refreshable {
-            self.viewModel.reset()
-            await self.viewModel.getMoreImages()
+                .padding(.horizontal)
+                //                .overlay(
+                //                    alignment: .bottom,
+                //                    content: {
+                //                        if self.viewModel.viewState == .Fetching {
+                //                            ProgressView()
+                //                        }
+                //                    }
+                //                )
+                if self.viewModel.viewState == .Fetching {
+                    ProgressView()
+                        .padding(50)
+                }
+            }
+            .navigationTitle("Voyago")
+            .refreshable {
+                self.viewModel.reset()
+                await self.viewModel.getMoreImages()
+            }
         }
     }
 }

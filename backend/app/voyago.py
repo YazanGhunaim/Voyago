@@ -46,6 +46,7 @@ class Voyago:
         }
         return images
 
+    # TODO: image urls for multiple resolution types (low, mid, high) ?
     def get_images(self, query: str, count: int, page: int = 1) -> list[str]:
         """gets images based on a query
 

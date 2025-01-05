@@ -22,7 +22,7 @@ struct ImageCard: View {
             ImageMetaData().padding(.horizontal, 8)
         }
         //        .clipShape(.rect(cornerRadius: 20))
-//                .border(.red)
+        //                .border(.red)
     }
 }
 
@@ -31,6 +31,8 @@ struct LoadedImage: View {
 
     var body: some View {
         KFImage(URL(string: self.imageUrl))
+            .placeholder({ Rectangle().fill(Color.indigo).opacity(0.25) })
+            .fade(duration: 1)
             .resizable()
             .scaledToFit()
             .clipShape(.rect(cornerRadius: 15))
