@@ -21,6 +21,12 @@ class HomeViewModel {
         self.query = query.joined(separator: " ")
         Task { await getImages() }
     }
+    
+    func reset() {
+        self.imageUrls = []
+        self.page = 1
+        self.viewState = nil
+    }
 
     /// function to check whether or not the image viewed by the user is the last
     /// this is used for pagination purposes
@@ -49,7 +55,7 @@ class HomeViewModel {
     func getMoreImages() async {
         self.viewState = .Fetching
         self.page += 1
-        
+
         let result = await VoyagoService.shared.fetchImages(
             for: self.query, count: 10, page: self.page
         )
@@ -72,5 +78,18 @@ extension HomeViewModel {
         case Fetching
         case Success
         case Failure
+    }
+}
+
+/// Splitting image url's array in half for pinterest like layout reasons
+extension HomeViewModel {
+    var firstHalfImageUrls: [String] {
+        let midIndex = imageUrls.count / 2
+        return Array(imageUrls[..<midIndex])
+    }
+
+    var secondHalfImageUrls: [String] {
+        let midIndex = imageUrls.count / 2
+        return Array(imageUrls[midIndex...])
     }
 }

@@ -14,39 +14,45 @@ struct ImageCard: View {
     let imageUrl: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 5) {
             // MARK: Image
-            Image(imageUrl: self.imageUrl)
+            LoadedImage(imageUrl: self.imageUrl)
 
             // MARK: Image metadata
             ImageMetaData().padding(.horizontal, 8)
         }
-        .clipShape(.rect(cornerRadius: 20))
+        //        .clipShape(.rect(cornerRadius: 20))
+//                .border(.red)
     }
 }
 
-struct Image: View {
+struct LoadedImage: View {
     let imageUrl: String
 
     var body: some View {
         KFImage(URL(string: self.imageUrl))
             .resizable()
             .scaledToFit()
+            .clipShape(.rect(cornerRadius: 15))
     }
 }
 
 struct ImageMetaData: View {
     var body: some View {
-        VStack(alignment: .leading) {
+        HStack(alignment: .center) {
             Text("Prague")
                 .font(.headline)
 
-            HStack {
-                Text("Metadata")
+            Spacer()
+
+            Button {
+                // TODO: Go to metadata view
+            } label: {
+                Image(systemName: "ellipsis")
+
             }
-            .padding(.bottom, 15)
-            .foregroundStyle(.gray)
         }
+        .foregroundStyle(.primary)
     }
 }
 

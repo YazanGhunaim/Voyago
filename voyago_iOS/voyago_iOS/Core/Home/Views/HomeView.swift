@@ -10,14 +10,15 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel(keywords: [
-        "Travel", "Cities", "Nature", "Tourism",
+        "Travel", "Cities", "Nature",
     ])
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    //    let columns: [GridItem] = [.init(.flexible()), .init(.flexible())]
+    let columns: [GridItem] = [.init(.flexible())]
 
     var body: some View {
         NavigationStack {
             switch self.viewModel.viewState {
-            case .Loading:
+            case .Loading, nil:
                 ProgressView()
             case .Failure:
                 // TODO: Error view
@@ -29,33 +30,20 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    HomeView()
-}
-
 struct HomeScrollView: View {
     let viewModel: HomeViewModel
     let columns: [GridItem]
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(self.viewModel.imageUrls, id: \.self) {
-                    imageUrl in
-
-                    // TODO: PASS METADATA
-                    ImageCard(imageUrl: imageUrl)
-                        .onAppear {
-                            if self.viewModel.lastImage(
-                                imageUrl: imageUrl)
-                                && self.viewModel.viewState != .Fetching
-                            {
-                                Task {
-                                    await self.viewModel.getMoreImages()
-                                }
-                            }
-                        }
-                }
+            HStack(alignment: .top) {
+                // MARK: Grids
+                ImageGrid(
+                    viewModel: self.viewModel, columns: self.columns,
+                    imageUrls: self.viewModel.firstHalfImageUrls)
+                ImageGrid(
+                    viewModel: self.viewModel, columns: self.columns,
+                    imageUrls: self.viewModel.secondHalfImageUrls)
             }
             .overlay(
                 alignment: .bottom,
@@ -68,5 +56,40 @@ struct HomeScrollView: View {
             .padding(.horizontal)
         }
         .navigationTitle("Voyago")
+        .refreshable {
+            self.viewModel.reset()
+            await self.viewModel.getMoreImages()
+        }
     }
+}
+
+struct ImageGrid: View {
+    let viewModel: HomeViewModel
+    let columns: [GridItem]
+    let imageUrls: [String]
+
+    var body: some View {
+        LazyVGrid(columns: columns) {
+            ForEach(self.imageUrls, id: \.self) {
+                imageUrl in
+
+                // TODO: PASS METADATA
+                ImageCard(imageUrl: imageUrl)
+                    .onAppear {
+                        if self.viewModel.lastImage(
+                            imageUrl: imageUrl)
+                            && self.viewModel.viewState != .Fetching
+                        {
+                            Task {
+                                await self.viewModel.getMoreImages()
+                            }
+                        }
+                    }
+            }
+        }
+    }
+}
+
+#Preview {
+    HomeView()
 }
