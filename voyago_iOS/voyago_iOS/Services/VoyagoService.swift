@@ -73,7 +73,7 @@ class VoyagoService: APIClient {
         ]
 
         let res: Result<ImageURLS, APIError> = await fetch(
-            url: "http://192.168.0.105:5050/images", parameters: parameters
+            url: "http://192.168.0.118:8000/images", parameters: parameters
         )
 
         return res

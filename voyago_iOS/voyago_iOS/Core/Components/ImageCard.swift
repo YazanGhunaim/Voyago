@@ -35,7 +35,7 @@ struct LoadedImage: View {
             .fade(duration: 1)
             .resizable()
             .scaledToFit()
-            .clipShape(.rect(cornerRadius: 15))
+            .clipShape(.rect(cornerRadius: 10))
     }
 }
 
