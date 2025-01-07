@@ -53,6 +53,8 @@ class HomeViewModel {
     }
 
     func getMoreImages() async {
+        guard self.viewState != .Fetching else { return }
+        
         self.viewState = .Fetching
         self.page += 1
 

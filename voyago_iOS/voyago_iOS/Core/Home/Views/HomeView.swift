@@ -21,7 +21,7 @@ struct HomeView: View {
             case .Loading, nil:
                 ProgressView()
             case .Failure:
-                // TODO: Error view
+                // TODO: - Error view
                 Text("Error Encountered.")
             case _:
                 HomeScrollView(viewModel: self.viewModel, columns: self.columns)
@@ -62,8 +62,13 @@ struct HomeScrollView: View {
             }
             .navigationTitle("Voyago")
             .refreshable {
-                self.viewModel.reset()
-                await self.viewModel.getMoreImages()
+                // FIXME: - weird cancelled bug
+                print("DEBUG: Starting refresh")
+                print("DEBUG: Before reset - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
+                viewModel.reset()
+                print("DEBUG: After reset - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
+                await viewModel.getMoreImages()
+                print("DEBUG: After getMoreImages - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
             }
         }
     }
@@ -79,7 +84,7 @@ struct ImageGrid: View {
             ForEach(self.imageUrls, id: \.self) {
                 imageUrl in
 
-                // TODO: PASS METADATA
+                // TODO: - PASS METADATA
                 ImageCard(imageUrl: imageUrl)
                     .onAppear {
                         if self.viewModel.lastImage(
