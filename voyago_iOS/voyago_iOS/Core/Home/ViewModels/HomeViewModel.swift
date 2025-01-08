@@ -61,7 +61,6 @@ extension HomeViewModel {
 }
 
 extension HomeViewModel {
-
     func getImages(initial: Bool) async {
         if initial {
             guard self.viewState != .Loading else { return }
@@ -75,7 +74,7 @@ extension HomeViewModel {
 
         let result = await VoyagoService.shared.fetchImages(
             for: self.query, count: 10, page: self.page)
-        
+
         switch result {
         case .success(let images):
             initial ? (self.imageUrls = images) : (self.imageUrls += images)
