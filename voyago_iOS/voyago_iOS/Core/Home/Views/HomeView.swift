@@ -12,7 +12,7 @@ struct HomeView: View {
     let columns: [GridItem] = [.init(.flexible())]
     @State private var viewModel = HomeViewModel(keywords: [
         "Travel", "Cities", "Nature",
-    ])
+    ])  // TODO: - recieve from user preferences
 
     var body: some View {
         NavigationStack {
