@@ -9,11 +9,10 @@ import Kingfisher
 import SwiftUI
 
 struct HomeView: View {
+    let columns: [GridItem] = [.init(.flexible())]
     @State private var viewModel = HomeViewModel(keywords: [
         "Travel", "Cities", "Nature",
     ])
-    //    let columns: [GridItem] = [.init(.flexible()), .init(.flexible())]
-    let columns: [GridItem] = [.init(.flexible())]
 
     var body: some View {
         NavigationStack {
@@ -62,13 +61,10 @@ struct HomeScrollView: View {
             }
             .navigationTitle("Voyago")
             .refreshable {
-                // FIXME: - weird cancelled bug
-                print("DEBUG: Starting refresh")
-                print("DEBUG: Before reset - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
-                viewModel.reset()
-                print("DEBUG: After reset - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
-                await viewModel.getMoreImages()
-                print("DEBUG: After getMoreImages - page=\(viewModel.page), imageUrls=\(viewModel.imageUrls.count)")
+                await Task {
+                    viewModel.reset()
+                    await self.viewModel.getMoreImages()
+                }.value
             }
         }
     }
