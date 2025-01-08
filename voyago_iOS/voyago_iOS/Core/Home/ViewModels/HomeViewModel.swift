@@ -21,22 +21,51 @@ class HomeViewModel {
         self.query = query.joined(separator: " ")
         Task { await getImages() }
     }
-    
+}
+
+/// Splitting image url's array in half for pinterest like layout reasons
+extension HomeViewModel {
+    var firstHalfImageUrls: [String] {
+        let midIndex = imageUrls.count / 2
+        return Array(imageUrls[..<midIndex])
+    }
+
+    var secondHalfImageUrls: [String] {
+        let midIndex = imageUrls.count / 2
+        return Array(imageUrls[midIndex...])
+    }
+}
+
+extension HomeViewModel {
+    /// Enum to distinguish what state the viewmodel is in
+    enum viewState {
+        case Loading
+        case Fetching
+        case Success
+        case Failure
+    }
+}
+
+extension HomeViewModel {
+    /// reset viewmodel to initial state
     func reset() {
-        self.imageUrls = []
         self.page = 1
         self.viewState = nil
+        self.imageUrls.removeAll()
     }
 
     /// function to check whether or not the image viewed by the user is the last
-    /// this is used for pagination purposes
     func lastImage(imageUrl: String) -> Bool {
         self.imageUrls.last == imageUrl
     }
+}
 
+extension HomeViewModel {
     func getImages() async {
         guard self.viewState != .Loading else { return }
         self.viewState = .Loading
+
+        defer { self.page += 1 }
 
         let result = await VoyagoService.shared.fetchImages(
             for: self.query, count: 10, page: self.page
@@ -54,9 +83,10 @@ class HomeViewModel {
 
     func getMoreImages() async {
         guard self.viewState != .Fetching else { return }
-        
+
         self.viewState = .Fetching
-        self.page += 1
+
+        defer { self.page += 1 }
 
         let result = await VoyagoService.shared.fetchImages(
             for: self.query, count: 10, page: self.page
@@ -67,31 +97,10 @@ class HomeViewModel {
             self.imageUrls += images
             self.viewState = .Success
         case .failure(let error):
-            print("DEBUG: failed to fetch images with error: \(error)")
+            print(
+                "DEBUG: failed to fetch images with error: \(error.localizedDescription)"
+            )
             self.viewState = .Failure
         }
-    }
-}
-
-/// Enum to distinguish what state the viewmodel is in, for pagination
-extension HomeViewModel {
-    enum viewState {
-        case Loading
-        case Fetching
-        case Success
-        case Failure
-    }
-}
-
-/// Splitting image url's array in half for pinterest like layout reasons
-extension HomeViewModel {
-    var firstHalfImageUrls: [String] {
-        let midIndex = imageUrls.count / 2
-        return Array(imageUrls[..<midIndex])
-    }
-
-    var secondHalfImageUrls: [String] {
-        let midIndex = imageUrls.count / 2
-        return Array(imageUrls[midIndex...])
     }
 }
