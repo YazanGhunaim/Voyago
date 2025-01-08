@@ -63,7 +63,7 @@ struct HomeScrollView: View {
             .refreshable {
                 await Task {
                     viewModel.reset()
-                    await self.viewModel.getMoreImages()
+                    await self.viewModel.getImages(initial: false)
                 }.value
             }
         }
@@ -88,7 +88,7 @@ struct ImageGrid: View {
                             && self.viewModel.viewState != .Fetching
                         {
                             Task {
-                                await self.viewModel.getMoreImages()
+                                await self.viewModel.getImages(initial: false)
                             }
                         }
                     }

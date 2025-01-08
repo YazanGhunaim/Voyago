@@ -12,14 +12,14 @@ import Foundation
 @MainActor
 class HomeViewModel {
     var imageUrls = [String]()
+    var viewState: viewState?
     var page = 1
 
     let query: String
-    var viewState: viewState?
 
     init(keywords query: [String]) {
         self.query = query.joined(separator: " ")
-        Task { await getImages() }
+        Task { await getImages(initial: true) }
     }
 }
 
@@ -61,45 +61,27 @@ extension HomeViewModel {
 }
 
 extension HomeViewModel {
-    func getImages() async {
-        guard self.viewState != .Loading else { return }
-        self.viewState = .Loading
+
+    func getImages(initial: Bool) async {
+        if initial {
+            guard self.viewState != .Loading else { return }
+            self.viewState = .Loading
+        } else {
+            guard self.viewState != .Fetching else { return }
+            self.viewState = .Fetching
+        }
 
         defer { self.page += 1 }
 
         let result = await VoyagoService.shared.fetchImages(
-            for: self.query, count: 10, page: self.page
-        )
-
+            for: self.query, count: 10, page: self.page)
+        
         switch result {
         case .success(let images):
-            self.imageUrls = images
+            initial ? (self.imageUrls = images) : (self.imageUrls += images)
             self.viewState = .Success
         case .failure(let error):
             print("DEBUG: failed to fetch images with error: \(error)")
-            self.viewState = .Failure
-        }
-    }
-
-    func getMoreImages() async {
-        guard self.viewState != .Fetching else { return }
-
-        self.viewState = .Fetching
-
-        defer { self.page += 1 }
-
-        let result = await VoyagoService.shared.fetchImages(
-            for: self.query, count: 10, page: self.page
-        )
-
-        switch result {
-        case .success(let images):
-            self.imageUrls += images
-            self.viewState = .Success
-        case .failure(let error):
-            print(
-                "DEBUG: failed to fetch images with error: \(error.localizedDescription)"
-            )
             self.viewState = .Failure
         }
     }
