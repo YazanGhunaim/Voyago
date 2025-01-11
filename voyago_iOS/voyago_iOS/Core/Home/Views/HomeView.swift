@@ -8,6 +8,8 @@
 import Kingfisher
 import SwiftUI
 
+/// Image feed view
+/// Displays curated contents based on the user preferences
 struct HomeView: View {
     let columns: [GridItem] = [.init(.flexible())]
     @State private var viewModel = HomeViewModel(keywords: [
@@ -16,6 +18,7 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
+            // Display views based on viewmodel view state
             switch self.viewModel.viewState {
             case .Loading, nil:
                 ProgressView()
@@ -29,12 +32,15 @@ struct HomeView: View {
     }
 }
 
+/// Scroll view displaying the images in the homeview
+///
+/// Attempts a pinterest like appraoch, currently achieved by using two grid views with one flexible column each
 struct HomeScrollView: View {
     let viewModel: HomeViewModel
     let columns: [GridItem]
 
     var body: some View {
-        ZStack {
+        ZStack {  // zstack solely for the purpose of progressview approach using if statement
             ScrollView(.vertical, showsIndicators: false) {
                 HStack(alignment: .top) {
                     // MARK: Grids
@@ -61,6 +67,10 @@ struct HomeScrollView: View {
             }
             .navigationTitle("Voyago")
             .refreshable {
+                // even tho refreshable has its own async handler
+                // placed logic inside another Task that way when view refreshes
+                // and refreshable redraws (as well for its task being discarded)
+                // my logic is in a seperate standalone task thats being awaited
                 await Task {
                     viewModel.reset()
                     await self.viewModel.getImages(initial: false)
@@ -70,6 +80,7 @@ struct HomeScrollView: View {
     }
 }
 
+/// A single image vertical grid
 struct ImageGrid: View {
     let viewModel: HomeViewModel
     let columns: [GridItem]
@@ -83,6 +94,8 @@ struct ImageGrid: View {
                 // TODO: - PASS METADATA
                 ImageCard(imageUrl: imageUrl)
                     .onAppear {
+                        // whenever the last image is on the screen
+                        // fetch more images
                         if self.viewModel.lastImage(
                             imageUrl: imageUrl)
                             && self.viewModel.viewState != .Fetching

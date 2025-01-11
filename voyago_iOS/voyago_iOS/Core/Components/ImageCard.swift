@@ -26,6 +26,9 @@ struct ImageCard: View {
     }
 }
 
+/// LoadedImage returns an image view from a URL
+///
+/// Uses KingFischer for image loading and caching
 struct LoadedImage: View {
     let imageUrl: String
 
@@ -39,6 +42,8 @@ struct LoadedImage: View {
     }
 }
 
+// TODO: - display image metadata
+/// Metadata about the image
 struct ImageMetaData: View {
     var body: some View {
         HStack(alignment: .center) {
