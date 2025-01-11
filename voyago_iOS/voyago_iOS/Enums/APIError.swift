@@ -11,6 +11,6 @@ import Foundation
 enum APIError: Error {
     case invalidResponse
     case invalidURL
-    case decodingError(Error)
-    case networkError(Error)
+    case decodingError(Error)  // unable to decode response to required data format
+    case networkError(Error)  // status codes etc.
 }

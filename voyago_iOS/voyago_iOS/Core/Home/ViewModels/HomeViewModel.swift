@@ -7,7 +7,9 @@
 
 import Foundation
 
-/// HomeViewModel is responsible of handling data used by the home view
+/// HomeViewModel is responsible for:
+///     - handling and processing data used in the HomeView
+///     - managing and maintaining the viewstate
 @Observable
 @MainActor
 class HomeViewModel {
@@ -36,8 +38,8 @@ extension HomeViewModel {
     }
 }
 
+/// Enum to distinguish what state the viewmodel is in
 extension HomeViewModel {
-    /// Enum to distinguish what state the viewmodel is in
     enum viewState {
         case Loading
         case Fetching
@@ -46,6 +48,7 @@ extension HomeViewModel {
     }
 }
 
+/// Utility functions
 extension HomeViewModel {
     /// reset viewmodel to initial state
     func reset() {
@@ -60,7 +63,13 @@ extension HomeViewModel {
     }
 }
 
+/// Networking functions
 extension HomeViewModel {
+    /// Gets Images for the home view feed, manages pagination and view state
+    ///
+    /// Uses the VoyagoService to fetch images for the current page.
+    /// - Parameter initial: Boolean value determining wether this is the first call for this method
+    ///     to correcltly manage view state
     func getImages(initial: Bool) async {
         if initial {
             guard self.viewState != .Loading else { return }

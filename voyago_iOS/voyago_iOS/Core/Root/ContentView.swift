@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: - should probably become a tab bar to navigate between main views
 struct ContentView: View {
     var body: some View {
         VStack {

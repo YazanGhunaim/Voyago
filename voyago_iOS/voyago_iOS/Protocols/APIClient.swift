@@ -10,7 +10,6 @@ import Foundation
 /// A protocol defining an API client
 protocol APIClient {
 
-    
     /// Fetches data from a given url
     /// - Parameters:
     ///   - url: URL endpoint being called

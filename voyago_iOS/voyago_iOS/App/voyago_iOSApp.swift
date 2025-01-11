@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Main entry point to the app
 @main
 struct voyago_iOSApp: App {
     var body: some Scene {
