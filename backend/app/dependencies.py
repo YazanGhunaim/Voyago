@@ -1,7 +1,7 @@
 """module to hold dependencies"""
-from app.completions.client import AIClient
-from app.services.unsplash.unsplash_service import UnsplashService
-from app.voyago import Voyago
+from backend.app.completions.client import AIClient
+from backend.app.services.unsplash.unsplash_service import UnsplashService
+from backend.app.voyago import Voyago
 
 
 def get_voyago() -> Voyago:

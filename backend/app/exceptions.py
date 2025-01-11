@@ -21,3 +21,4 @@ class ClientTokenLimitExceededError(VoyagoError):
 
 class TripPlanGenerationError(VoyagoError):
     """Failed to generate an itinerary"""
+    pass

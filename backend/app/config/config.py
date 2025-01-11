@@ -11,6 +11,7 @@ class Config(BaseSettings):
     """pydantic settings class providing access to .env file"""
     openai_key: str = ""
     unsplash_key: str = ""
+    unsplash_base_url: str = ""
 
     class Config:
         env_file = DOTENV

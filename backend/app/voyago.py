@@ -1,10 +1,11 @@
 """Voyago class"""
 import logging
 
-from app.completions.client import AIClient
-from app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, VoyagoError
-from app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
-from app.services.unsplash.unsplash_service import UnsplashService
+from backend.app.completions.client import AIClient
+from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, \
+    VoyagoError
+from backend.app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
+from backend.app.services.unsplash.unsplash_service import UnsplashService
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class Voyago:
             log.error(f"Error occurred while getting itinerary: {e}")
             return None
 
-    def _get_images(self, itinerary: Itinerary) -> dict[str, list[str]]:
+    def _get_images_from_itinerary(self, itinerary: Itinerary) -> dict[str, list[str]]:
         """private method for getting images of sights in a specific itinerary
 
         :param itinerary: The itinerary model holding the sights
@@ -40,9 +41,33 @@ class Voyago:
         log.info("Getting images for the sights in the itinerary.")
         recommended_sights = [recommendation.sight for recommendation in itinerary.recommendations]
         images = {
-            sight: self.unsplash.fetch_image_for(sight=sight, count=3)
+            sight: self.get_images(query=sight, count=3)
             for sight in recommended_sights
         }
+        return images
+
+    # TODO: image urls for multiple resolution types (low, mid, high) ?
+    def get_images(self, query: str, count: int, page: int = 1) -> list[str]:
+        """gets images based on a query
+
+        :param query: search terms
+        :param count: number of images requested
+        :param page: page number [pagination]
+        :return: list of image url's
+        """
+        images = self.unsplash.fetch_image_for(query=query, count=count, page=page)
+        return images
+
+    def get_image_collection(self, topic: str, count: int = 10, page: int = 1) -> list[str]:
+        """gets a collection of images for a curated topic, to be used in feed view
+
+        :param topic: topic for requested collection
+        :param count: number of images requested
+        :param page: page number [pagination]
+        :return: list of image url's
+        """
+        log.info(f"Getting image collection for the {topic}.")
+        images = self.unsplash.fetch_image_collection_for(topic=topic, count=count, page=page)
         return images
 
     def generate_visual_itinerary(self, query: RecommendationQuery) -> VisualItinerary:
@@ -58,7 +83,7 @@ class Voyago:
             log.error("Failed to generate a trip plan because no itinerary was generated.")
             raise TripPlanGenerationError(f"Trip plan generation failed due to an empty itinerary.")
 
-        images = self._get_images(itinerary=itinerary)
+        images = self._get_images_from_itinerary(itinerary=itinerary)
         plan = VisualItinerary(**itinerary.model_dump(), images=images)
 
         return plan
@@ -69,9 +94,10 @@ if __name__ == "__main__":
 
     client = AIClient()
     unsplash = UnsplashService()
+
     voyago = Voyago(client=client, unsplash=unsplash)
 
-    recommendation_query = RecommendationQuery(destination="Portugal", days=2)
+    recommendation_query = RecommendationQuery(destination="Vienna", days=3)
     plan = voyago.generate_visual_itinerary(query=recommendation_query)
 
     pprint(plan.model_dump())

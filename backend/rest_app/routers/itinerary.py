@@ -3,9 +3,9 @@
 from fastapi import APIRouter, Depends, status
 from starlette.exceptions import HTTPException
 
-from app.dependencies import get_voyago
-from app.exceptions import TripPlanGenerationError
-from app.models.recommendations import RecommendationQuery, VisualItinerary
+from backend.app.dependencies import get_voyago
+from backend.app.exceptions import TripPlanGenerationError
+from backend.app.models.recommendations import RecommendationQuery, VisualItinerary
 
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 

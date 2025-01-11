@@ -5,10 +5,10 @@ from logging import getLogger
 import openai
 from openai import LengthFinishReasonError
 
-from app.config.config import get_config
-from app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, VoyagoError
-from app.models.recommendations import Itinerary, RecommendationQuery
-from app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
+from backend.app.config.config import get_config
+from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, VoyagoError
+from backend.app.models.recommendations import Itinerary, RecommendationQuery
+from backend.app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
 
 log = getLogger(__name__)
 
