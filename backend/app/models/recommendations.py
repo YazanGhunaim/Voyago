@@ -1,6 +1,8 @@
 """pydantic models related to sight recommendations"""
 from pydantic import BaseModel, Field, field_validator
 
+from backend.app.models.images import VoyagoImage
+
 
 class SightRecommendation(BaseModel):
     """model of a single sight recommendation"""
@@ -16,7 +18,7 @@ class Itinerary(BaseModel):
 
 class VisualItinerary(Itinerary):
     """model of a full trip plan provided to users"""
-    images: dict[str, list[str]]
+    images: dict[str, list[VoyagoImage]]
 
 
 class RecommendationQuery(BaseModel):
