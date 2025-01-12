@@ -4,6 +4,7 @@ import logging
 from backend.app.completions.client import AIClient
 from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, \
     VoyagoError
+from backend.app.models.images import VoyagoImage
 from backend.app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
 from backend.app.services.unsplash.unsplash_service import UnsplashService
 
@@ -32,7 +33,7 @@ class Voyago:
             log.error(f"Error occurred while getting itinerary: {e}")
             return None
 
-    def _get_images_from_itinerary(self, itinerary: Itinerary) -> dict[str, list[str]]:
+    def _get_images_from_itinerary(self, itinerary: Itinerary) -> dict[str, list[VoyagoImage]]:
         """private method for getting images of sights in a specific itinerary
 
         :param itinerary: The itinerary model holding the sights
@@ -46,8 +47,7 @@ class Voyago:
         }
         return images
 
-    # TODO: image urls for multiple resolution types (low, mid, high) ?
-    def get_images(self, query: str, count: int, page: int = 1) -> list[str]:
+    def get_images(self, query: str, count: int, page: int = 1) -> list[VoyagoImage]:
         """gets images based on a query
 
         :param query: search terms
