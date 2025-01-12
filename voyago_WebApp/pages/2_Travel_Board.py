@@ -34,7 +34,16 @@ with st.form("Trip plan"):
         st.text(plan)
 
         for sight, links in sight_with_image.items():
-            # TODO: metadata credits etc
             st.subheader(f"{sight}:")
-            for link in links:
-                st.image(link, caption=sight)
+
+            # displays images in two columns
+            col1, col2 = st.columns(2)
+            for i, voyago_image in enumerate(links):
+                if i % 2 == 0:
+                    with col1:
+                        st.markdown(f"Artist: [{voyago_image.username}]({voyago_image.unsplash_profile})")
+                        st.image(voyago_image.urls["regular"], caption=sight, use_container_width=True)
+                else:
+                    with col2:
+                        st.markdown(f"[{voyago_image.username}]({voyago_image.unsplash_profile})")
+                        st.image(voyago_image.urls["regular"], caption=sight, use_container_width=True)
