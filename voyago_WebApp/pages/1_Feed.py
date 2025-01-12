@@ -11,8 +11,9 @@ images = voyago.get_images(query="travel europe sightseeing cities", count=20)
 st.title("Voyago feed")
 
 columns = st.columns(3)
-for index, image_url in enumerate(images):
+for index, voyago_image in enumerate(images):
     col = columns[index % 3]
     with col:
-        # TODO: caption is metadata
-        st.image(image_url, caption="Image from URL", use_container_width=True)
+        # TODO: Location metadata
+        st.markdown(f"Artist: [{voyago_image.username}]({voyago_image.unsplash_profile})")
+        st.image(voyago_image.urls["regular"], caption=f"{voyago_image.username}", use_container_width=True)
