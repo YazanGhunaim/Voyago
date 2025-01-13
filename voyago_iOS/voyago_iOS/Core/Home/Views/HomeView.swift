@@ -22,9 +22,13 @@ struct HomeView: View {
             switch self.viewModel.viewState {
             case .Loading, nil:
                 ProgressView()
-            case .Failure:
-                // TODO: - Error view
-                Text("Error Encountered.")
+            case .Failure(_):
+                ErrorView {
+                    // onReload action
+                    Task {
+                        await self.viewModel.getImages(initial: true)
+                    }
+                }
             case _:
                 HomeScrollView(viewModel: self.viewModel, columns: self.columns)
             }
@@ -113,3 +117,4 @@ struct ImageGrid: View {
 #Preview {
     HomeView()
 }
+
