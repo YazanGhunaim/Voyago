@@ -40,11 +40,11 @@ extension HomeViewModel {
 
 /// Enum to distinguish what state the viewmodel is in
 extension HomeViewModel {
-    enum viewState {
+    enum viewState: Equatable {
         case Loading
         case Fetching
         case Success
-        case Failure
+        case Failure(errorMessage: String)
     }
 }
 
@@ -95,9 +95,11 @@ extension HomeViewModel {
         case .failure(let error):
             VoyagoLogger.shared.logger.log(
                 level: .error,
-                "Failed to fetch images with error: \(error.localizedDescription, privacy: .public)"
+                "Failed to fetch images with error: \(error, privacy: .public)"
             )
-            self.viewState = .Failure
+            self.viewState = .Failure(
+                errorMessage: "An unexpected error occurred while loading data."
+            )
         }
     }
 }
