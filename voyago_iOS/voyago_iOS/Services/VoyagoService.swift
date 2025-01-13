@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: - Need actual model now
 typealias ImageURLS = [String]
 
 /// Service class to communicate with the Voyago REST API
