@@ -8,18 +8,18 @@
 import Kingfisher
 import SwiftUI
 
-// TODO: Take in metadata
 /// ImageCard view used throughout Voyago
 struct ImageCard: View {
-    let imageUrl: String
+    let image: VoyagoImage
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: Image
-            LoadedImage(imageUrl: self.imageUrl)
+            LoadedImage(imageUrl: self.image.regularUrl)
 
             // MARK: Image metadata
-            ImageMetaData().padding(.horizontal, 8)
+            ImageMetaData(image: self.image)
+                .padding(.horizontal, 8)
         }
         //        .clipShape(.rect(cornerRadius: 20))
         //                .border(.red)
@@ -42,13 +42,14 @@ struct LoadedImage: View {
     }
 }
 
-// TODO: - display image metadata
 /// Metadata about the image
 struct ImageMetaData: View {
+    let image: VoyagoImage
+
     var body: some View {
         HStack(alignment: .center) {
-            Text("Prague")
-                .font(.headline)
+            Text(image.username)
+                .font(.footnote)
 
             Spacer()
 
@@ -63,9 +64,9 @@ struct ImageMetaData: View {
     }
 }
 
-#Preview {
-    ImageCard(
-        imageUrl:
-            "https://images.unsplash.com/photo-1503410781609-75b1d892dd28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODIyMzV8MHwxfHNlYXJjaHwxfHxQcmFndWV8ZW58MHx8fHwxNzM2MDEzNDM3fDA&ixlib=rb-4.0.3&q=80&w=1080"
-    )
-}
+//#Preview {
+//    ImageCard(
+//        image:
+//            "https://images.unsplash.com/photo-1503410781609-75b1d892dd28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODIyMzV8MHwxfHNlYXJjaHwxfHxQcmFndWV8ZW58MHx8fHwxNzM2MDEzNDM3fDA&ixlib=rb-4.0.3&q=80&w=1080"
+//    )
+//}

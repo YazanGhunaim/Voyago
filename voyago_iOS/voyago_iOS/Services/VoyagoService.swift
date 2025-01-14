@@ -7,9 +7,6 @@
 
 import Foundation
 
-// TODO: - Need actual model now
-typealias ImageURLS = [String]
-
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
@@ -20,7 +17,9 @@ class VoyagoService: APIClient {
     private init(session: URLSession = .shared) {
         self.session = session
     }
+}
 
+extension VoyagoService {
     func fetch<T>(url: String, parameters: [String: String]? = nil) async
         -> Result<T, APIError> where T: Decodable
     {
@@ -65,7 +64,7 @@ class VoyagoService: APIClient {
     ///   - page: Page number
     /// - Returns: List of URL's
     func fetchImages(for query: String, count: Int, page: Int) async -> Result<
-        ImageURLS, APIError
+        [VoyagoImage], APIError
     > {
         let parameters = [
             "query": query,
@@ -73,7 +72,7 @@ class VoyagoService: APIClient {
             "page": "\(page)",
         ]
 
-        let res: Result<ImageURLS, APIError> = await fetch(
+        let res: Result<[VoyagoImage], APIError> = await fetch(
             url: "http://192.168.0.116:8000/images", parameters: parameters
         )
 
