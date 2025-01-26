@@ -96,7 +96,6 @@ struct ImageGrid: View {
             ForEach(self.images, id: \.id) {
                 image in
 
-                // TODO: - PASS METADATA
                 ImageCard(image: image)
                     .onAppear {
                         // whenever the last image is on the screen
