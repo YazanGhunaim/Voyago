@@ -17,6 +17,9 @@ protocol APIClient {
     /// - Returns: Result type containing decoded response or an error
     func fetch<T: Decodable>(
         url: String,
-        parameters: [String: String]?
+        parameters: [String: String]?,
+        method: HTTPMethod,
+        body: Encodable?,
+        headers: [String: String]?
     ) async -> Result<T, APIError>
 }
