@@ -73,7 +73,7 @@ extension VoyagoService {
         ]
 
         let res: Result<[VoyagoImage], APIError> = await fetch(
-            url: "http://192.168.0.116:8000/images", parameters: parameters
+            url: "http://192.168.0.101:8000/images", parameters: parameters
         )
 
         return res

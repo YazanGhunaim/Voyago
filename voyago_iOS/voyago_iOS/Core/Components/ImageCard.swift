@@ -15,7 +15,11 @@ struct ImageCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: Image
-            LoadedImage(imageUrl: self.image.regularUrl)
+            NavigationLink {
+                ImageDetailsView(image: self.image)
+            } label: {
+                LoadedImage(imageUrl: self.image.regularUrl)
+            }
 
             // MARK: Image metadata
             ImageMetaData(image: self.image)
@@ -54,19 +58,17 @@ struct ImageMetaData: View {
             Spacer()
 
             Button {
-                // TODO: Go to metadata view
+                // TODO: sharing options
             } label: {
                 Image(systemName: "ellipsis")
-
             }
         }
         .foregroundStyle(.primary)
     }
 }
 
-//#Preview {
-//    ImageCard(
-//        image:
-//            "https://images.unsplash.com/photo-1503410781609-75b1d892dd28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2ODIyMzV8MHwxfHNlYXJjaHwxfHxQcmFndWV8ZW58MHx8fHwxNzM2MDEzNDM3fDA&ixlib=rb-4.0.3&q=80&w=1080"
-//    )
-//}
+#Preview {
+    ImageCard(
+        image: voyagoImageMock
+    )
+}

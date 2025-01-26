@@ -14,6 +14,14 @@ struct VoyagoImage: Codable {
     let unsplashProfile: String?  // Optional Unsplash profile URL
 
     private let urls: [String: String]  // [resolution: url]
+
+    init(
+        username: String, unsplashProfile: String? = nil, urls: [String: String]
+    ) {
+        self.username = username
+        self.unsplashProfile = unsplashProfile
+        self.urls = urls
+    }
 }
 
 extension VoyagoImage {
