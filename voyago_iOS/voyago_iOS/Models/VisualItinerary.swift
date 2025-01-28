@@ -9,8 +9,15 @@ import Foundation
 
 // A model for a single sight recommendation
 struct SightRecommendation: Codable {
+    var id = UUID()
+    
     let sight: String
     let brief: String
+    
+    enum CodingKeys: String, CodingKey {
+        case sight
+        case brief
+    }
 }
 
 // A model for the expected itinerary returned by the LLM

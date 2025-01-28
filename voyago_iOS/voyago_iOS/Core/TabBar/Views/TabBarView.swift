@@ -15,7 +15,7 @@ struct TabBarView: View {
             }
 
             Tab("", systemImage: "wand.and.stars") {
-                GenTravelBoardView()
+                GenItineraryFormView()
             }
 
             Tab("", systemImage: "person.fill") {

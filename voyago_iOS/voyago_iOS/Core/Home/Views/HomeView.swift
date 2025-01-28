@@ -70,7 +70,8 @@ struct HomeScrollView: View {
                         .padding(50)
                 }
             }
-            .navigationTitle("Voyago")
+            .navigationTitle("voyago")
+            .navigationBarTitleDisplayMode(.inline)
             .refreshable {
                 // even tho refreshable has its own async handler
                 // placed logic inside another Task that way when view refreshes
