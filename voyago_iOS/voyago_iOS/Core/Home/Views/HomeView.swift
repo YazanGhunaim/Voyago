@@ -22,9 +22,14 @@ struct HomeView: View {
             switch self.viewModel.viewState {
             case .Loading, nil:
                 ProgressView()
-            case .Failure:
-                // TODO: - Error view
-                Text("Error Encountered.")
+            case .Failure(_):
+                ErrorView {
+                    // onReload action
+                    Task {
+                        self.viewModel.reset()
+                        await self.viewModel.getImages(initial: true)
+                    }
+                }
             case _:
                 HomeScrollView(viewModel: self.viewModel, columns: self.columns)
             }
@@ -46,10 +51,10 @@ struct HomeScrollView: View {
                     // MARK: Grids
                     ImageGrid(
                         viewModel: self.viewModel, columns: self.columns,
-                        imageUrls: self.viewModel.firstHalfImageUrls)
+                        images: self.viewModel.firstHalfImages)
                     ImageGrid(
                         viewModel: self.viewModel, columns: self.columns,
-                        imageUrls: self.viewModel.secondHalfImageUrls)
+                        images: self.viewModel.secondHalfImages)
                 }
                 .padding(.horizontal)
                 //                .overlay(
@@ -65,14 +70,15 @@ struct HomeScrollView: View {
                         .padding(50)
                 }
             }
-            .navigationTitle("Voyago")
+            .navigationTitle("voyago")
+            .navigationBarTitleDisplayMode(.inline)
             .refreshable {
                 // even tho refreshable has its own async handler
                 // placed logic inside another Task that way when view refreshes
                 // and refreshable redraws (as well for its task being discarded)
                 // my logic is in a seperate standalone task thats being awaited
                 await Task {
-                    viewModel.reset()
+                    self.viewModel.reset()
                     await self.viewModel.getImages(initial: false)
                 }.value
             }
@@ -84,20 +90,19 @@ struct HomeScrollView: View {
 struct ImageGrid: View {
     let viewModel: HomeViewModel
     let columns: [GridItem]
-    let imageUrls: [String]
+    let images: [VoyagoImage]
 
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(self.imageUrls, id: \.self) {
-                imageUrl in
+            ForEach(self.images, id: \.id) {
+                image in
 
-                // TODO: - PASS METADATA
-                ImageCard(imageUrl: imageUrl)
+                ImageCard(image: image)
                     .onAppear {
                         // whenever the last image is on the screen
                         // fetch more images
                         if self.viewModel.lastImage(
-                            imageUrl: imageUrl)
+                            image: image)
                             && self.viewModel.viewState != .Fetching
                         {
                             Task {

@@ -13,7 +13,7 @@ import Foundation
 @Observable
 @MainActor
 class HomeViewModel {
-    var imageUrls = [String]()
+    var images = [VoyagoImage]()
     var viewState: viewState?
     var page = 1
 
@@ -25,26 +25,26 @@ class HomeViewModel {
     }
 }
 
-/// Splitting image url's array in half for pinterest like layout reasons
+/// Splitting images array in half for pinterest like layout reasons
 extension HomeViewModel {
-    var firstHalfImageUrls: [String] {
-        let midIndex = imageUrls.count / 2
-        return Array(imageUrls[..<midIndex])
+    var firstHalfImages: [VoyagoImage] {
+        let midIndex = images.count / 2
+        return Array(images[..<midIndex])
     }
 
-    var secondHalfImageUrls: [String] {
-        let midIndex = imageUrls.count / 2
-        return Array(imageUrls[midIndex...])
+    var secondHalfImages: [VoyagoImage] {
+        let midIndex = images.count / 2
+        return Array(images[midIndex...])
     }
 }
 
 /// Enum to distinguish what state the viewmodel is in
 extension HomeViewModel {
-    enum viewState {
+    enum viewState: Equatable {
         case Loading
         case Fetching
         case Success
-        case Failure
+        case Failure(errorMessage: String)
     }
 }
 
@@ -54,12 +54,12 @@ extension HomeViewModel {
     func reset() {
         self.page = 1
         self.viewState = nil
-        self.imageUrls.removeAll()
+        self.images.removeAll()
     }
 
     /// function to check whether or not the image viewed by the user is the last
-    func lastImage(imageUrl: String) -> Bool {
-        self.imageUrls.last == imageUrl
+    func lastImage(image: VoyagoImage) -> Bool {
+        self.images.last?.id == image.id
     }
 }
 
@@ -90,14 +90,16 @@ extension HomeViewModel {
                 level: .info,
                 "Successfully fetched images for page \(self.page, privacy: .public)"
             )
-            self.imageUrls += images
+            self.images += images
             self.viewState = .Success
         case .failure(let error):
             VoyagoLogger.shared.logger.log(
                 level: .error,
-                "Failed to fetch images with error: \(error.localizedDescription, privacy: .public)"
+                "Failed to fetch images with error: \(error, privacy: .public)"
             )
-            self.viewState = .Failure
+            self.viewState = .Failure(
+                errorMessage: "An unexpected error occurred while loading data."
+            )
         }
     }
 }

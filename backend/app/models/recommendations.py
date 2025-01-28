@@ -12,7 +12,7 @@ class SightRecommendation(BaseModel):
 
 class Itinerary(BaseModel):
     """model of what is expected from the LLM to return"""
-    plan: str
+    plan: str  # TODO: refactor to become [str] ie index 0 -> Day 1 etc.. for more consistent text formatting
     recommendations: list[SightRecommendation]
 
 
