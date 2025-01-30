@@ -66,6 +66,7 @@ extension VoyagoService {
 
         // Execute request
         do {
+            VoyagoLogger.shared.logger.info("Voyago Service attempting request: \(request)")
             let (data, response) = try await self.session.data(for: request)
 
             // Validate HTTP status code

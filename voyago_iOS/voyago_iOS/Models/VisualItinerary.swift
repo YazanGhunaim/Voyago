@@ -7,7 +7,7 @@
 
 import Foundation
 
-// A model for a single sight recommendation
+/// A model for a single sight recommendation
 struct SightRecommendation: Codable {
     var id = UUID()
     
@@ -20,13 +20,13 @@ struct SightRecommendation: Codable {
     }
 }
 
-// A model for the expected itinerary returned by the LLM
+/// A model for the expected itinerary returned by the LLM
 struct Itinerary: Codable {
     let plan: String
     let recommendations: [SightRecommendation]
 }
 
-// A model for the full trip plan provided to users
+/// A model for the full trip plan provided to users
 struct VisualItinerary: Codable {
     let plan: String
     let recommendations: [SightRecommendation]

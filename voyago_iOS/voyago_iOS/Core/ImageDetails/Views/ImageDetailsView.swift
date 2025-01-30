@@ -8,6 +8,7 @@
 import SwiftUI
 import Kingfisher
 
+/// Full page of image, displaying its metadata and other details
 struct ImageDetailsView: View {
     let image: VoyagoImage
 

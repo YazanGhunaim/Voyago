@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// GenItineraryViewModel responsible for managing data related to the generate itinerary view
 @Observable
 @MainActor
 class GenItineraryViewModel {
@@ -14,9 +15,12 @@ class GenItineraryViewModel {
 }
 
 extension GenItineraryViewModel {
+    
+    /// Gets the generated travel board from the voyago service
+    /// - Parameter query: RecommendationQuery
     func getGeneratedTravelBoard(query: RecommendationQuery) async {
         VoyagoLogger.shared.logger.info("Fetching generated itinerary")
-
+        
         let result =
             await VoyagoService.shared
             .fetchGeneratedTravelBoard(query: query)
@@ -32,7 +36,8 @@ extension GenItineraryViewModel {
             self.generatedItinerary = nil
         }
     }
-
+    
+    /// resets the viewmodel
     func reset() {
         self.generatedItinerary = nil
     }

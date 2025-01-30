@@ -8,37 +8,35 @@
 import SwiftUI
 
 // TODO: Save previous generated itineraries
+/// View of the generated itinerary
 struct GenItineraryView: View {
     @State private var viewModel = GenItineraryViewModel()
-
     let destination: String
     let numOfDays: Int
-
+    
     var body: some View {
-        VStack {
-            if let itinerary = viewModel.generatedItinerary {
-                // MARK: Itinerary Details
-                ItineraryDetailsView(
-                    destination: self.destination, itinerary: itinerary)
-            } else {
-                // MARK: Progress view
-                VisualizingProgressView()
+        ZStack {
+            VStack {
+                if let itinerary = viewModel.generatedItinerary {
+                    ItineraryDetailsView(destination: destination, itinerary: itinerary)
+                } else {
+                    VisualizingProgressView()
+                }
             }
         }
         .task {
-            let recommendationQuery = RecommendationQuery(
-                destination: self.destination, days: self.numOfDays)
-            await self.viewModel.getGeneratedTravelBoard(
-                query: recommendationQuery)
+            let recommendationQuery = RecommendationQuery(destination: self.destination, days: self.numOfDays)
+            await self.viewModel.getGeneratedTravelBoard(query: recommendationQuery)
         }
         .onDisappear {
             // FIXME: clicking on image card then going back shouldnt reset
-            self.viewModel.reset()
+            // self.viewModel.reset()
         }
+        .navigationBarTitle("Generating Itinerary...", displayMode: .inline)
     }
 }
 
-// TODO: Upgrade UI
+// MARK: - Itinerary Details View
 struct ItineraryDetailsView: View {
     let destination: String
     let itinerary: VisualItinerary
@@ -48,45 +46,25 @@ struct ItineraryDetailsView: View {
     }
 
     var body: some View {
-        ScrollView(.vertical) {
-            VStack(spacing: 10) {
-                // MARK: Plan
-                VStack(alignment: .leading) {
-                    Text("Plan:")
-                        .font(.subheadline)
-
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                // Plan Section
+                SectionContainer(title: "Plan") {
                     Text(itinerary.plan)
+                        .font(.body)
                         .multilineTextAlignment(.leading)
                 }
 
-                Divider()
-
-                // MARK: Sight Recommendations
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Places to visit:")
-                        .font(.subheadline)
-
-                    ForEach(self.itinerary.recommendations, id: \.id) {
-                        recommendation in
-                        VStack(alignment: .leading) {
-                            Text("\(recommendation.sight):")
-                                .bold()
-
-                            Text(recommendation.brief)
-                        }
+                // Sight Recommendations
+                SectionContainer(title: "Places to Visit") {
+                    ForEach(itinerary.recommendations, id: \.id) { recommendation in
+                        SightRecommendationCard(recommendation: recommendation)
                     }
                 }
 
-                Divider()
-
-                // MARK: Sight Images
-                // TODO: UI change to smth similar to deck of cards?
-                ForEach(itinerary.images.keys.sorted(), id: \.self) {
-                    category in
-                    ForEach(itinerary.images[category] ?? [], id: \.id) {
-                        image in
-                        ImageCard(image: image)
-                    }
+                // Images Section
+                SectionContainer(title: "Destination Highlights") {
+                    ItineraryImagesView(itinerary: itinerary)
                 }
             }
             .padding()
@@ -95,12 +73,88 @@ struct ItineraryDetailsView: View {
     }
 }
 
+// MARK: - Sight Recommendation Card
+struct SightRecommendationCard: View {
+    let recommendation: SightRecommendation
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading) {
+                Text(recommendation.sight)
+                    .font(.headline)
+                Text(recommendation.brief)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+            }
+
+            Spacer()
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
+    }
+}
+
+// MARK: - Itinerary Images View
+struct ItineraryImagesView: View {
+    let itinerary: VisualItinerary
+
+    var body: some View {
+        TabView {
+            ForEach(itinerary.images.keys.sorted(), id: \.self) { category in
+                ForEach(itinerary.images[category] ?? [], id: \.id) { image in
+                    ImageCard(image: image)
+                }
+            }
+        }
+        .tabViewStyle(.page)
+        .frame(height: 200)
+    }
+}
+
+/// Custom progress bar
 struct VisualizingProgressView: View {
     var body: some View {
-        ProgressView {
-            Text("Visualizing...")
+        ZStack {
+            VStack(spacing: 10) {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
+                    .scaleEffect(1.5)
+
+                Text("Visualizing your trip...")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.systemGray6))
+                    .shadow(radius: 4)
+            )
         }
-        .tint(.indigo)
+    }
+}
+
+// MARK: - Section Container
+struct SectionContainer<Content: View>: View {
+    let title: String
+    let content: Content
+
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(self.title)
+                .font(.headline)
+                .foregroundColor(.primary)
+
+            self.content
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
     }
 }
 
