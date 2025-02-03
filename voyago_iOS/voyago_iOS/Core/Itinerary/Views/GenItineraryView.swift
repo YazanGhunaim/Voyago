@@ -13,26 +13,37 @@ struct GenItineraryView: View {
     @State private var viewModel = GenItineraryViewModel()
     let destination: String
     let numOfDays: Int
-    
+
     var body: some View {
-        ZStack {
-            VStack {
-                if let itinerary = viewModel.generatedItinerary {
-                    ItineraryDetailsView(destination: destination, itinerary: itinerary)
-                } else {
-                    VisualizingProgressView()
+        switch viewModel.viewState {
+        case .Loading:
+            VisualizingProgressView()
+                .navigationBarTitle(
+                    "Generating Itinerary...", displayMode: .inline
+                )
+                .task {
+                    let recommendationQuery = RecommendationQuery(
+                        destination: self.destination, days: self.numOfDays)
+                    await self.viewModel.getGeneratedTravelBoard(
+                        query: recommendationQuery)
+                }
+        case .Success:
+            if let itinerary = viewModel.generatedItinerary {
+                ItineraryDetailsView(
+                    destination: destination, itinerary: itinerary
+                )
+
+                .onDisappear {
+                    // FIXME: clicking on image card then going back shouldnt reset
+                    // self.viewModel.reset()
                 }
             }
+        case .Failure(let errorMessage):
+            ErrorView(
+                //                errorMessage: errorMessage,
+                onReload: {}  // TODO: on reload
+            )
         }
-        .task {
-            let recommendationQuery = RecommendationQuery(destination: self.destination, days: self.numOfDays)
-            await self.viewModel.getGeneratedTravelBoard(query: recommendationQuery)
-        }
-        .onDisappear {
-            // FIXME: clicking on image card then going back shouldnt reset
-            // self.viewModel.reset()
-        }
-        .navigationBarTitle("Generating Itinerary...", displayMode: .inline)
     }
 }
 
@@ -50,14 +61,16 @@ struct ItineraryDetailsView: View {
             VStack(alignment: .leading, spacing: 16) {
                 // Plan Section
                 SectionContainer(title: "Plan") {
-                    Text(itinerary.plan)
-                        .font(.body)
-                        .multilineTextAlignment(.leading)
+                    ForEach(itinerary.plan, id: \.self) { dayPlan in
+                        Text("Day: \(dayPlan.day)")
+                        Text(dayPlan.plan)
+                    }
                 }
 
                 // Sight Recommendations
                 SectionContainer(title: "Places to Visit") {
-                    ForEach(itinerary.recommendations, id: \.id) { recommendation in
+                    ForEach(itinerary.recommendations, id: \.id) {
+                        recommendation in
                         SightRecommendationCard(recommendation: recommendation)
                     }
                 }
@@ -91,7 +104,8 @@ struct SightRecommendationCard: View {
             Spacer()
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
+        .background(
+            RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
     }
 }
 
@@ -154,10 +168,12 @@ struct SectionContainer<Content: View>: View {
             self.content
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
+        .background(
+            RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
     }
 }
 
 #Preview {
+
     GenItineraryView(destination: "Prague", numOfDays: 2)
 }
