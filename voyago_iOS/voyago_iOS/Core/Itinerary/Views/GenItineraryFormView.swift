@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Form View for itinerary user input
 struct GenItineraryFormView: View {
     @State private var destination: String = ""
     @State private var numberOfDays: Int = 1

@@ -41,7 +41,7 @@ struct LoadedImage: View {
             .placeholder({ Rectangle().fill(Color.indigo).opacity(0.25) })
             .fade(duration: 1)
             .resizable()
-            .scaledToFit()
+            .scaledToFill() // extreme sus :o
             .clipShape(.rect(cornerRadius: 10))
     }
 }
