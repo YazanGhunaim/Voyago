@@ -3,8 +3,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from backend.app.dependencies import get_voyago
 from backend.app.models.images import VoyagoImage
+from backend.rest_app.dependencies.voyago_client import get_voyago
 
 router = APIRouter(prefix="/images", tags=["Images"])
 
