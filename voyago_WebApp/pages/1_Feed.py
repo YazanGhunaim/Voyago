@@ -1,7 +1,7 @@
 """Image feed view"""
 import streamlit as st
 
-from backend.app.dependencies import get_voyago
+from backend.rest_app.dependencies import get_voyago
 
 st.set_page_config(page_title="Voyago", layout="wide")
 
