@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from gotrue import AuthResponse
 from supabase import Client
 
-from backend.rest_app.fast_api_dependencies.auth import get_auth_headers
-from backend.rest_app.fast_api_dependencies.supabase_client import get_supabase_client
+from backend.rest_app.dependencies.auth import get_auth_headers
+from backend.rest_app.dependencies.supabase_client import get_supabase_client
 from backend.rest_app.models.auth import AuthHeaders
 from backend.rest_app.models.users import UserLogin
 from backend.rest_app.utils.auth import set_supabase_session

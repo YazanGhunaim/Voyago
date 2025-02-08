@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from backend.app.models.images import VoyagoImage
-from backend.rest_app.fast_api_dependencies.voyago_client import get_voyago
+from backend.rest_app.dependencies.voyago_client import get_voyago
 
 router = APIRouter(prefix="/images", tags=["Images"])
 
