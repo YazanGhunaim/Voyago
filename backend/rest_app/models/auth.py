@@ -9,5 +9,3 @@ class AuthHeaders(BaseModel):
     """
     authorization: str
     refresh_token: str
-
-
