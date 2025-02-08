@@ -2,7 +2,7 @@
 import streamlit as st
 
 from backend.app.models.recommendations import RecommendationQuery
-from backend.rest_app.dependencies import get_voyago
+from backend.rest_app.fast_api_dependencies import get_voyago
 
 voyago = get_voyago()
 
