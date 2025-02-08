@@ -12,6 +12,9 @@ class Config(BaseSettings):
     openai_key: str = ""
     unsplash_key: str = ""
     unsplash_base_url: str = ""
+    supabase_url: str = ""
+    supabase_key: str = ""
+    supabase_service_key: str = ""
 
     class Config:
         env_file = DOTENV
