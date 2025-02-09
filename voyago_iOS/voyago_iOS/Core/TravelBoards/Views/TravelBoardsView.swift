@@ -7,13 +7,15 @@
 
 import SwiftUI
 
+// TODO: Refreshable
+// TODO: Cache travel boards [ model conversion to swiftdata ]
 struct TravelBoardsView: View {
     @State private var showingSheet = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 15) {
                     ForEach(1..<10) { num in
                         TravelBoardCard(
                             recommendationQuery: RecommendationQuery(
@@ -37,7 +39,8 @@ struct TravelBoardsView: View {
                 }
             }
             .sheet(isPresented: $showingSheet) {
-                GenTravelBoardForm()
+                GenTravelBoardFormView()
+                    .interactiveDismissDisabled()
             }
         }
     }

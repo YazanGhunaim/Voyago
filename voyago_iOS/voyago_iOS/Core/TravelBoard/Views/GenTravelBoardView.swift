@@ -18,6 +18,7 @@ struct GenTravelBoardView: View {
         switch viewModel.viewState {
         case .Loading:
             VisualizingProgressView()
+                .navigationBarBackButtonHidden()
                 .navigationBarTitle(
                     "Generating Itinerary...", displayMode: .inline
                 )
@@ -32,7 +33,6 @@ struct GenTravelBoardView: View {
                 ItineraryDetailsView(
                     destination: destination, itinerary: itinerary
                 )
-
                 .onDisappear {
                     // FIXME: clicking on image card then going back shouldnt reset
                     // self.viewModel.reset()
