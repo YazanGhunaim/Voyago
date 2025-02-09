@@ -1,7 +1,7 @@
 """user related endpoints"""
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from gotrue import AuthResponse
+from gotrue import AuthResponse, UserResponse
 from supabase import Client
 
 from backend.rest_app.dependencies.auth import get_auth_headers
@@ -10,6 +10,7 @@ from backend.rest_app.models.auth import AuthHeaders
 from backend.rest_app.models.users import UserLogin
 from backend.rest_app.utils.auth import set_supabase_session
 
+# TODO: Add Unauthorized exceptions
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
@@ -31,11 +32,7 @@ def get_user_session(
     """
     try:
         set_supabase_session(auth=auth, supabase_client=supabase_client)
-        # Retrieve the current session
-        session = supabase_client.auth.get_session()
-
-        if not session:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired session token.")
+        session = supabase_client.auth.get_session()  # Retrieve the current session
         return session
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Session retrieval failed: {e}")
@@ -95,12 +92,33 @@ def sign_out(auth: AuthHeaders = Depends(get_auth_headers),
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
 
 
+# TODO: fix models such that only that what needs to change is changed
+@router.put("/update_user", responses={
+    status.HTTP_200_OK: {"description": "User signed in successfully."},
+    status.HTTP_400_BAD_REQUEST: {"description": "User sign in failed."},
+})
+def update_user(
+        user: UserLogin,
+        auth: AuthHeaders = Depends(get_auth_headers),
+        supabase_client: Client = Depends(get_supabase_client)) -> UserResponse:
+    """Updates user data
+
+    :return: UserResponse
+    """
+    try:
+        set_supabase_session(auth=auth, supabase_client=supabase_client)
+        response = supabase_client.auth.update_user(user.model_dump(exclude={"username"}))
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+
+
 @router.delete("/delete_user", responses={
     status.HTTP_200_OK: {"description": "User deleted successfully."},
     status.HTTP_400_BAD_REQUEST: {"description": "User deletion failed."},
 })
 def delete_user(auth: AuthHeaders = Depends(get_auth_headers),
-                supabase_client: Client = Depends(get_supabase_client)):
+                supabase_client: Client = Depends(get_supabase_client)) -> None:
     """Deletes user account associated with uid
 
     :param auth: AuthHeaders object
