@@ -38,7 +38,7 @@ struct GenItineraryView: View {
                     // self.viewModel.reset()
                 }
             }
-        case .Failure(let errorMessage):
+        case .Failure(_):
             ErrorView(
                 //                errorMessage: errorMessage,
                 onReload: {}  // TODO: on reload

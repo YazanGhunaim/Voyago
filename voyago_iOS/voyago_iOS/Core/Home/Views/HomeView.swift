@@ -57,14 +57,6 @@ struct HomeScrollView: View {
                         images: self.viewModel.secondHalfImages)
                 }
                 .padding(.horizontal)
-                //                .overlay(
-                //                    alignment: .bottom,
-                //                    content: {
-                //                        if self.viewModel.viewState == .Fetching {
-                //                            ProgressView()
-                //                        }
-                //                    }
-                //                )
                 if self.viewModel.viewState == .Fetching {
                     ProgressView()
                         .padding(50)
