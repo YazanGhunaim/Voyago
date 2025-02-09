@@ -174,6 +174,5 @@ struct SectionContainer<Content: View>: View {
 }
 
 #Preview {
-
     GenItineraryView(destination: "Prague", numOfDays: 2)
 }
