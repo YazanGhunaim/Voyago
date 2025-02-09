@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: Remove back navigation toolbaritem
-
 /// Form View for itinerary user input
 struct GenTravelBoardFormView: View {
     @Environment(\.dismiss) var dismiss

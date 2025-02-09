@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: WHAT THE ACTUAL FUCK IS THIS BECOMING (REFACTOR EVERYWHERE)
+// TODO: LINE ABOVE
 /// A model for a single sight recommendation
 struct SightRecommendation: Codable {
     var id = UUID()
@@ -34,7 +36,31 @@ struct Itinerary: Codable {
 
 /// A model for the full trip plan provided to users
 struct VisualItinerary: Codable {
+    var id = UUID()
+
     let plan: [DayPlan]
     let recommendations: [SightRecommendation]
     let images: [String: [VoyagoImage]]
+}
+
+/// A model representing previous user generated itinerary from storage
+struct UserVisualItinerary: Codable {
+    let id: String
+    let createdAt: String
+
+    let destination: String
+    let days: Int
+
+    let plan: [DayPlan]
+    let recommendations: [SightRecommendation]
+    let images: [String: [VoyagoImage]]
+
+    enum CodingKeys: String, CodingKey {
+        case id, destination, days, plan, recommendations, images
+        case createdAt = "created_at"
+    }
+}
+
+struct UserVisualItineraries: Codable {
+    let data: [UserVisualItinerary]
 }

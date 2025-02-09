@@ -66,7 +66,8 @@ extension VoyagoService {
 
         // Execute request
         do {
-            VoyagoLogger.shared.logger.info("Voyago Service attempting request: \(request)")
+            VoyagoLogger.shared.logger.info(
+                "Voyago Service attempting request: \(request)")
             let (data, response) = try await self.session.data(for: request)
 
             // Validate HTTP status code
@@ -120,6 +121,26 @@ extension VoyagoService {
         let res: Result<VisualItinerary, APIError> = await fetch(
             url: self.baseUrl + "/itinerary", method: .POST, body: query
         )
+
+        return res
+    }
+}
+
+extension VoyagoService {
+
+    /// Fetches travel boards that the user created
+    // TODO: pass user auth headers
+    func fetchUserTravelBoards() async -> Result<
+        UserVisualItineraries, APIError
+    > {
+        let res: Result<UserVisualItineraries, APIError> = await fetch(
+            url: self.baseUrl + "/itinerary/user",
+            method: .GET,
+            headers: [
+                "Authorization":
+                    "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InZieXJHR3NaT2FrYzluYTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2NqaHV6bWZjbXd4cnZtdWJjY21xLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwY2M3ZWMxMS05ZjY0LTQ2NWEtODRiNy0zOTJlMmZkYzczMDciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM5MTQwNjQ1LCJpYXQiOjE3MzkxMzcwNDUsImVtYWlsIjoieWF6YW5naHVuYWltMDdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InlhemFuZ2h1bmFpbTA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjBjYzdlYzExLTlmNjQtNDY1YS04NGI3LTM5MmUyZmRjNzMwNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM5MTM3MDQ1fV0sInNlc3Npb25faWQiOiIyYjA0MGZkYi02OTE0LTRmZDktYmFjMy01YjIwMjYxMmI4NmMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.T5t2DfXD7rwiVYJrEy1h8OCfFEj6W5hTEM1DhJhGX9Y",
+                "refresh-token": "kneVxkn0Vy2EK6QhvwbeeQ",
+            ])
 
         return res
     }

@@ -9,17 +9,20 @@ import SwiftUI
 
 // TODO: Refreshable
 // TODO: Cache travel boards [ model conversion to swiftdata ]
+// TODO: No previous travel boards view
 struct TravelBoardsView: View {
+    @State private var viewModel = TravelBoardsViewModel()
     @State private var showingSheet = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 15) {
-                    ForEach(1..<10) { num in
+                    ForEach(viewModel.travelBoards!.data, id: \.id) { board in
                         TravelBoardCard(
                             recommendationQuery: RecommendationQuery(
-                                destination: "Czech Republic", days: num),
+                                destination: board.destination, days: board.days
+                            ),
                             image: voyagoImageMock)
                     }
                 }

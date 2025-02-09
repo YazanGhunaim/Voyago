@@ -15,6 +15,7 @@ from backend.rest_app.utils.auth import set_supabase_session
 
 # TODO: require authentication (valid user)
 # TODO: RLS on travel_boards ( only valid users )
+# TODO: Tables names config?
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
@@ -58,6 +59,10 @@ def get_visual_itinerary(query: RecommendationQuery, voyago=Depends(get_voyago),
         visual_itinerary = voyago.generate_visual_itinerary(query=query).model_dump()
         uid = supabase_client.auth.get_user().user.id  # extract current uid
         visual_itinerary["user_id"] = uid  # Append uid to model
+        # TODO: fix this ass solution
+        visual_itinerary["destination"] = query.destination
+        visual_itinerary["days"] = query.days
+
 
         # Insert Itinerary into table
         (
