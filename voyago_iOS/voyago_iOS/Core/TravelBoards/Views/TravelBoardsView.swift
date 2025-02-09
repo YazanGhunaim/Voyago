@@ -8,15 +8,36 @@
 import SwiftUI
 
 struct TravelBoardsView: View {
+    @State private var showingSheet = false
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                ForEach(1..<10) { num in
-                    TravelBoardCard(
-                        recommendationQuery: RecommendationQuery(
-                            destination: "Czechia", days: num),
-                        image: voyagoImageMock)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(1..<10) { num in
+                        TravelBoardCard(
+                            recommendationQuery: RecommendationQuery(
+                                destination: "Czech Republic", days: num),
+                            image: voyagoImageMock)
+                    }
                 }
+            }
+            .navigationTitle("Travel boards")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(
+                        action: {
+                            showingSheet.toggle()
+                        },
+                        label: {
+                            Image(systemName: "plus")
+                        }
+                    )
+                    .tint(.primary)
+                }
+            }
+            .sheet(isPresented: $showingSheet) {
+                GenTravelBoardForm()
             }
         }
     }

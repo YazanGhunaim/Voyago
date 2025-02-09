@@ -1,5 +1,5 @@
 //
-//  GenItineraryView.swift
+//  GenTravelBoardView.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 1/28/25.
@@ -9,7 +9,7 @@ import SwiftUI
 
 // TODO: Save previous generated itineraries
 /// View of the generated itinerary
-struct GenItineraryView: View {
+struct GenTravelBoardView: View {
     @State private var viewModel = GenItineraryViewModel()
     let destination: String
     let numOfDays: Int
@@ -174,5 +174,5 @@ struct SectionContainer<Content: View>: View {
 }
 
 #Preview {
-    GenItineraryView(destination: "Prague", numOfDays: 2)
+    GenTravelBoardView(destination: "Prague", numOfDays: 2)
 }
