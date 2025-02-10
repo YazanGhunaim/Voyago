@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: Save previous generated itineraries
 /// View of the generated itinerary
 struct GenTravelBoardView: View {
     @State private var viewModel = GenItineraryViewModel()

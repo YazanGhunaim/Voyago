@@ -35,7 +35,7 @@ struct TravelBoardCard: View {
         .frame(height: 150)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
-        .shadow(color: .secondary, radius: 5)
+//        .shadow(color: .secondary, radius: 5)
     }
 }
 
