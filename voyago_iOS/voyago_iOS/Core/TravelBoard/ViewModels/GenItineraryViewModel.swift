@@ -11,7 +11,7 @@ import Foundation
 @Observable
 @MainActor
 class GenItineraryViewModel {
-    var generatedItinerary: VisualItinerary? = nil
+    var generatedItinerary: GeneratedTravelBoard? = nil
     var viewState: ViewState = .Loading
 }
 

@@ -10,7 +10,7 @@ import Foundation
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.0.100:8000"
+    private let baseUrl = "http://192.168.0.121:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -66,7 +66,8 @@ extension VoyagoService {
 
         // Execute request
         do {
-            VoyagoLogger.shared.logger.info("Voyago Service attempting request: \(request)")
+            VoyagoLogger.shared.logger.info(
+                "Voyago Service attempting request: \(request)")
             let (data, response) = try await self.session.data(for: request)
 
             // Validate HTTP status code
@@ -114,12 +115,32 @@ extension VoyagoService {
     /// - Parameter query: recommendation query
     func fetchGeneratedTravelBoard(query: RecommendationQuery)
         async -> Result<
-            VisualItinerary, APIError
+            GeneratedTravelBoard, APIError
         >
     {
-        let res: Result<VisualItinerary, APIError> = await fetch(
+        let res: Result<GeneratedTravelBoard, APIError> = await fetch(
             url: self.baseUrl + "/itinerary", method: .POST, body: query
         )
+
+        return res
+    }
+}
+
+extension VoyagoService {
+
+    /// Fetches travel boards that the user created
+    // TODO: pass user auth headers
+    func fetchUserTravelBoards() async -> Result<
+        UserTravelBoards, APIError
+    > {
+        let res: Result<UserTravelBoards, APIError> = await fetch(
+            url: self.baseUrl + "/itinerary/user",
+            method: .GET,
+            headers: [
+                "Authorization":
+                    "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InZieXJHR3NaT2FrYzluYTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2NqaHV6bWZjbXd4cnZtdWJjY21xLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwY2M3ZWMxMS05ZjY0LTQ2NWEtODRiNy0zOTJlMmZkYzczMDciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM5MjE3NDgzLCJpYXQiOjE3MzkyMTM4ODMsImVtYWlsIjoieWF6YW5naHVuYWltMDdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InlhemFuZ2h1bmFpbTA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjBjYzdlYzExLTlmNjQtNDY1YS04NGI3LTM5MmUyZmRjNzMwNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM5MjEzODgzfV0sInNlc3Npb25faWQiOiI5OGM0MGRmNi1hYjIzLTQ5ZDgtODE1Yy1lMWZmYjVlYWRlYzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.73MA-fU40FusRbMLCCwJlGjuf0HVkfCi9fsn4P_J18M",
+                "refresh-token": "g1ob2r5v5YrvYt8V-zOXmg",
+            ])
 
         return res
     }

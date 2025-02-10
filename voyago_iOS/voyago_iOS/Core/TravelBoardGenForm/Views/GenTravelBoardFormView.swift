@@ -1,5 +1,5 @@
 //
-//  GenItineraryFormView.swift
+//  GenTravelBoardFormView.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 1/26/25.
@@ -8,21 +8,32 @@
 import SwiftUI
 
 /// Form View for itinerary user input
-struct GenItineraryFormView: View {
+struct GenTravelBoardFormView: View {
+    @Environment(\.dismiss) var dismiss
+
     @State private var destination: String = ""
     @State private var numberOfDays: Int = 1
 
     var body: some View {
         NavigationStack {
             // MARK: Form
-            GenTravelBoardFormView(
+            TravelBoardQueryForm(
                 destination: $destination,
-                numberOfDays: $numberOfDays)
+                numberOfDays: $numberOfDays
+            )
+            .toolbar {  // MARK: dismiss sheet
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("cancel") {
+                        dismiss()
+                    }
+                    .tint(.red)
+                }
+            }
         }
     }
 }
 
-struct GenTravelBoardFormView: View {
+struct TravelBoardQueryForm: View {
     @Binding var destination: String
     @Binding var numberOfDays: Int
 
@@ -56,7 +67,7 @@ struct GenTravelBoardFormView: View {
 
             // MARK: Submit Button
             NavigationLink {
-                GenItineraryView(
+                GenTravelBoardView(
                     destination: self.destination, numOfDays: self.numberOfDays)
             } label: {
                 Text("Visualize")
@@ -78,5 +89,5 @@ struct GenTravelBoardFormView: View {
 }
 
 #Preview {
-    GenItineraryFormView()
+    GenTravelBoardFormView()
 }

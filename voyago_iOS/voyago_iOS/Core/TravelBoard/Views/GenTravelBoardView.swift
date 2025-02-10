@@ -1,5 +1,5 @@
 //
-//  GenItineraryView.swift
+//  GenTravelBoardView.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 1/28/25.
@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-// TODO: Save previous generated itineraries
 /// View of the generated itinerary
-struct GenItineraryView: View {
+struct GenTravelBoardView: View {
     @State private var viewModel = GenItineraryViewModel()
     let destination: String
     let numOfDays: Int
@@ -18,6 +17,7 @@ struct GenItineraryView: View {
         switch viewModel.viewState {
         case .Loading:
             VisualizingProgressView()
+                .navigationBarBackButtonHidden()
                 .navigationBarTitle(
                     "Generating Itinerary...", displayMode: .inline
                 )
@@ -32,7 +32,6 @@ struct GenItineraryView: View {
                 ItineraryDetailsView(
                     destination: destination, itinerary: itinerary
                 )
-
                 .onDisappear {
                     // FIXME: clicking on image card then going back shouldnt reset
                     // self.viewModel.reset()
@@ -50,7 +49,7 @@ struct GenItineraryView: View {
 // MARK: - Itinerary Details View
 struct ItineraryDetailsView: View {
     let destination: String
-    let itinerary: VisualItinerary
+    let itinerary: GeneratedTravelBoard
 
     var navTitle: String {
         "Your trip in \(destination)"
@@ -111,7 +110,7 @@ struct SightRecommendationCard: View {
 
 // MARK: - Itinerary Images View
 struct ItineraryImagesView: View {
-    let itinerary: VisualItinerary
+    let itinerary: GeneratedTravelBoard
 
     var body: some View {
         TabView {
@@ -174,6 +173,5 @@ struct SectionContainer<Content: View>: View {
 }
 
 #Preview {
-
-    GenItineraryView(destination: "Prague", numOfDays: 2)
+    GenTravelBoardView(destination: "Prague", numOfDays: 2)
 }

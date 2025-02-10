@@ -24,6 +24,7 @@ class Itinerary(BaseModel):
 class VisualItinerary(Itinerary):
     """model of a full trip plan provided to users"""
     images: dict[str, list[VoyagoImage]]
+    destination_image: VoyagoImage
 
 
 class RecommendationQuery(BaseModel):

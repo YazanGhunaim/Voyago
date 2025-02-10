@@ -84,7 +84,8 @@ class Voyago:
             raise TripPlanGenerationError(f"Trip plan generation failed due to an empty itinerary.")
 
         images = self._get_images_from_itinerary(itinerary=itinerary)
-        plan = VisualItinerary(**itinerary.model_dump(), images=images)
+        destination_image = self.get_images(query=query.destination, count=1, page=1)[0]
+        plan = VisualItinerary(**itinerary.model_dump(), images=images, destination_image=destination_image)
 
         return plan
 
