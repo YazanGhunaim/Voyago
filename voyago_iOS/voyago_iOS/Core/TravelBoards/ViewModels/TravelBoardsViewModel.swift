@@ -10,7 +10,7 @@ import Foundation
 @Observable
 @MainActor
 class TravelBoardsViewModel {
-    var travelBoards: UserVisualItineraries?
+    var travelBoards: UserTravelBoards?
 
     init() {
         Task { await self.getUserTravelBoards() }
@@ -26,7 +26,7 @@ extension TravelBoardsViewModel {
         case .success(let boards):
             VoyagoLogger.shared.logger.info(
                 "Successfully retrieved user travel boards")
-
+            
             self.travelBoards = boards
         case .failure(let error):
             VoyagoLogger.shared.logger.error(

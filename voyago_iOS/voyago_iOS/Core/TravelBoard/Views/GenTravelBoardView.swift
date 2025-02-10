@@ -50,7 +50,7 @@ struct GenTravelBoardView: View {
 // MARK: - Itinerary Details View
 struct ItineraryDetailsView: View {
     let destination: String
-    let itinerary: VisualItinerary
+    let itinerary: GeneratedTravelBoard
 
     var navTitle: String {
         "Your trip in \(destination)"
@@ -111,7 +111,7 @@ struct SightRecommendationCard: View {
 
 // MARK: - Itinerary Images View
 struct ItineraryImagesView: View {
-    let itinerary: VisualItinerary
+    let itinerary: GeneratedTravelBoard
 
     var body: some View {
         TabView {

@@ -14,8 +14,8 @@ from backend.rest_app.models.auth import AuthHeaders
 from backend.rest_app.utils.auth import set_supabase_session
 
 # TODO: require authentication (valid user)
-# TODO: RLS on travel_boards ( only valid users )
 # TODO: Tables names config?
+# TODO: Database migrations
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
@@ -26,15 +26,17 @@ def get_visual_itinerary_for_user(auth: AuthHeaders = Depends(get_auth_headers),
 
     :param auth: AuthHeaders
     :param supabase_client: Supabase client
-    :return: List of visual itineraries
+    :return: List of visual itineraries alongside the query details that generated them
     """
     try:
         set_supabase_session(auth=auth, supabase_client=supabase_client)
         uid = supabase_client.auth.get_user().user.id  # extract current uid
         response = (
             supabase_client
-            .table("travel_boards")
-            .select("*")
+            .from_("travel_boards")
+            .select(
+                "plan, images, recommendations, destination_image, recommendation_queries(destination, days)"
+            )  # join
             .eq("user_id", uuid.UUID(uid))
             .execute()
         )
@@ -56,22 +58,35 @@ def get_visual_itinerary(query: RecommendationQuery, voyago=Depends(get_voyago),
     :return: VisualItinerary
     """
     try:
-        visual_itinerary = voyago.generate_visual_itinerary(query=query).model_dump()
+        # get uid
         uid = supabase_client.auth.get_user().user.id  # extract current uid
-        visual_itinerary["user_id"] = uid  # Append uid to model
-        # TODO: fix this ass solution
-        visual_itinerary["destination"] = query.destination
-        visual_itinerary["days"] = query.days
 
+        # get models
+        visual_itinerary_model = voyago.generate_visual_itinerary(query=query).model_dump()
+        query_model = query.model_dump()
 
-        # Insert Itinerary into table
+        # append uid to models
+        query_model["user_id"] = uid
+        visual_itinerary_model["user_id"] = uid
+
+        query_id = (
+            supabase_client
+            .table("recommendation_queries")
+            .insert(query_model)
+            .execute()
+        ).data[0]["id"]
+
+        # append query_id
+        visual_itinerary_model["query_id"] = query_id
+
+        # insert travel board
         (
             supabase_client.table("travel_boards")
-            .insert(visual_itinerary)
+            .insert(visual_itinerary_model)
             .execute()
         )
 
-        return visual_itinerary
+        return visual_itinerary_model
     except TripPlanGenerationError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")
     except Exception as e:

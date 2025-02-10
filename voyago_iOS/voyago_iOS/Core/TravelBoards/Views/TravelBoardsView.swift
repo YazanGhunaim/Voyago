@@ -16,34 +16,40 @@ struct TravelBoardsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 15) {
-                    ForEach(viewModel.travelBoards!.data, id: \.id) { board in
-                        TravelBoardCard(
-                            recommendationQuery: RecommendationQuery(
-                                destination: board.destination, days: board.days
-                            ),
-                            image: voyagoImageMock)
+            if let userTravelBoards = viewModel.travelBoards {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 15) {
+                        ForEach(userTravelBoards.data, id: \.id) { board in
+                            TravelBoardCard(
+                                recommendationQuery: RecommendationQuery(
+                                    destination: board.recommendationQuery!
+                                        .destination,
+                                    days: board.recommendationQuery!.days
+                                ),
+                                image: board.destinationImage)
+                        }
                     }
                 }
-            }
-            .navigationTitle("Travel boards")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(
-                        action: {
-                            showingSheet.toggle()
-                        },
-                        label: {
-                            Image(systemName: "plus")
-                        }
-                    )
-                    .tint(.primary)
+                .navigationTitle("Travel boards")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(
+                            action: {
+                                showingSheet.toggle()
+                            },
+                            label: {
+                                Image(systemName: "plus")
+                            }
+                        )
+                        .tint(.primary)
+                    }
                 }
-            }
-            .sheet(isPresented: $showingSheet) {
-                GenTravelBoardFormView()
-                    .interactiveDismissDisabled()
+                .sheet(isPresented: $showingSheet) {
+                    GenTravelBoardFormView()
+                        .interactiveDismissDisabled()
+                }
+            } else {
+                Text("woops")
             }
         }
     }
