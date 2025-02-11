@@ -11,6 +11,9 @@ import SwiftUI
 struct TravelBoardsView: View {
     @State private var viewModel = TravelBoardsViewModel()
     @State private var showingSheet = false
+    @State private var showingAlert = false
+
+    @Environment(GenTravelBoardFormViewModel.self) private var genFormViewModel
 
     var body: some View {
         NavigationStack {
@@ -24,9 +27,19 @@ struct TravelBoardsView: View {
                     }
                 }
             case _:
-                TravelBoardsScrollView(
-                    viewModel: viewModel, showingSheet: $showingSheet
-                )
+                switch genFormViewModel.viewState {
+                case .Success, nil:
+                    TravelBoardsScrollView(
+                        viewModel: viewModel, showingSheet: $showingSheet
+                    )
+                    .task {
+                        await viewModel.getUserTravelBoards()
+                    }
+                case .Loading:
+                    VisualizingProgressView()
+                case .Failure(_):
+                    EmptyView()  // TODO: Alert
+                }
             }
         }
     }
@@ -44,13 +57,7 @@ struct TravelBoardsScrollView: View {
                 VStack(alignment: .leading, spacing: 15) {
                     ForEach(viewModel.travelBoards!.data, id: \.id) {
                         board in
-                        TravelBoardCard(
-                            recommendationQuery: RecommendationQuery(
-                                destination: board.recommendationQuery!
-                                    .destination,
-                                days: board.recommendationQuery!.days
-                            ),
-                            image: board.destinationImage)
+                        TravelBoardCardButtonView(board: board)
                     }
                 }
             }
@@ -76,7 +83,26 @@ struct TravelBoardsScrollView: View {
         }
         .sheet(isPresented: $showingSheet) {
             GenTravelBoardFormView()
-                .interactiveDismissDisabled()
+        }
+    }
+}
+
+struct TravelBoardCardButtonView: View {
+    let board: GeneratedTravelBoard
+
+    var body: some View {
+        NavigationLink {
+            // MARK: TravelBoard details view
+            TravelBoardDetailsView(travelBoard: board)
+        } label: {
+            // MARK: TravelBoard card
+            TravelBoardCard(
+                recommendationQuery: RecommendationQuery(
+                    destination: board.recommendationQuery!
+                        .destination,
+                    days: board.recommendationQuery!.days
+                ),
+                image: board.destinationImage)
         }
     }
 }
@@ -108,6 +134,29 @@ struct NoTravelBoardsView: View {
         .shadow(radius: 10)
         .padding()
 
+    }
+}
+
+/// Custom progress bar
+struct VisualizingProgressView: View {
+    var body: some View {
+        ZStack {
+            VStack(spacing: 10) {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
+                    .scaleEffect(1.5)
+
+                Text("Visualizing your trip...")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.systemGray6))
+                    .shadow(radius: 4)
+            )
+        }
     }
 }
 

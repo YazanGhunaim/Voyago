@@ -1,5 +1,5 @@
 //
-//  GenItineraryViewModel.swift
+//  GenTravelBoardFormViewModel.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 1/26/25.
@@ -7,15 +7,15 @@
 
 import Foundation
 
-/// GenItineraryViewModel responsible for managing data related to the generate itinerary view
+/// GenTravelBoardFormViewModel responsible for managing data related to the generate itinerary view
 @Observable
 @MainActor
-class GenItineraryViewModel {
+class GenTravelBoardFormViewModel {
     var generatedItinerary: GeneratedTravelBoard? = nil
-    var viewState: ViewState = .Loading
+    var viewState: ViewState?
 }
 
-extension GenItineraryViewModel {
+extension GenTravelBoardFormViewModel {
     // Enum to distinguish viewstate
     enum ViewState: Equatable {
         case Loading
@@ -24,10 +24,13 @@ extension GenItineraryViewModel {
     }
 }
 
-extension GenItineraryViewModel {
+extension GenTravelBoardFormViewModel {
     /// Gets the generated travel board from the voyago service
     /// - Parameter query: RecommendationQuery
     func getGeneratedTravelBoard(query: RecommendationQuery) async {
+        guard self.viewState != .Loading else { return }
+        self.viewState = .Loading
+
         VoyagoLogger.shared.logger.info("Fetching generated itinerary")
 
         let result =

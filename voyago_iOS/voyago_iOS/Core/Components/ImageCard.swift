@@ -16,13 +16,13 @@ struct ImageCard: View {
         VStack(alignment: .leading, spacing: 5) {
             // MARK: Image
             NavigationLink {
-                ImageDetailsView(image: self.image)
+                ImageDetailsView(image: image)
             } label: {
-                LoadedImage(imageUrl: self.image.regularUrl)
+                LoadedImage(image: image)
             }
 
             // MARK: Image metadata
-            ImageMetaData(image: self.image)
+            ImageMetaData(image: image)
                 .padding(.horizontal, 8)
         }
         //        .clipShape(.rect(cornerRadius: 20))
@@ -34,14 +34,15 @@ struct ImageCard: View {
 ///
 /// Uses KingFischer for image loading and caching
 struct LoadedImage: View {
-    let imageUrl: String
+    let image: VoyagoImage
 
     var body: some View {
-        KFImage(URL(string: self.imageUrl))
+        KFImage(URL(string: image.regularUrl))
             .placeholder({ Rectangle().fill(Color.indigo).opacity(0.25) })
             .fade(duration: 1)
             .resizable()
-            .scaledToFill() // extreme sus :o
+//            .scaledToFill()  // extreme sus :o
+            .scaledToFit()
             .clipShape(.rect(cornerRadius: 10))
     }
 }
@@ -69,6 +70,6 @@ struct ImageMetaData: View {
 
 #Preview {
     ImageCard(
-        image: voyagoImageMock
+        image: mockVoyagoImage
     )
 }

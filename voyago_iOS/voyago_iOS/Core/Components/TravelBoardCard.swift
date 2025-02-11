@@ -21,21 +21,31 @@ struct TravelBoardCard: View {
                 .resizable()
 
             // MARK: Destination Data
-            VStack(alignment: .center) {
-                Text("\(self.recommendationQuery.destination)")
-                    .font(.largeTitle)
+            HStack {
+                Spacer()
 
-                self.recommendationQuery.days > 1
-                    ? Text("\(self.recommendationQuery.days) days")
-                    : Text("\(self.recommendationQuery.days) day")
+                VStack(alignment: .center) {
+                    Text("\(self.recommendationQuery.destination)")
+                        .font(.largeTitle)
+
+                    self.recommendationQuery.days > 1
+                        ? Text("\(self.recommendationQuery.days) days")
+                        : Text("\(self.recommendationQuery.days) day")
+                }
+                .foregroundColor(.white)
+                .padding()
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.white)
+                    .padding(.trailing)
             }
-            .foregroundColor(.white)
-            .padding()
         }
         .frame(height: 150)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
-//        .shadow(color: .secondary, radius: 5)
+        //        .shadow(color: .secondary, radius: 5)
     }
 }
 
@@ -43,5 +53,5 @@ struct TravelBoardCard: View {
     TravelBoardCard(
         recommendationQuery: RecommendationQuery(
             destination: "Czech Republic", days: 5),
-        image: voyagoImageMock)
+        image: mockVoyagoImage)
 }

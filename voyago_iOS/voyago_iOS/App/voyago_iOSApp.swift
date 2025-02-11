@@ -7,13 +7,16 @@
 
 import SwiftUI
 
-
 /// Main entry point to the app
 @main
 struct voyago_iOSApp: App {
+    @State private var genTravelBoardFormViewModel =
+        GenTravelBoardFormViewModel()
+
     var body: some Scene {
         WindowGroup {
             TabBarView()
+                .environment(genTravelBoardFormViewModel)
         }
     }
 }

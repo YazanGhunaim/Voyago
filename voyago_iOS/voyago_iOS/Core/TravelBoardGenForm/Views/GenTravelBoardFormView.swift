@@ -14,32 +14,31 @@ struct GenTravelBoardFormView: View {
     @State private var destination: String = ""
     @State private var numberOfDays: Int = 1
 
+    @Environment(GenTravelBoardFormViewModel.self) private var viewModel
+
     var body: some View {
         NavigationStack {
             // MARK: Form
             TravelBoardQueryForm(
                 destination: $destination,
-                numberOfDays: $numberOfDays
+                numberOfDays: $numberOfDays,
+                viewModel: viewModel
             )
-            .toolbar {  // MARK: dismiss sheet
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("cancel") {
-                        dismiss()
-                    }
-                    .tint(.red)
-                }
-            }
         }
     }
 }
 
 struct TravelBoardQueryForm: View {
+    @Environment(\.dismiss) var dismiss
     @Binding var destination: String
     @Binding var numberOfDays: Int
+
+    let viewModel: GenTravelBoardFormViewModel
 
     var formNotFilled: Bool {
         destination.isEmpty
     }
+
     var numberOfDaysText: String {
         "\(self.numberOfDays)" + (self.numberOfDays > 1 ? " days" : " day")
     }
@@ -57,7 +56,7 @@ struct TravelBoardQueryForm: View {
 
             // MARK: Duration Input
             VStack(alignment: .leading, spacing: 8) {
-                Text("How many days?")
+                Text("How long will you be staying?")
                     .font(.headline)
                 Stepper(value: $numberOfDays, in: 1...14) {
                     Text(numberOfDaysText)
@@ -66,9 +65,13 @@ struct TravelBoardQueryForm: View {
             }
 
             // MARK: Submit Button
-            NavigationLink {
-                GenTravelBoardView(
-                    destination: self.destination, numOfDays: self.numberOfDays)
+            Button {
+                Task {
+                    await viewModel.getGeneratedTravelBoard(
+                        query: RecommendationQuery(
+                            destination: destination, days: numberOfDays))
+                }
+                dismiss()
             } label: {
                 Text("Visualize")
                     .frame(maxWidth: .infinity)
@@ -81,6 +84,19 @@ struct TravelBoardQueryForm: View {
             }
             .disabled(self.formNotFilled)
 
+            //            NavigationLink {
+            //                switch viewModel.viewState {
+            //                case .Loading:
+            //                    VisualizingProgressView()
+            //                case .Success:
+            //                    Text("Hello")
+            //                case .Failure(_):
+            //                    ErrorView()
+            //                }
+            //            } label: {
+            //
+            //            }
+
             Spacer()
         }
         .padding()
@@ -88,6 +104,6 @@ struct TravelBoardQueryForm: View {
     }
 }
 
-#Preview {
-    GenTravelBoardFormView()
-}
+//#Preview {
+//    GenTravelBoardFormView()
+//}

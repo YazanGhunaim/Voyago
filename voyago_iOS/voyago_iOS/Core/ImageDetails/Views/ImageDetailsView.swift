@@ -45,5 +45,5 @@ struct ImageDetailsView: View {
 }
 
 #Preview {
-    ImageDetailsView(image: voyagoImageMock)
+    ImageDetailsView(image: mockVoyagoImage)
 }
