@@ -12,13 +12,16 @@ struct TravelBoardCard: View {
     let recommendationQuery: RecommendationQuery
     let image: VoyagoImage
 
+    private var tripDurationString: String {
+        recommendationQuery.days > 1
+            ? "\(self.recommendationQuery.days) days"
+            : "\(self.recommendationQuery.days) day"
+    }
+
     var body: some View {
         ZStack {
             // MARK: Destination background image
-            KFImage(URL(string: self.image.regularUrl))
-                .placeholder({ Rectangle().fill(Color.indigo).opacity(0.25) })
-                .fade(duration: 1)
-                .resizable()
+            VoyagoImageCard(image: image, cornerRadius: 0)
 
             // MARK: Destination Data
             HStack {
@@ -28,9 +31,7 @@ struct TravelBoardCard: View {
                     Text("\(self.recommendationQuery.destination)")
                         .font(.largeTitle)
 
-                    self.recommendationQuery.days > 1
-                        ? Text("\(self.recommendationQuery.days) days")
-                        : Text("\(self.recommendationQuery.days) day")
+                    Text(tripDurationString)
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -45,7 +46,6 @@ struct TravelBoardCard: View {
         .frame(height: 150)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
-        //        .shadow(color: .secondary, radius: 5)
     }
 }
 

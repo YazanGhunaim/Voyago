@@ -38,8 +38,9 @@ extension TravelBoardsViewModel {
             guard self.viewState != .Fetching else { return }
             self.viewState = .Fetching
         }
+        
         let result = await VoyagoService.shared.fetchUserTravelBoards()
-
+        
         switch result {
         case .success(let boards):
             VoyagoLogger.shared.logger.info(

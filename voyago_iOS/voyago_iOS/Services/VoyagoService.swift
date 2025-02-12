@@ -10,7 +10,7 @@ import Foundation
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.0.121:8000"
+    private let baseUrl = "http://192.168.0.122:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -139,7 +139,7 @@ extension VoyagoService {
             headers: [
                 "Authorization":
                     "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InZieXJHR3NaT2FrYzluYTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2NqaHV6bWZjbXd4cnZtdWJjY21xLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwY2M3ZWMxMS05ZjY0LTQ2NWEtODRiNy0zOTJlMmZkYzczMDciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM5MjE3NDgzLCJpYXQiOjE3MzkyMTM4ODMsImVtYWlsIjoieWF6YW5naHVuYWltMDdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InlhemFuZ2h1bmFpbTA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjBjYzdlYzExLTlmNjQtNDY1YS04NGI3LTM5MmUyZmRjNzMwNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM5MjEzODgzfV0sInNlc3Npb25faWQiOiI5OGM0MGRmNi1hYjIzLTQ5ZDgtODE1Yy1lMWZmYjVlYWRlYzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.73MA-fU40FusRbMLCCwJlGjuf0HVkfCi9fsn4P_J18M",
-                "refresh-token": "g1ob2r5v5YrvYt8V-zOXmg",
+                "refresh-token": "808DjJ46P-Mmqx-lrqiGtg",
             ])
 
         return res

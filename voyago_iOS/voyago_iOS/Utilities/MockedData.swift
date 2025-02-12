@@ -20,6 +20,9 @@ let mockVoyagoImage = VoyagoImage(
     ]
 )
 
+let mockRecommendationQuery = RecommendationQuery(
+    destination: "Czech Republic", days: 3)
+
 let mockTravelBoard = GeneratedTravelBoard(
     plan: [
         DayPlan(

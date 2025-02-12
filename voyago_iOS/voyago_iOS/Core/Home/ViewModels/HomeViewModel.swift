@@ -57,6 +57,12 @@ extension HomeViewModel {
         self.images.removeAll()
     }
 
+    /// reload view
+    func reload(initial: Bool) async {
+        self.reset()
+        await self.getImages(initial: initial)
+    }
+
     /// function to check whether or not the image viewed by the user is the last
     func lastImage(image: VoyagoImage) -> Bool {
         self.images.last?.id == image.id
