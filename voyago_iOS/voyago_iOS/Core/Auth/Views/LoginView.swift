@@ -13,73 +13,75 @@ struct LoginView: View {
     //    @EnvironmentObject var viewModel: AuthViewModel
 
     var body: some View {
-        VStack {
-            // MARK: header
-            AuthHeaderView(title1: "Hello.", title2: "Welcome back")
+        NavigationStack {
+            VStack {
+                // MARK: header
+                AuthHeaderView(title1: "Hello.", title2: "Welcome back")
 
-            VStack(spacing: 40) {
-                VoyagoInputField(
-                    imageName: "envelope", placeHolderText: "Email",
-                    text: $email
-                )
+                VStack(spacing: 40) {
+                    VoyagoInputField(
+                        imageName: "envelope", placeHolderText: "Email",
+                        text: $email
+                    )
 
-                VoyagoInputField(
-                    imageName: "lock", placeHolderText: "Password",
-                    isSecureField: true, text: $password
-                )
-            }
-            .padding(.horizontal, 32)
-            .padding(.top, 44)
+                    VoyagoInputField(
+                        imageName: "lock", placeHolderText: "Password",
+                        isSecureField: true, text: $password
+                    )
+                }
+                .padding(.horizontal, 32)
+                .padding(.top, 44)
 
-            HStack {
+                HStack {
+                    Spacer()
+
+                    NavigationLink {
+                        Text("Reset Password View..")
+                    } label: {
+                        Text("Forgot Password?")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(.systemIndigo))
+                            .padding(.top)
+                            .padding(.trailing, 24)
+                    }
+
+                }
+
+                Button {
+                    //                viewModel.login(withEmail: email, password: password)
+                } label: {
+                    Text("Sign in")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(width: 340, height: 50)
+                        .background(Color(.systemIndigo))
+                        .clipShape(Capsule())
+                        .padding()
+                }
+                .shadow(color: .gray.opacity(0.5), radius: 10, x: 0, y: 0)
+
                 Spacer()
 
                 NavigationLink {
-                    Text("Reset Password View..")
+                    RegistrationView()
+                        .toolbar(.hidden, for: .navigationBar)
                 } label: {
-                    Text("Forgot Password?")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color(.systemIndigo))
-                        .padding(.top)
-                        .padding(.trailing, 24)
+                    HStack {
+                        Text("Dont have an account?")
+                            .font(.footnote)
+
+                        Text("Sign Up")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                    }
                 }
-
+                .padding(.bottom, 32)
+                .foregroundStyle(Color(.systemIndigo))
             }
-
-            Button {
-                //                viewModel.login(withEmail: email, password: password)
-            } label: {
-                Text("Sign in")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(width: 340, height: 50)
-                    .background(Color(.systemIndigo))
-                    .clipShape(Capsule())
-                    .padding()
-            }
-            .shadow(color: .gray.opacity(0.5), radius: 10, x: 0, y: 0)
-
-            Spacer()
-
-            NavigationLink {
-                RegistrationView()
-                    .toolbar(.hidden, for: .navigationBar)
-            } label: {
-                HStack {
-                    Text("Dont have an account?")
-                        .font(.footnote)
-
-                    Text("Sign Up")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                }
-            }
-            .padding(.bottom, 32)
-            .foregroundStyle(Color(.systemIndigo))
+            .ignoresSafeArea()
+            .toolbar(.hidden, for: .navigationBar)
         }
-        .ignoresSafeArea()
-        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
