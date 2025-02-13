@@ -12,8 +12,9 @@ struct RegistrationView: View {
     @State private var username = ""
     @State private var fullname = ""
     @State private var password = ""
+
     @Environment(\.dismiss) var dismiss
-    //    @EnvironmentObject var viewModel: AuthViewModel
+    @Environment(AuthViewModel.self) private var viewModel
 
     var body: some View {
         VStack {
@@ -23,16 +24,12 @@ struct RegistrationView: View {
 
             VStack(spacing: 40) {
                 VoyagoInputField(
-                    imageName: "envelope", placeHolderText: "Email",
-                    text: $email)
-
-                VoyagoInputField(
                     imageName: "person", placeHolderText: "Username",
                     text: $username)
 
                 VoyagoInputField(
-                    imageName: "person", placeHolderText: "Full name",
-                    text: $fullname)
+                    imageName: "envelope", placeHolderText: "Email",
+                    text: $email)
 
                 VoyagoInputField(
                     imageName: "lock", placeHolderText: "Password",
@@ -41,9 +38,10 @@ struct RegistrationView: View {
             .padding(32)
 
             Button {
-                //                    viewModel.register(
-                //                        withEmail: email, password: password,
-                //                        fullname: fullname, username: username)
+                Task {
+                    await viewModel.registerAndLoginWithEmailAndPassword(
+                        username: username, email: email, password: password)
+                }
             } label: {
                 Text("Sign up")
                     .font(.headline)
@@ -78,7 +76,6 @@ struct RegistrationView: View {
         //            {
         //                ProfilePhotoSelectorView()
         //            }
-
     }
 }
 

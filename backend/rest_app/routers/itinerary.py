@@ -13,12 +13,12 @@ from backend.rest_app.dependencies.voyago_client import get_voyago
 from backend.rest_app.models.auth import AuthHeaders
 from backend.rest_app.utils.auth import set_supabase_session
 
-# TODO: require authentication (valid user)
 # TODO: Tables names config?
 # TODO: Database migrations
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
+# TODO: return refresh token
 @router.get("/user", status_code=status.HTTP_200_OK)
 def get_visual_itinerary_for_user(auth: AuthHeaders = Depends(get_auth_headers),
                                   supabase_client: Client = Depends(get_supabase_client)):

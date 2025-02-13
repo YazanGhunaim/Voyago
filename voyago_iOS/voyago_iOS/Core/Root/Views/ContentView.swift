@@ -12,7 +12,7 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if authViewModel.userTokens != nil {
+            if authViewModel.isLoggedIn {
                 TabBarView()
             } else {
                 LoginView()

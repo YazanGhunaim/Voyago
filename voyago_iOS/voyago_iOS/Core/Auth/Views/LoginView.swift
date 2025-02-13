@@ -9,6 +9,7 @@ import SwiftUI
 
 // TODO: Fix keyboard covering text field
 // TODO: Dismiss keyboard on screen tap
+// TODO: Buttons disabled if no input
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
@@ -94,6 +95,6 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView()
+//}

@@ -21,6 +21,20 @@ class VoyagoService: APIClient {
 }
 
 extension VoyagoService {
+    private var accessToken: String? {
+        AuthTokensKeychainManager.shared.getToken(forKey: .accessToken)
+    }
+
+    private var refreshToken: String? {
+        AuthTokensKeychainManager.shared.getToken(forKey: .refreshToken)
+    }
+
+    private var isAuthenticated: Bool {
+        (accessToken != nil) && (refreshToken != nil)
+    }
+}
+
+extension VoyagoService {
     func fetch<T>(
         url: String,
         parameters: [String: String]? = nil,
@@ -128,7 +142,6 @@ extension VoyagoService {
 
 extension VoyagoService {
     /// Fetches travel boards that the user created
-    // TODO: pass user auth headers
     func fetchUserTravelBoards() async -> Result<
         UserTravelBoards, APIError
     > {
@@ -136,10 +149,10 @@ extension VoyagoService {
             url: self.baseUrl + "/itinerary/user",
             method: .GET,
             headers: [
-                "Authorization":
-                    "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InZieXJHR3NaT2FrYzluYTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2NqaHV6bWZjbXd4cnZtdWJjY21xLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwY2M3ZWMxMS05ZjY0LTQ2NWEtODRiNy0zOTJlMmZkYzczMDciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM5MjE3NDgzLCJpYXQiOjE3MzkyMTM4ODMsImVtYWlsIjoieWF6YW5naHVuYWltMDdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InlhemFuZ2h1bmFpbTA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjBjYzdlYzExLTlmNjQtNDY1YS04NGI3LTM5MmUyZmRjNzMwNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM5MjEzODgzfV0sInNlc3Npb25faWQiOiI5OGM0MGRmNi1hYjIzLTQ5ZDgtODE1Yy1lMWZmYjVlYWRlYzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.73MA-fU40FusRbMLCCwJlGjuf0HVkfCi9fsn4P_J18M",
-                "refresh-token": "808DjJ46P-Mmqx-lrqiGtg",
-            ])
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
 
         return res
     }
@@ -147,7 +160,9 @@ extension VoyagoService {
 
 // MARK: - Auth Email and Password
 extension VoyagoService {
-    func signInWithEmailAndPassword(withCredentials creditials: UserCredintials)
+    func signInWithEmailAndPassword(
+        withCredentials creditials: UserLoginCredintails
+    )
         async -> Result<AuthResponse, APIError>
     {
         let res: Result<AuthResponse, APIError> = await fetch(
@@ -159,7 +174,9 @@ extension VoyagoService {
         return res
     }
 
-    func signUpWithEmailAndPassword(withCredentials creditials: UserCredintials)
+    func signUpWithEmailAndPassword(
+        withCredentials creditials: UserLoginCredintails
+    )
         async -> Result<AuthResponse, APIError>
     {
         let res: Result<AuthResponse, APIError> = await fetch(

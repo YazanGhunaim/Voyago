@@ -11,6 +11,8 @@ from backend.rest_app.models.users import UserLogin
 from backend.rest_app.utils.auth import set_supabase_session
 
 # TODO: Add Unauthorized exceptions
+# TODO: User database
+
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
