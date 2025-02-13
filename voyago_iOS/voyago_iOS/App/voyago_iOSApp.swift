@@ -13,10 +13,13 @@ struct voyago_iOSApp: App {
     @State private var genTravelBoardFormViewModel =
         GenTravelBoardFormViewModel()
 
+    @State private var authViewModel = AuthViewModel()
+
     var body: some Scene {
         WindowGroup {
-            TabBarView()
+            ContentView()
                 .environment(genTravelBoardFormViewModel)
+                .environment(authViewModel)
         }
     }
 }

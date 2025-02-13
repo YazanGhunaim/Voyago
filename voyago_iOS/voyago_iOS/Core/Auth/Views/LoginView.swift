@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+// TODO: Fix keyboard covering text field
+// TODO: Dismiss keyboard on screen tap
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
-    //    @EnvironmentObject var viewModel: AuthViewModel
+    @Environment(AuthViewModel.self) private var viewModel
 
     var body: some View {
         NavigationStack {
@@ -18,6 +20,7 @@ struct LoginView: View {
                 // MARK: header
                 AuthHeaderView(title1: "Hello.", title2: "Welcome back")
 
+                // MARK: Input fields
                 VStack(spacing: 40) {
                     VoyagoInputField(
                         imageName: "envelope", placeHolderText: "Email",
@@ -32,6 +35,7 @@ struct LoginView: View {
                 .padding(.horizontal, 32)
                 .padding(.top, 44)
 
+                // TODO: Forgot password
                 HStack {
                     Spacer()
 
@@ -48,8 +52,12 @@ struct LoginView: View {
 
                 }
 
+                // MARK: Sign in
                 Button {
-                    //                viewModel.login(withEmail: email, password: password)
+                    Task {
+                        await viewModel.loginWithEmailAndPassword(
+                            email: email, password: password)
+                    }
                 } label: {
                     Text("Sign in")
                         .font(.headline)
@@ -63,6 +71,7 @@ struct LoginView: View {
 
                 Spacer()
 
+                // MARK: Navigation to signup
                 NavigationLink {
                     RegistrationView()
                         .toolbar(.hidden, for: .navigationBar)

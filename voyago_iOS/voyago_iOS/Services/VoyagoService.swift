@@ -127,7 +127,6 @@ extension VoyagoService {
 }
 
 extension VoyagoService {
-
     /// Fetches travel boards that the user created
     // TODO: pass user auth headers
     func fetchUserTravelBoards() async -> Result<
@@ -141,6 +140,33 @@ extension VoyagoService {
                     "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InZieXJHR3NaT2FrYzluYTUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2NqaHV6bWZjbXd4cnZtdWJjY21xLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwY2M3ZWMxMS05ZjY0LTQ2NWEtODRiNy0zOTJlMmZkYzczMDciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM5MjE3NDgzLCJpYXQiOjE3MzkyMTM4ODMsImVtYWlsIjoieWF6YW5naHVuYWltMDdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InlhemFuZ2h1bmFpbTA3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjBjYzdlYzExLTlmNjQtNDY1YS04NGI3LTM5MmUyZmRjNzMwNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM5MjEzODgzfV0sInNlc3Npb25faWQiOiI5OGM0MGRmNi1hYjIzLTQ5ZDgtODE1Yy1lMWZmYjVlYWRlYzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.73MA-fU40FusRbMLCCwJlGjuf0HVkfCi9fsn4P_J18M",
                 "refresh-token": "808DjJ46P-Mmqx-lrqiGtg",
             ])
+
+        return res
+    }
+}
+
+// MARK: - Auth Email and Password
+extension VoyagoService {
+    func signInWithEmailAndPassword(withCredentials creditials: UserCredintials)
+        async -> Result<AuthResponse, APIError>
+    {
+        let res: Result<AuthResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/sign_in",
+            method: .POST,
+            body: creditials
+        )
+
+        return res
+    }
+
+    func signUpWithEmailAndPassword(withCredentials creditials: UserCredintials)
+        async -> Result<AuthResponse, APIError>
+    {
+        let res: Result<AuthResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/sign_up",
+            method: .POST,
+            body: creditials
+        )
 
         return res
     }
