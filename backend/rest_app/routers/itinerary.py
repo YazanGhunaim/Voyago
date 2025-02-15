@@ -10,28 +10,29 @@ from backend.app.models.recommendations import RecommendationQuery, VisualItiner
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
 from backend.rest_app.dependencies.voyago_client import get_voyago
-from backend.rest_app.models.auth import AuthHeaders
+from backend.rest_app.models.auth import AuthTokens
+from backend.rest_app.models.response import VoyagoSessionResponse
 from backend.rest_app.utils.auth import set_supabase_session
+from backend.rest_app.utils.response import create_voyago_session_response
 
 # TODO: Tables names config?
 # TODO: Database migrations
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
-# TODO: return refresh token
-@router.get("/user", status_code=status.HTTP_200_OK)
-def get_visual_itinerary_for_user(auth: AuthHeaders = Depends(get_auth_headers),
+@router.get("/user", response_model=VoyagoSessionResponse, status_code=status.HTTP_200_OK)
+def get_visual_itinerary_for_user(auth: AuthTokens = Depends(get_auth_headers),
                                   supabase_client: Client = Depends(get_supabase_client)):
     """Retrieves all user generated itineraries
 
     :param auth: AuthHeaders
     :param supabase_client: Supabase client
-    :return: List of visual itineraries alongside the query details that generated them
+    :return: List of visual itineraries + query details that generated them + auth tokens
     """
     try:
-        set_supabase_session(auth=auth, supabase_client=supabase_client)
+        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
         uid = supabase_client.auth.get_user().user.id  # extract current uid
-        response = (
+        data = (
             supabase_client
             .from_("travel_boards")
             .select(
@@ -41,6 +42,7 @@ def get_visual_itinerary_for_user(auth: AuthHeaders = Depends(get_auth_headers),
             .execute()
         )
 
+        response = create_voyago_session_response(response=data, auth_response=auth_response)
         return response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")

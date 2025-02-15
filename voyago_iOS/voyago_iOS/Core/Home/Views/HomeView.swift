@@ -21,10 +21,7 @@ struct HomeView: View {
             case .Loading, nil:
                 ProgressView()
             case .Failure(_):
-                ErrorView {
-                    // onReload action
-                    Task { await viewModel.reload(initial: true) }
-                }
+                ErrorView { Task { await viewModel.reload(initial: true) } }
             case _:
                 HomeScrollView(viewModel: viewModel)
             }

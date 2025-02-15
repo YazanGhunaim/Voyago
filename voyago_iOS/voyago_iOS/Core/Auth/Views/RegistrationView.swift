@@ -19,8 +19,7 @@ struct RegistrationView: View {
     var body: some View {
         VStack {
             // MARK: Header
-            AuthHeaderView(
-                title1: "Get started.", title2: "Create your account")
+            AuthHeaderView(title1: "Get started.", title2: "Create your account")
 
             VStack(spacing: 40) {
                 VoyagoInputField(
@@ -38,10 +37,7 @@ struct RegistrationView: View {
             .padding(32)
 
             Button {
-                Task {
-                    await viewModel.registerAndLoginWithEmailAndPassword(
-                        username: username, email: email, password: password)
-                }
+                Task { await viewModel.registerWithEmailAndPassword(email: email, password: password) }
             } label: {
                 Text("Sign up")
                     .font(.headline)

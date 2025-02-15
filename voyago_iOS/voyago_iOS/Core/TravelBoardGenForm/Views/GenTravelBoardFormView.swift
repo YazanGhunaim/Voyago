@@ -51,9 +51,7 @@ struct GenTravelBoardFormView: View {
                     Text("Visualize")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(
-                            self.formNotFilled ? Color.gray : Color.indigo
-                        )
+                        .background(self.formNotFilled ? Color.gray : Color.indigo)
                         .foregroundColor(.white)
                         .cornerRadius(15)
                 }
@@ -68,11 +66,8 @@ struct GenTravelBoardFormView: View {
 }
 
 extension GenTravelBoardFormView {
-
     func submit() async {
-        let query = RecommendationQuery(
-            destination: destination, days: numberOfDays
-        )
+        let query = RecommendationQuery(destination: destination, days: numberOfDays)
         await viewModel.getGeneratedTravelBoard(query: query)
         dismiss()
     }

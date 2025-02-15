@@ -24,8 +24,7 @@ struct TravelBoardDetailsView: View {
                 TravelBoardSectionDetailsView(dailyPlan: travelBoard.plan)
 
                 // MARK: Places to visit
-                TravelBoardPlacesToVisitView(
-                    recommendations: travelBoard.recommendations)
+                TravelBoardPlacesToVisitView(recommendations: travelBoard.recommendations)
 
                 // MARK: Board Images
                 TravelBoardImagesView(images: travelBoard.images)

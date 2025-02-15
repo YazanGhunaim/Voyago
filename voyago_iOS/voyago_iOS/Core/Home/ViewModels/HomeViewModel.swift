@@ -87,25 +87,18 @@ extension HomeViewModel {
 
         defer { self.page += 1 }
 
-        let result = await VoyagoService.shared.fetchImages(
-            for: self.query, count: 10, page: self.page)
+        let result = await VoyagoService.shared.fetchImages(for: self.query, count: 10, page: self.page)
 
         switch result {
         case .success(let images):
-            VoyagoLogger.shared.logger.log(
-                level: .info,
-                "Successfully fetched images for page \(self.page, privacy: .public)"
-            )
+            VoyagoLogger.shared.logger.info("Successfully fetched images for page \(self.page, privacy: .public)")
+
             self.images += images
             self.viewState = .Success
         case .failure(let error):
-            VoyagoLogger.shared.logger.log(
-                level: .error,
-                "Failed to fetch images with error: \(error, privacy: .public)"
-            )
-            self.viewState = .Failure(
-                errorMessage: "An unexpected error occurred while loading data."
-            )
+            VoyagoLogger.shared.logger.info("Failed to fetch images with error: \(error, privacy: .public)")
+
+            self.viewState = .Failure(errorMessage: "An unexpected error occurred while loading data.")
         }
     }
 }

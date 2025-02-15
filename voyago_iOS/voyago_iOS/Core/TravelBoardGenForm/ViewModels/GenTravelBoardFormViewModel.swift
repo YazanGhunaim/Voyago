@@ -39,17 +39,15 @@ extension GenTravelBoardFormViewModel {
 
         switch result {
         case .success(let generatedTravelBoard):
-            VoyagoLogger.shared.logger.info(
-                "Generated itinerary fetched successfully")
+            VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
+
             self.generatedItinerary = generatedTravelBoard
             self.viewState = .Success
         case .failure(let error):
-            VoyagoLogger.shared.logger.info(
-                "Generated itinerary fetch failed with error: \(error)")
+            VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
+
             self.generatedItinerary = nil
-            self.viewState = .Failure(
-                errorMessage:
-                    "Itinerary generation failed. Please try again later.")
+            self.viewState = .Failure(errorMessage: "Itinerary generation failed. Please try again later.")
         }
     }
 

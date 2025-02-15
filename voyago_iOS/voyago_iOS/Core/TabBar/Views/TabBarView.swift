@@ -25,7 +25,7 @@ struct TabBarView: View {
                 Text("Profile View")
             }
         }
-        //        .environment(genTravelBoardFormViewModel)  // for previews TODO: remove later
+        //        .environment(genTravelBoardFormViewModel)
         .tint(.indigo)
     }
 }

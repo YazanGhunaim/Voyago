@@ -17,9 +17,8 @@ struct ImageDetailsView: View {
             // MARK: Image
             VoyagoImageCard(
                 image: image,
-                placeholder: {
-                    ProgressView()
-                }, resolution: "full"
+                placeholder: { ProgressView() },
+                resolution: "full"
             )
             .scaledToFit()
 

@@ -15,19 +15,13 @@ struct VoyagoHomeImageGrid: View {
 
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(self.images, id: \.id) {
-                image in
+            ForEach(self.images, id: \.id) { image in
                 VoyagoHomeImageCard(image: image)
                     .onAppear {
                         // whenever the last image is on the screen
                         // fetch more images
-                        if self.viewModel.lastImage(
-                            image: image)
-                            && self.viewModel.viewState != .Fetching
-                        {
-                            Task {
-                                await self.viewModel.getImages(initial: false)
-                            }
+                        if self.viewModel.lastImage(image: image) && self.viewModel.viewState != .Fetching {
+                            Task { await self.viewModel.getImages(initial: false) }
                         }
                     }
             }

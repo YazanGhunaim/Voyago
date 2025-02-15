@@ -17,8 +17,7 @@ struct TravelBoardPlacesToVisitView: View {
                 Text("Places to visit")
                     .bold()
 
-                ForEach(recommendations, id: \.id) {
-                    recommendation in
+                ForEach(recommendations, id: \.id) { recommendation in
                     // MARK: sight recommendation card
                     VStack(alignment: .leading, spacing: 10) {
                         Text("\(recommendation.sight)")

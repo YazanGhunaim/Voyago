@@ -8,7 +8,6 @@ class BaseUser(BaseModel):
 
     data that can be safely returned about user
     """
-    username: str
     email: EmailStr
 
 

@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-/// Main entry point to the app
+// Main entry point to the app
 @main
 struct voyago_iOSApp: App {
-    @State private var genTravelBoardFormViewModel =
-        GenTravelBoardFormViewModel()
-
+    @State private var genTravelBoardFormViewModel = GenTravelBoardFormViewModel()
     @State private var authViewModel = AuthViewModel()
 
     var body: some Scene {

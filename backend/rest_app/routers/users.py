@@ -6,7 +6,7 @@ from supabase import Client
 
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
-from backend.rest_app.models.auth import AuthHeaders
+from backend.rest_app.models.auth import AuthTokens
 from backend.rest_app.models.users import UserLogin
 from backend.rest_app.utils.auth import set_supabase_session
 
@@ -22,7 +22,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
     status.HTTP_401_UNAUTHORIZED: {"description": "Invalid or expired session token."}
 })
 def get_user_session(
-        auth: AuthHeaders = Depends(get_auth_headers),
+        auth: AuthTokens = Depends(get_auth_headers),
         supabase_client: Client = Depends(get_supabase_client)
 ):
     """
@@ -52,7 +52,7 @@ def sign_up(user: UserLogin, supabase_client: Client = Depends(get_supabase_clie
     :return: Auth response object
     """
     try:
-        response = supabase_client.auth.sign_up(user.model_dump(exclude={"username"}))
+        response = supabase_client.auth.sign_up(user.model_dump())
         return response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
@@ -70,7 +70,7 @@ def sign_in(user: UserLogin, supabase_client: Client = Depends(get_supabase_clie
     :return: Auth response object
     """
     try:
-        response = supabase_client.auth.sign_in_with_password(user.model_dump(exclude={"username"}))
+        response = supabase_client.auth.sign_in_with_password(user.model_dump())
         return response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
@@ -80,7 +80,7 @@ def sign_in(user: UserLogin, supabase_client: Client = Depends(get_supabase_clie
     status.HTTP_200_OK: {"description": "User signed out successfully."},
     status.HTTP_400_BAD_REQUEST: {"description": "User sign out failed."},
 })
-def sign_out(auth: AuthHeaders = Depends(get_auth_headers),
+def sign_out(auth: AuthTokens = Depends(get_auth_headers),
              supabase_client: Client = Depends(get_supabase_client)) -> None:
     """Signs out user
 
@@ -101,7 +101,7 @@ def sign_out(auth: AuthHeaders = Depends(get_auth_headers),
 })
 def update_user(
         user: UserLogin,
-        auth: AuthHeaders = Depends(get_auth_headers),
+        auth: AuthTokens = Depends(get_auth_headers),
         supabase_client: Client = Depends(get_supabase_client)) -> UserResponse:
     """Updates user data
 
@@ -109,7 +109,7 @@ def update_user(
     """
     try:
         set_supabase_session(auth=auth, supabase_client=supabase_client)
-        response = supabase_client.auth.update_user(user.model_dump(exclude={"username"}))
+        response = supabase_client.auth.update_user(user.model_dump())
         return response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
@@ -119,7 +119,7 @@ def update_user(
     status.HTTP_200_OK: {"description": "User deleted successfully."},
     status.HTTP_400_BAD_REQUEST: {"description": "User deletion failed."},
 })
-def delete_user(auth: AuthHeaders = Depends(get_auth_headers),
+def delete_user(auth: AuthTokens = Depends(get_auth_headers),
                 supabase_client: Client = Depends(get_supabase_client)) -> None:
     """Deletes user account associated with uid
 

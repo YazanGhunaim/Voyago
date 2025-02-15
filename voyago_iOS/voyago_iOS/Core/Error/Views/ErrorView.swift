@@ -13,8 +13,7 @@ struct ErrorView: View {
     let onReload: () -> Void
 
     init(
-        errorMessage: String =
-            "Looks like we have messed up behind the scenes. Please try again later.",
+        errorMessage: String = "Looks like we have messed up behind the scenes. Please try again later.",
         onReload: @escaping () -> Void = {}
     ) {
         self.errorMessage = errorMessage

@@ -12,10 +12,13 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if authViewModel.isLoggedIn {
+            switch authViewModel.userSessionState {
+            case .loggedIn:
                 TabBarView()
-            } else {
+            case .loggedOut:
                 LoginView()
+            case .none:
+                ProgressView()
             }
         }
     }

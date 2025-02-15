@@ -17,8 +17,7 @@ struct TravelBoardsScrollView: View {
                 NoTravelBoardsView(showingSheet: $showingSheet)
             } else {
                 VStack(alignment: .leading, spacing: 15) {
-                    ForEach(viewModel.travelBoards!.data, id: \.id) {
-                        board in
+                    ForEach(viewModel.travelBoards!.data, id: \.id) { board in
                         TravelBoardCardButtonView(board: board)
                     }
                 }
@@ -26,9 +25,7 @@ struct TravelBoardsScrollView: View {
         }
         .navigationTitle("Travel boards")
         .refreshable {
-            await Task {
-                await viewModel.getUserTravelBoards()
-            }.value
+            await Task { await viewModel.getUserTravelBoards() }.value
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

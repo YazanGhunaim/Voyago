@@ -19,21 +19,16 @@ final class KeychainManager {
 
     private init() {}
 
-    func saveData(query: [String: Any])
-        throws
-    {
+    func saveData(query: [String: Any]) throws {
         let status = SecItemAdd(query as CFDictionary, nil)
-        guard status != errSecDuplicateItem else {
-            throw KeychainError.duplicateEntry
-        }
-        guard status == errSecSuccess else {
-            throw KeychainError.unknown(status)
-        }
 
+        guard status != errSecDuplicateItem else { throw KeychainError.duplicateEntry }
+        guard status == errSecSuccess else { throw KeychainError.unknown(status) }
     }
 
     func getData(query: [String: Any]) -> String? {
         var dataTypeRef: AnyObject?
+
         let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
         if status == errSecSuccess, let data = dataTypeRef as? Data {
             return String(data: data, encoding: .utf8)
@@ -41,20 +36,13 @@ final class KeychainManager {
         return nil
     }
 
-    func updateData(
-        searchQuery: [String: Any],
-        updateQuery: [String: Any]
-    )
-        throws
-    {
+    func updateData(searchQuery: [String: Any], updateQuery: [String: Any]) throws {
         let status = SecItemUpdate(
             searchQuery as CFDictionary,
             updateQuery as CFDictionary
         )
 
-        guard status == errSecSuccess else {
-            throw KeychainError.unknown(status)
-        }
+        guard status == errSecSuccess else { throw KeychainError.unknown(status) }
     }
 
     func deleteData(query: [String: Any]) -> Bool {

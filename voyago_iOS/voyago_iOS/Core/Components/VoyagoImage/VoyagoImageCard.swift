@@ -17,9 +17,7 @@ struct VoyagoImageCard<Content: View>: View {
 
     init(
         image: VoyagoImage,
-        @ViewBuilder placeholder: () -> Content = {
-            Rectangle().fill(Color.indigo).opacity(0.25)
-        },
+        @ViewBuilder placeholder: () -> Content = { Rectangle().fill(Color.indigo).opacity(0.25) },
         fadeDuration: Double = 1, cornerRadius: CGFloat = 10,
         resolution: String = "regular"
     ) {
@@ -45,13 +43,10 @@ struct VoyagoImageCard<Content: View>: View {
 
     var body: some View {
         KFImage(URL(string: stringURL))
-            .placeholder({
-                placeholder
-            })
+            .placeholder({ placeholder })
             .fade(duration: fadeDuration)
             .resizable()
             .clipShape(.rect(cornerRadius: cornerRadius))
-//            .scaledToFit()
     }
 }
 

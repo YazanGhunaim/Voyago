@@ -18,24 +18,14 @@ struct TravelBoardImagesView: View {
 
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(
-                        images.keys.sorted(), id: \.self
-                    ) {
-                        sight in
-                        ForEach(
-                            images[sight] ?? [],
-                            id: \.id
-                        ) {
-                            image in
+                    ForEach(images.keys.sorted(), id: \.self) { sight in
+                        ForEach(images[sight] ?? [], id: \.id) { image in
                             VoyagoImageCard(image: image)
                                 .frame(height: 250)
                                 .scaledToFit()
                         }
                     }
-                    .containerRelativeFrame(
-                        .horizontal, count: 1, spacing: 0
-                    )
-
+                    .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                 }
                 .scrollTargetLayout()
             }

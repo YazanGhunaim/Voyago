@@ -2,10 +2,10 @@
 from pydantic import BaseModel
 
 
-class AuthHeaders(BaseModel):
-    """Authorization headers for endpoints that need it
+class AuthTokens(BaseModel):
+    """Authorization tokens
 
-    authorization and refresh_token used to set supabase state
+    access_token and refresh_token used to set supabase state
     """
-    authorization: str
+    access_token: str
     refresh_token: str

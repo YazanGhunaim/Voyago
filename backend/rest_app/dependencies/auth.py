@@ -1,10 +1,14 @@
 """Auth dependencies"""
 from fastapi import Header
 
-from backend.rest_app.models.auth import AuthHeaders
+from backend.rest_app.models.auth import AuthTokens
 
 
-def get_auth_headers(authorization: str = Header(...),
-                     refresh_token: str = Header(..., alias="refresh-token")) -> AuthHeaders:
-    """:returns AuthHeaders object"""
-    return AuthHeaders(authorization=authorization, refresh_token=refresh_token)
+def get_auth_headers(access_token: str = Header(..., alias="Authorization"),
+                     refresh_token: str = Header(..., alias="refresh-token")) -> AuthTokens:
+    """expects to receive auth token from request headers
+    and passes the tokens to endpoints that need them
+
+    :returns AuthHeaders object
+    """
+    return AuthTokens(access_token=access_token, refresh_token=refresh_token)

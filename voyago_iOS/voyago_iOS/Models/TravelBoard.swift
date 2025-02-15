@@ -48,3 +48,14 @@ struct UserTravelBoards: Codable {
     let data: [GeneratedTravelBoard]
     let count: Int?
 }
+
+// User travel boards alongside his auth tokens
+struct UserTravelBoardsSessionResponse: Codable {
+    let boards: UserTravelBoards
+    let authTokens: UserTokens
+
+    enum CodingKeys: String, CodingKey {
+        case boards = "response"
+        case authTokens = "auth_tokens"
+    }
+}

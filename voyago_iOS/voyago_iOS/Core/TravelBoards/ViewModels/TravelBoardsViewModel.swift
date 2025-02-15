@@ -38,20 +38,24 @@ extension TravelBoardsViewModel {
             guard self.viewState != .Fetching else { return }
             self.viewState = .Fetching
         }
-        
-        let result = await VoyagoService.shared.fetchUserTravelBoards()
-        
-        switch result {
-        case .success(let boards):
-            VoyagoLogger.shared.logger.info(
-                "Successfully retrieved user travel boards")
 
-            self.travelBoards = boards
+        let result = await VoyagoService.shared.fetchUserTravelBoards()
+
+        switch result {
+        case .success(let sessionResponse):
+            VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
+            VoyagoLogger.shared.logger.info("Saving auth tokens")
+
+            // saving auth tokens
+            AuthTokensKeychainManager.shared.saveAuthTokens(
+                accessToken: sessionResponse.authTokens.accessToken,
+                refreshToken: sessionResponse.authTokens.refreshToken
+            )
+
+            self.travelBoards = sessionResponse.boards
             self.viewState = .Success
         case .failure(let error):
-            VoyagoLogger.shared.logger.error(
-                "Error getting user travel boards: \(error)"
-            )
+            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")
 
             self.viewState = .Failure(errorMessage: error.localizedDescription)
         }

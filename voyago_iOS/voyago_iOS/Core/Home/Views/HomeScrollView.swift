@@ -43,9 +43,7 @@ struct HomeScrollView: View {
                 // placed logic inside another Task that way when view refreshes
                 // and refreshable redraws (as well for its task being discarded)
                 // my logic is in a seperate standalone task thats being awaited
-                await Task {
-                    await viewModel.reload(initial: false)
-                }.value
+                await Task { await viewModel.reload(initial: false) }.value
             }
         }
     }

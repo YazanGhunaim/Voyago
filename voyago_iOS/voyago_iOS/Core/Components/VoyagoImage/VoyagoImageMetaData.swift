@@ -18,12 +18,9 @@ struct VoyagoImageMetaData: View {
 
             // MARK: Unsplash Link
             if let unsplashProfile = image.unsplashProfile {
-                Link(
-                    "View Profile on Unsplash",
-                    destination: URL(string: unsplashProfile)!
-                )
-                .foregroundColor(.blue)
-                .underline()
+                Link("View Profile on Unsplash", destination: URL(string: unsplashProfile)!)
+                    .foregroundColor(.blue)
+                    .underline()
             }
         }
     }

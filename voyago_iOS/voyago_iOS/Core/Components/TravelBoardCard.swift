@@ -51,7 +51,7 @@ struct TravelBoardCard: View {
 
 #Preview {
     TravelBoardCard(
-        recommendationQuery: RecommendationQuery(
-            destination: "Czech Republic", days: 5),
-        image: mockVoyagoImage)
+        recommendationQuery: RecommendationQuery(destination: "Czech Republic", days: 5),
+        image: mockVoyagoImage
+    )
 }

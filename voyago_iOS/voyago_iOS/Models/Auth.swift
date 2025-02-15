@@ -8,7 +8,6 @@
 import Foundation
 
 struct UserLoginCredintails: Codable {
-    let username: String
     let email: String
     let password: String
 }

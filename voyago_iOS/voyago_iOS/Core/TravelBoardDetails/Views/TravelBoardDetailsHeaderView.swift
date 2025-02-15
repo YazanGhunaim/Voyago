@@ -25,6 +25,5 @@ struct TravelBoardDetailsHeaderView: View {
 }
 
 #Preview {
-    TravelBoardDetailsHeaderView(
-        recommendationQuery: mockRecommendationQuery, image: mockVoyagoImage)
+    TravelBoardDetailsHeaderView(recommendationQuery: mockRecommendationQuery, image: mockVoyagoImage)
 }

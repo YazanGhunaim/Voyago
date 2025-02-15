@@ -13,6 +13,7 @@ import SwiftUI
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
+
     @Environment(AuthViewModel.self) private var viewModel
 
     var body: some View {
@@ -50,15 +51,11 @@ struct LoginView: View {
                             .padding(.top)
                             .padding(.trailing, 24)
                     }
-
                 }
 
                 // MARK: Sign in
                 Button {
-                    Task {
-                        await viewModel.loginWithEmailAndPassword(
-                            email: email, password: password)
-                    }
+                    Task { await viewModel.loginWithEmailAndPassword(email: email, password: password) }
                 } label: {
                     Text("Sign in")
                         .font(.headline)

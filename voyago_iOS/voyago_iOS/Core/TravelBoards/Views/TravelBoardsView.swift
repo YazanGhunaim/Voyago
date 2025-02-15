@@ -21,20 +21,12 @@ struct TravelBoardsView: View {
             case .Loading, nil:
                 ProgressView()
             case .Failure(_):
-                ErrorView {
-                    Task {
-                        await self.viewModel.getUserTravelBoards(initial: true)
-                    }
-                }
+                ErrorView { Task { await self.viewModel.getUserTravelBoards(initial: true) } }
             case _:
                 switch genFormViewModel.viewState {
                 case .Success, nil:
-                    TravelBoardsScrollView(
-                        viewModel: viewModel, showingSheet: $showingSheet
-                    )
-                    .task {
-                        await viewModel.getUserTravelBoards()
-                    }
+                    TravelBoardsScrollView(viewModel: viewModel, showingSheet: $showingSheet)
+                        .task { await viewModel.getUserTravelBoards() }
                 case .Loading:
                     VisualizingProgressView()
                 case .Failure(_):
