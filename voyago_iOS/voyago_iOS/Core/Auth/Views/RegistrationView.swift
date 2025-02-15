@@ -16,6 +16,10 @@ struct RegistrationView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(AuthViewModel.self) private var viewModel
 
+    var formFilled: Bool {
+        !email.isEmpty && !password.isEmpty
+    }
+
     var body: some View {
         VStack {
             // MARK: Header
@@ -43,11 +47,12 @@ struct RegistrationView: View {
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(width: 340, height: 50)
-                    .background(Color(.systemIndigo))
+                    .background(formFilled ? Color(.systemIndigo) : Color(.systemIndigo).opacity(0.5))
                     .clipShape(Capsule())
                     .padding()
             }
             .shadow(color: .gray.opacity(0.5), radius: 10, x: 0, y: 0)
+            .disabled(!formFilled)
 
             Spacer()
 
