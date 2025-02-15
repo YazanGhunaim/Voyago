@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TabBarView: View {
+    //    @State private var genTravelBoardFormViewModel =
+    //        GenTravelBoardFormViewModel()
+
     var body: some View {
         TabView {
             Tab("", systemImage: "house.fill") {
@@ -15,13 +18,14 @@ struct TabBarView: View {
             }
 
             Tab("", systemImage: "wand.and.stars") {
-                GenItineraryFormView()
+                TravelBoardsView()
             }
 
             Tab("", systemImage: "person.fill") {
                 Text("Profile View")
             }
         }
+        //        .environment(genTravelBoardFormViewModel)
         .tint(.indigo)
     }
 }

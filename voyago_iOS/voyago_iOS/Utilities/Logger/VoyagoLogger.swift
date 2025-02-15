@@ -16,7 +16,5 @@ class VoyagoLogger {
     static let shared = VoyagoLogger()
 
     // disable constructor to make it singleton
-    private init() {
-        self.logger = Logger()
-    }
+    private init() { self.logger = Logger() }
 }

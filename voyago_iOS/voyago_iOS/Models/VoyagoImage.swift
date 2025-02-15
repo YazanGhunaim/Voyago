@@ -15,9 +15,7 @@ struct VoyagoImage: Codable {
 
     private let urls: [String: String]  // [resolution: url]
 
-    init(
-        username: String, unsplashProfile: String? = nil, urls: [String: String]
-    ) {
+    init(username: String, unsplashProfile: String? = nil, urls: [String: String]) {
         self.username = username
         self.unsplashProfile = unsplashProfile
         self.urls = urls
