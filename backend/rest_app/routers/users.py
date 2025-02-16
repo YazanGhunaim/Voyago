@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from gotrue import AuthResponse, UserResponse
+from gotrue.errors import AuthApiError, AuthInvalidCredentialsError, AuthSessionMissingError
 from supabase import Client
 
 from backend.rest_app.dependencies.auth import get_auth_headers
@@ -10,7 +11,6 @@ from backend.rest_app.models.auth import AuthTokens
 from backend.rest_app.models.users import UserLogin
 from backend.rest_app.utils.auth import set_supabase_session
 
-# TODO: Add Unauthorized exceptions
 # TODO: User database
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -33,9 +33,11 @@ def get_user_session(
     :return: User session data if valid
     """
     try:
-        set_supabase_session(auth=auth, supabase_client=supabase_client)
-        session = supabase_client.auth.get_session()  # Retrieve the current session
-        return session
+        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
+        # session = supabase_client.auth.get_session()  # Retrieve the current session
+        return auth_response.session
+    except (AuthSessionMissingError, AuthApiError) as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Session retrieval failed: {e}")
 
@@ -54,7 +56,9 @@ def sign_up(user: UserLogin, supabase_client: Client = Depends(get_supabase_clie
     try:
         response = supabase_client.auth.sign_up(user.model_dump())
         return response
-    except Exception as e:
+    except AuthApiError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"{e}")
+    except (AuthInvalidCredentialsError, Exception) as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
 
 
@@ -73,7 +77,7 @@ def sign_in(user: UserLogin, supabase_client: Client = Depends(get_supabase_clie
         response = supabase_client.auth.sign_in_with_password(user.model_dump())
         return response
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
 @router.post("/sign_out", responses={
@@ -91,7 +95,7 @@ def sign_out(auth: AuthTokens = Depends(get_auth_headers),
         set_supabase_session(auth=auth, supabase_client=supabase_client)
         supabase_client.auth.sign_out()
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
 # TODO: fix models such that only that what needs to change is changed
@@ -112,7 +116,7 @@ def update_user(
         response = supabase_client.auth.update_user(user.model_dump())
         return response
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
 @router.delete("/delete_user", responses={
@@ -138,4 +142,4 @@ def delete_user(auth: AuthTokens = Depends(get_auth_headers),
         # delete user
         supabase_client.auth.admin.delete_user(uid)
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")

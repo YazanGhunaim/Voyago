@@ -7,7 +7,7 @@ from backend.rest_app.routers import auth, images, itinerary, users
 
 log = getLogger(__name__)
 log.info("Starting Voyago!")
-
+# TODO: add logger to fastapi app
 app = FastAPI()
 
 app.include_router(itinerary.router)
