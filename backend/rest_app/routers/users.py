@@ -131,11 +131,10 @@ def delete_user(auth: AuthTokens = Depends(get_auth_headers),
     :param supabase_client: supabase client
     """
     try:
-        set_supabase_session(auth=auth, supabase_client=supabase_client)
+        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
 
         # get user id
-        session = supabase_client.auth.get_session()
-        uid = session.user.id
+        uid = auth_response.session.user.id
         # sign out due to service role being overridden https://github.com/supabase/auth/issues/965
         supabase_client.auth.sign_out()
 
