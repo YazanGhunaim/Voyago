@@ -29,7 +29,7 @@ final class AuthTokensKeychainManager {
 
             do {
                 try KeychainManager.shared.saveData(query: query)
-                VoyagoLogger.shared.logger.info("Saving auth tokens with key \(key.rawValue) successful")
+                VoyagoLogger.shared.logger.debug("Saving auth tokens with key \(key.rawValue) successful")
             } catch KeychainError.duplicateEntry {
                 VoyagoLogger.shared.logger.error("Saving auth token with key \(key.rawValue) failed: Duplicate entry")
             } catch KeychainError.unknown(let status) {
@@ -53,7 +53,7 @@ final class AuthTokensKeychainManager {
             return nil
         }
 
-        VoyagoLogger.shared.logger.info("Succesffully got auth token with key \(key.rawValue)")
+        VoyagoLogger.shared.logger.debug("Succesffully got auth token with key \(key.rawValue)")
         return token
     }
 
@@ -70,7 +70,7 @@ final class AuthTokensKeychainManager {
 
             do {
                 try KeychainManager.shared.updateData(searchQuery: searchQuery, updateQuery: updateQuery)
-                VoyagoLogger.shared.logger.info("Successfully updated auth token \(key.rawValue)")
+                VoyagoLogger.shared.logger.debug("Successfully updated auth token \(key.rawValue)")
             } catch KeychainError.unknown(let status) {
                 VoyagoLogger.shared.logger.error("Failed to update auth tokens with error: \(status)")
             } catch {

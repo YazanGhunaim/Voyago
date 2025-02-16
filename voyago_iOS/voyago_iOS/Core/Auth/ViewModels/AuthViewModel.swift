@@ -32,9 +32,9 @@ extension AuthViewModel {
         }
     }
 
-    // validates the saved auth tokens, using voyago service
+    // checks if exist valid tokens
     private func validAuthTokens() async -> Bool {
-        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
+        //        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
 
         let result = await VoyagoService.shared.validateTokens()
 
@@ -76,8 +76,9 @@ extension AuthViewModel {
         }
     }
 
-    func registerWithEmailAndPassword(email: String, password: String) async -> Bool {
-        let result = await VoyagoService.shared.signUpWithEmailAndPassword(email: email, password: password)
+    func registerWithEmailAndPassword(username: String, email: String, password: String) async -> Bool {
+        let result = await VoyagoService.shared.signUpWithEmailAndPassword(
+            username: username, email: email, password: password)
 
         switch result {
         case .success(let authResponse):

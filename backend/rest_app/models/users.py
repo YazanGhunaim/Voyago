@@ -24,13 +24,13 @@ class UserOptions(BaseModel):
     data: UserData
 
 
-class UserLogin(BaseUser):
-    """User login model"""
+class UserSignIn(BaseUser):
+    """User signin model"""
     password: str
 
 
 class UserSignUp(BaseUser):
-    """User signin model
+    """User signup model
 
     extra data needed from user to sign up
     """

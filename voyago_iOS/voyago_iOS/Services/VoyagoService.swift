@@ -77,7 +77,7 @@ extension VoyagoService {
 
         // Execute request
         do {
-            VoyagoLogger.shared.logger.info("Voyago Service attempting request: \(request)")
+            VoyagoLogger.shared.logger.info("Voyago Service requesting: \(request)")
 
             let (data, response) = try await self.session.data(for: request)
 
@@ -111,7 +111,15 @@ extension VoyagoService {
             "page": "\(page)",
         ]
 
-        let res: Result<[VoyagoImage], APIError> = await fetch(url: self.baseUrl + "/images", parameters: parameters)
+        let res: Result<[VoyagoImage], APIError> = await fetch(
+            url: self.baseUrl + "/images",
+            parameters: parameters,
+            method: .GET,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
         return res
     }
 }
@@ -121,8 +129,15 @@ extension VoyagoService {
     /// - Parameter query: recommendation query
     func fetchGeneratedTravelBoard(query: RecommendationQuery) async -> Result<GeneratedTravelBoard, APIError> {
         let res: Result<GeneratedTravelBoard, APIError> = await fetch(
-            url: self.baseUrl + "/itinerary", method: .POST, body: query
+            url: self.baseUrl + "/itinerary",
+            method: .POST,
+            body: query,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
         )
+
         return res
     }
 }
@@ -162,7 +177,7 @@ extension VoyagoService {
 // MARK: - Auth Email and Password
 extension VoyagoService {
     func signInWithEmailAndPassword(email: String, password: String) async -> Result<AuthResponse, APIError> {
-        let credentials = UserLoginCredintails(email: email, password: password)
+        let credentials = UserSignInCredentials(email: email, password: password)
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/users/sign_in",
             method: .POST,
@@ -172,8 +187,14 @@ extension VoyagoService {
         return res
     }
 
-    func signUpWithEmailAndPassword(email: String, password: String) async -> Result<AuthResponse, APIError> {
-        let credentials = UserLoginCredintails(email: email, password: password)
+    func signUpWithEmailAndPassword(username: String, email: String, password: String)
+        async -> Result<AuthResponse, APIError>
+    {
+        let credentials = UserSignUpCredentials(
+            options: UserOptions(data: UserData(username: username)),
+            email: email,
+            password: password
+        )
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/users/sign_up",
             method: .POST,

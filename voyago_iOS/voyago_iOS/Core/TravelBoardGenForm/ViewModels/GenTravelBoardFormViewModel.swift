@@ -33,9 +33,7 @@ extension GenTravelBoardFormViewModel {
 
         VoyagoLogger.shared.logger.info("Fetching generated itinerary")
 
-        let result =
-            await VoyagoService.shared
-            .fetchGeneratedTravelBoard(query: query)
+        let result = await VoyagoService.shared.fetchGeneratedTravelBoard(query: query)
 
         switch result {
         case .success(let generatedTravelBoard):

@@ -8,7 +8,7 @@ from supabase import Client
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
 from backend.rest_app.models.auth import AuthTokens
-from backend.rest_app.models.users import UserLogin, UserSignUp
+from backend.rest_app.models.users import UserSignIn, UserSignUp
 from backend.rest_app.utils.auth import set_supabase_session
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -69,7 +69,7 @@ def sign_up(user: UserSignUp, supabase_client: Client = Depends(get_supabase_cli
     status.HTTP_200_OK: {"description": "User signed in successfully."},
     status.HTTP_400_BAD_REQUEST: {"description": "User sign in failed."},
 })
-def sign_in(user: UserLogin, supabase_client: Client = Depends(get_supabase_client)) -> AuthResponse:
+def sign_in(user: UserSignIn, supabase_client: Client = Depends(get_supabase_client)) -> AuthResponse:
     """Signs in user
 
     :param user: UserLogin pydantic model
@@ -107,7 +107,7 @@ def sign_out(auth: AuthTokens = Depends(get_auth_headers),
     status.HTTP_400_BAD_REQUEST: {"description": "User sign in failed."},
 })
 def update_user(
-        user: UserLogin,
+        user: UserSignIn,
         auth: AuthTokens = Depends(get_auth_headers),
         supabase_client: Client = Depends(get_supabase_client)) -> UserResponse:
     """Updates user data

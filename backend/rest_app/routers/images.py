@@ -4,7 +4,9 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from backend.app.models.images import VoyagoImage
+from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.voyago_client import get_voyago
+from backend.rest_app.models.auth import AuthTokens
 
 router = APIRouter(prefix="/images", tags=["Images"])
 
@@ -14,7 +16,8 @@ def get_images_for(
         query: str,
         count: int = 10,
         page: int = 1,
-        voyago=Depends(get_voyago)
+        voyago=Depends(get_voyago),
+        auth: AuthTokens = Depends(get_auth_headers)
 ):
     """:returns Lists of images along with metadata"""
     return voyago.get_images(query=query, count=count, page=page)

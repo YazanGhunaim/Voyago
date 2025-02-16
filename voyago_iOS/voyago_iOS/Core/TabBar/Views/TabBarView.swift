@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct TabBarView: View {
-    //    @State private var genTravelBoardFormViewModel =
-    //        GenTravelBoardFormViewModel()
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         TabView {
@@ -25,7 +24,6 @@ struct TabBarView: View {
                 Text("Profile View")
             }
         }
-        //        .environment(genTravelBoardFormViewModel)
         .tint(.indigo)
     }
 }
