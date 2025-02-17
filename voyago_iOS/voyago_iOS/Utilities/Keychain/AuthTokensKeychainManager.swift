@@ -7,18 +7,64 @@
 
 import Foundation
 
-// TODO: are these operations expensive?
 final class AuthTokensKeychainManager {
     static let shared = AuthTokensKeychainManager()
 
-    private init() {}
+    // in memory cache
+    private var accessToken: String?
+    private var refreshToken: String?
 
     enum AuthTokenKey: String {
         case accessToken
         case refreshToken
     }
 
-    func saveToken(withKey key: AuthTokenKey, token: String) {
+    private init() {
+        self.accessToken = self.getToken(forKey: .accessToken)
+        self.refreshToken = self.getToken(forKey: .refreshToken)
+    }
+
+    func getAccessToken() -> String? {
+        if let accessToken = self.accessToken {
+            return accessToken
+        }
+
+        self.accessToken = self.getToken(forKey: .accessToken)
+        return self.accessToken
+    }
+
+    func getRefreshToken() -> String? {
+        if let refreshToken = self.refreshToken {
+            return refreshToken
+        }
+
+        self.refreshToken = self.getToken(forKey: .refreshToken)
+        return self.refreshToken
+    }
+
+    // saves auth tokens to keychain
+    func saveAuthTokens(accessToken: String, refreshToken: String) {
+        guard accessToken != self.accessToken || refreshToken != self.refreshToken else { return }
+        if authTokensExist() {
+            VoyagoLogger.shared.logger.debug("Updating user tokens")
+            AuthTokensKeychainManager.shared.updateToken(forKey: .accessToken, token: accessToken)
+            AuthTokensKeychainManager.shared.updateToken(forKey: .refreshToken, token: refreshToken)
+        } else {
+            VoyagoLogger.shared.logger.debug("Saving user tokens")
+            AuthTokensKeychainManager.shared.saveToken(withKey: .accessToken, token: accessToken)
+            AuthTokensKeychainManager.shared.saveToken(withKey: .refreshToken, token: refreshToken)
+        }
+    }
+
+    // Checks if user auth tokens already exist in keychain
+    private func authTokensExist() -> Bool {
+        guard AuthTokensKeychainManager.shared.getToken(forKey: .accessToken) != nil else { return false }
+        return true
+    }
+}
+
+extension AuthTokensKeychainManager {
+    private func saveToken(withKey key: AuthTokenKey, token: String) {
         if let data = token.data(using: .utf8) {
             let query: [String: Any] = [
                 kSecClass as String: kSecClassGenericPassword,
@@ -40,24 +86,7 @@ final class AuthTokensKeychainManager {
         }
     }
 
-    func getToken(forKey key: AuthTokenKey) -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key.rawValue,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-        ]
-
-        guard let token = KeychainManager.shared.getData(query: query) else {
-            VoyagoLogger.shared.logger.error("Failed to get auth token with key \(key.rawValue)")
-            return nil
-        }
-
-        VoyagoLogger.shared.logger.debug("Succesffully got auth token with key \(key.rawValue)")
-        return token
-    }
-
-    func updateToken(forKey key: AuthTokenKey, token: String) {
+    private func updateToken(forKey key: AuthTokenKey, token: String) {
         if let data = token.data(using: .utf8) {
             let searchQuery: [String: Any] = [
                 kSecClass as String: kSecClassGenericPassword,
@@ -78,23 +107,21 @@ final class AuthTokensKeychainManager {
             }
         }
     }
-}
 
-extension AuthTokensKeychainManager {
-    // saves auth tokens to keychain
-    func saveAuthTokens(accessToken: String, refreshToken: String) {
-        if authTokensExist() {
-            AuthTokensKeychainManager.shared.updateToken(forKey: .accessToken, token: accessToken)
-            AuthTokensKeychainManager.shared.updateToken(forKey: .refreshToken, token: refreshToken)
-        } else {
-            AuthTokensKeychainManager.shared.saveToken(withKey: .accessToken, token: accessToken)
-            AuthTokensKeychainManager.shared.saveToken(withKey: .refreshToken, token: refreshToken)
+    private func getToken(forKey key: AuthTokenKey) -> String? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key.rawValue,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+        ]
+
+        guard let token = KeychainManager.shared.getData(query: query) else {
+            VoyagoLogger.shared.logger.error("Failed to get auth token with key \(key.rawValue)")
+            return nil
         }
-    }
 
-    // Checks if user auth tokens already exist in keychain
-    func authTokensExist() -> Bool {
-        guard AuthTokensKeychainManager.shared.getToken(forKey: .accessToken) != nil else { return false }
-        return true
+        VoyagoLogger.shared.logger.debug("Succesffully got auth token with key \(key.rawValue)")
+        return token
     }
 }

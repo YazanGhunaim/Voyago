@@ -22,11 +22,11 @@ class VoyagoService: APIClient {
 
 extension VoyagoService {
     private var accessToken: String? {
-        AuthTokensKeychainManager.shared.getToken(forKey: .accessToken)
+        AuthTokensKeychainManager.shared.getAccessToken()
     }
 
     private var refreshToken: String? {
-        AuthTokensKeychainManager.shared.getToken(forKey: .refreshToken)
+        AuthTokensKeychainManager.shared.getRefreshToken()
     }
 
     private var isAuthenticated: Bool {

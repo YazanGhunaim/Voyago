@@ -44,7 +44,6 @@ extension TravelBoardsViewModel {
         switch result {
         case .success(let sessionResponse):
             VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
-            VoyagoLogger.shared.logger.info("Saving auth tokens")
 
             // saving auth tokens
             AuthTokensKeychainManager.shared.saveAuthTokens(
