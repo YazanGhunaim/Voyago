@@ -8,38 +8,27 @@
 import SwiftUI
 
 struct MainTabView: View {
-    //    @State private var showingSheet = false
-    @State private var selectedItem = 1
-    //    @State private var oldSelectedItem = 1
+    @State private var selectedItem = 0
 
     var body: some View {
         TabView(selection: $selectedItem) {
-            Tab("", systemImage: "house.fill", value: 1) {
+            Group {
                 HomeView()
-            }
+                    .tag(0)
 
-            Tab("", systemImage: "plus", value: 2) {
-                VisualizeTravelBoardView()
-            }
+                EmptyView() // sheet for visualization form... check customTabBar
+                    .tag(1)
 
-            Tab("", systemImage: "person.fill", value: 3) {
                 ProfileView()
+                    .tag(2)
             }
+            .toolbarBackground(.hidden, for: .tabBar)
         }
         .tint(.indigo)
-        //        .onChange(of: selectedItem) { old, new in
-        //            if selectedItem == 2 {
-        //                showingSheet.toggle()
-        //            } else {
-        //                oldSelectedItem = new
-        //            }
-        //        }
-        //        .sheet(isPresented: $showingSheet) {
-        //            selectedItem = oldSelectedItem
-        //        } content: {
-        //            VisualizeTravelBoardView()
-        //                .presentationDetents([.medium])
-        //        }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .overlay(alignment: .bottom) {
+            CustomTabBar(selectedItem: $selectedItem)
+        }
     }
 }
 

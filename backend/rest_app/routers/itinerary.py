@@ -97,7 +97,7 @@ def get_visual_itinerary(
             .insert(visual_itinerary_model)
             .execute()
         )
-
+        # TODO: return db data
         return visual_itinerary_model
     except TripPlanGenerationError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")

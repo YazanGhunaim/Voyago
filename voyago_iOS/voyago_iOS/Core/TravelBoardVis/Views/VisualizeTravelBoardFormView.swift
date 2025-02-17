@@ -12,7 +12,8 @@ struct VisualizeTravelBoardFormView: View {
     @State private var numberOfDays: Int = 1
 
     @Environment(VisualizeTravelBoardViewModel.self) private var viewModel
-
+    @Environment(\.dismiss) var dismiss
+    
     var formNotFilled: Bool {
         destination.isEmpty
     }
@@ -24,45 +25,48 @@ struct VisualizeTravelBoardFormView: View {
     func visualize() async {
         let query = RecommendationQuery(destination: destination, days: numberOfDays)
         await viewModel.getGeneratedTravelBoard(query: query)
+        dismiss()
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // MARK: Destination Input
-            VoyagoInputField(
-                imageName: "sun.and.horizon.fill",
-                placeHolderText: "Where to?",
-                text: $destination
-            )
-
-            // MARK: Duration Input
-            VStack(alignment: .leading, spacing: 10) {
-                Text("How long will you be staying?")
-                    .font(.headline)
-
-                Stepper(value: $numberOfDays, in: 1...14) {
-                    Text(numberOfDaysText)
-                        .font(.body)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                // MARK: Destination Input
+                VoyagoInputField(
+                    imageName: "sun.and.horizon.fill",
+                    placeHolderText: "Where to?",
+                    text: $destination
+                )
+                
+                // MARK: Duration Input
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("How long will you be staying?")
+                        .font(.headline)
+                    
+                    Stepper(value: $numberOfDays, in: 1...14) {
+                        Text(numberOfDaysText)
+                            .font(.body)
+                    }
                 }
+                
+                // MARK: Submit Button
+                Button {
+                    Task { await visualize() }
+                } label: {
+                    Text("Visualize")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(self.formNotFilled ? Color.gray : Color.indigo)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                }
+                .disabled(self.formNotFilled)
+                
+                Spacer()
             }
-
-            // MARK: Submit Button
-            Button {
-                Task { await visualize() }
-            } label: {
-                Text("Visualize")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(self.formNotFilled ? Color.gray : Color.indigo)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-            }
-            .disabled(self.formNotFilled)
-
-            Spacer()
+            .padding()
+            .navigationTitle("Visualize Your Trip")
         }
-        .padding()
-        .navigationTitle("Visualize Your Trip")
     }
 }
 

@@ -20,6 +20,7 @@ struct VisualizeTravelBoardView: View {
                 VisualizeTravelBoardFormView()
             case .Loading:
                 VisualizingProgressView()
+                    .interactiveDismissDisabled()
             case .Failure(_):
                 ErrorView()
             }
