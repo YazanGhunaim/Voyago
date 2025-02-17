@@ -7,10 +7,13 @@
 
 import Foundation
 
+struct NoResponse: Codable {
+
+}
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.0.100:8000"
+    private let baseUrl = "http://192.168.0.119:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -22,11 +25,11 @@ class VoyagoService: APIClient {
 
 extension VoyagoService {
     private var accessToken: String? {
-        AuthTokensKeychainManager.shared.getToken(forKey: .accessToken)
+        AuthTokensKeychainManager.shared.getAccessToken()
     }
 
     private var refreshToken: String? {
-        AuthTokensKeychainManager.shared.getToken(forKey: .refreshToken)
+        AuthTokensKeychainManager.shared.getRefreshToken()
     }
 
     private var isAuthenticated: Bool {
@@ -77,7 +80,7 @@ extension VoyagoService {
 
         // Execute request
         do {
-            VoyagoLogger.shared.logger.info("Voyago Service attempting request: \(request)")
+            VoyagoLogger.shared.logger.info("Voyago Service requesting: \(request)")
 
             let (data, response) = try await self.session.data(for: request)
 
@@ -86,6 +89,10 @@ extension VoyagoService {
                 (200...299).contains(httpResponse.statusCode)
             else {
                 return .failure(APIError.invalidResponse)
+            }
+
+            if httpResponse.statusCode == 204 {
+                return .success(NoResponse() as! T)
             }
 
             // Decode response
@@ -111,7 +118,15 @@ extension VoyagoService {
             "page": "\(page)",
         ]
 
-        let res: Result<[VoyagoImage], APIError> = await fetch(url: self.baseUrl + "/images", parameters: parameters)
+        let res: Result<[VoyagoImage], APIError> = await fetch(
+            url: self.baseUrl + "/images",
+            parameters: parameters,
+            method: .GET,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
         return res
     }
 }
@@ -121,8 +136,15 @@ extension VoyagoService {
     /// - Parameter query: recommendation query
     func fetchGeneratedTravelBoard(query: RecommendationQuery) async -> Result<GeneratedTravelBoard, APIError> {
         let res: Result<GeneratedTravelBoard, APIError> = await fetch(
-            url: self.baseUrl + "/itinerary", method: .POST, body: query
+            url: self.baseUrl + "/itinerary",
+            method: .POST,
+            body: query,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
         )
+
         return res
     }
 }
@@ -143,7 +165,8 @@ extension VoyagoService {
         return res
     }
 }
-// MARK: Auth validation
+
+// MARK: - Token auth
 extension VoyagoService {
     // validate existing user tokens in hand
     func validateTokens() async -> Result<AuthResponse, APIError> {
@@ -159,10 +182,37 @@ extension VoyagoService {
     }
 }
 
+// MARK: - User account Auth
+extension VoyagoService {
+    func signOut() async -> Result<NoResponse, APIError> {
+        let res: Result<NoResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/sign_out", method: .POST,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
+
+        return res
+    }
+
+    func deleteAccount() async -> Result<NoResponse, APIError> {
+        let res: Result<NoResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/delete", method: .DELETE,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
+
+        return res
+    }
+}
+
 // MARK: - Auth Email and Password
 extension VoyagoService {
     func signInWithEmailAndPassword(email: String, password: String) async -> Result<AuthResponse, APIError> {
-        let credentials = UserLoginCredintails(email: email, password: password)
+        let credentials = UserSignInCredentials(email: email, password: password)
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/users/sign_in",
             method: .POST,
@@ -172,8 +222,14 @@ extension VoyagoService {
         return res
     }
 
-    func signUpWithEmailAndPassword(email: String, password: String) async -> Result<AuthResponse, APIError> {
-        let credentials = UserLoginCredintails(email: email, password: password)
+    func signUpWithEmailAndPassword(username: String, email: String, password: String)
+        async -> Result<AuthResponse, APIError>
+    {
+        let credentials = UserSignUpCredentials(
+            options: UserOptions(data: UserData(username: username)),
+            email: email,
+            password: password
+        )
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/users/sign_up",
             method: .POST,

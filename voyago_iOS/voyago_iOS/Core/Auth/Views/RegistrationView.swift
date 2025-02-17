@@ -41,13 +41,15 @@ struct RegistrationView: View {
             .padding(32)
 
             Button {
-                Task { await viewModel.registerWithEmailAndPassword(email: email, password: password) }
+                Task {
+                    await viewModel.registerWithEmailAndPassword(username: username, email: email, password: password)
+                }
             } label: {
                 Text("Sign up")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(width: 340, height: 50)
-                    .background(formFilled ? Color(.systemIndigo) : Color(.systemIndigo).opacity(0.5))
+                    .background(formFilled ? .indigo : .indigo.opacity(0.5))
                     .clipShape(Capsule())
                     .padding()
             }
@@ -68,7 +70,7 @@ struct RegistrationView: View {
                         .fontWeight(.semibold)
                 }
             }
-            .foregroundStyle(Color(.systemIndigo))
+            .foregroundStyle(.indigo)
             .padding(.bottom, 32)
 
         }

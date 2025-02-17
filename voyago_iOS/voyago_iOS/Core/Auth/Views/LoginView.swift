@@ -50,7 +50,7 @@ struct LoginView: View {
                         Text("Forgot Password?")
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(Color(.systemIndigo))
+                            .foregroundStyle(.indigo)
                             .padding(.top)
                             .padding(.trailing, 24)
                     }
@@ -64,7 +64,7 @@ struct LoginView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(width: 340, height: 50)
-                        .background(formFilled ? Color(.systemIndigo) : Color(.systemIndigo).opacity(0.5))
+                        .background(formFilled ? .indigo : .indigo.opacity(0.5))
                         .clipShape(Capsule())
                         .padding()
                 }
@@ -88,7 +88,7 @@ struct LoginView: View {
                     }
                 }
                 .padding(.bottom, 32)
-                .foregroundStyle(Color(.systemIndigo))
+                .foregroundStyle(.indigo)
             }
             .ignoresSafeArea()
             .toolbar(.hidden, for: .navigationBar)

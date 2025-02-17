@@ -1,5 +1,5 @@
 //
-//  GenTravelBoardFormViewModel.swift
+//  VisualizeTravelBoardViewModel.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 1/26/25.
@@ -7,15 +7,15 @@
 
 import Foundation
 
-/// GenTravelBoardFormViewModel responsible for managing data related to the generate itinerary view
+// VisualizeTravelBoardViewModel responsible for managing data related to the generate itinerary view
 @Observable
 @MainActor
-class GenTravelBoardFormViewModel {
-    var generatedItinerary: GeneratedTravelBoard? = nil
+class VisualizeTravelBoardViewModel {
+    var visualizedBoard: GeneratedTravelBoard?
     var viewState: ViewState?
 }
 
-extension GenTravelBoardFormViewModel {
+extension VisualizeTravelBoardViewModel {
     // Enum to distinguish viewstate
     enum ViewState: Equatable {
         case Loading
@@ -24,36 +24,33 @@ extension GenTravelBoardFormViewModel {
     }
 }
 
-extension GenTravelBoardFormViewModel {
-    /// Gets the generated travel board from the voyago service
-    /// - Parameter query: RecommendationQuery
+extension VisualizeTravelBoardViewModel {
+    // Gets the generated travel board from the voyago service
     func getGeneratedTravelBoard(query: RecommendationQuery) async {
         guard self.viewState != .Loading else { return }
         self.viewState = .Loading
 
         VoyagoLogger.shared.logger.info("Fetching generated itinerary")
 
-        let result =
-            await VoyagoService.shared
-            .fetchGeneratedTravelBoard(query: query)
+        let result = await VoyagoService.shared.fetchGeneratedTravelBoard(query: query)
 
         switch result {
         case .success(let generatedTravelBoard):
             VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
 
-            self.generatedItinerary = generatedTravelBoard
+            self.visualizedBoard = generatedTravelBoard
             self.viewState = .Success
         case .failure(let error):
             VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
 
-            self.generatedItinerary = nil
+            self.visualizedBoard = nil
             self.viewState = .Failure(errorMessage: "Itinerary generation failed. Please try again later.")
         }
     }
 
     // resets the viewmodel
     func reset() {
-        self.generatedItinerary = nil
-        self.viewState = .Loading
+        self.visualizedBoard = nil
+        self.viewState = nil
     }
 }
