@@ -7,10 +7,13 @@
 
 import Foundation
 
+struct NoResponse: Codable {
+
+}
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.0.100:8000"
+    private let baseUrl = "http://192.168.0.119:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -88,6 +91,10 @@ extension VoyagoService {
                 return .failure(APIError.invalidResponse)
             }
 
+            if httpResponse.statusCode == 204 {
+                return .success(NoResponse() as! T)
+            }
+
             // Decode response
             let result = try JSONDecoder().decode(T.self, from: data)
             return .success(result)
@@ -158,12 +165,40 @@ extension VoyagoService {
         return res
     }
 }
-// MARK: Auth validation
+
+// MARK: - Token auth
 extension VoyagoService {
     // validate existing user tokens in hand
     func validateTokens() async -> Result<AuthResponse, APIError> {
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/auth/validate_tokens", method: .GET,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
+
+        return res
+    }
+}
+
+// MARK: - User account Auth
+extension VoyagoService {
+    func signOut() async -> Result<NoResponse, APIError> {
+        let res: Result<NoResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/sign_out", method: .POST,
+            headers: [
+                "Authorization": "Bearer \(self.accessToken!)",
+                "refresh-token": "\(self.refreshToken!)",
+            ]
+        )
+
+        return res
+    }
+
+    func deleteAccount() async -> Result<NoResponse, APIError> {
+        let res: Result<NoResponse, APIError> = await fetch(
+            url: self.baseUrl + "/users/delete", method: .DELETE,
             headers: [
                 "Authorization": "Bearer \(self.accessToken!)",
                 "refresh-token": "\(self.refreshToken!)",

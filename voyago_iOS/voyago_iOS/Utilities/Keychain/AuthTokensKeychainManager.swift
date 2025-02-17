@@ -14,7 +14,7 @@ final class AuthTokensKeychainManager {
     private var accessToken: String?
     private var refreshToken: String?
 
-    enum AuthTokenKey: String {
+    private enum AuthTokenKey: String {
         case accessToken
         case refreshToken
     }
@@ -44,7 +44,9 @@ final class AuthTokensKeychainManager {
 
     // saves auth tokens to keychain
     func saveAuthTokens(accessToken: String, refreshToken: String) {
+        // workaround... only write to keychain if refreshtoken used
         guard accessToken != self.accessToken || refreshToken != self.refreshToken else { return }
+
         if authTokensExist() {
             VoyagoLogger.shared.logger.debug("Updating user tokens")
             AuthTokensKeychainManager.shared.updateToken(forKey: .accessToken, token: accessToken)
@@ -54,6 +56,8 @@ final class AuthTokensKeychainManager {
             AuthTokensKeychainManager.shared.saveToken(withKey: .accessToken, token: accessToken)
             AuthTokensKeychainManager.shared.saveToken(withKey: .refreshToken, token: refreshToken)
         }
+
+        // update in mem cache
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }

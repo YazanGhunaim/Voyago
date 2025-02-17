@@ -67,7 +67,7 @@ def sign_up(user: UserSignUp, supabase_client: Client = Depends(get_supabase_cli
 
 @router.post("/sign_in", status_code=status.HTTP_200_OK, responses={
     status.HTTP_200_OK: {"description": "User signed in successfully."},
-    status.HTTP_400_BAD_REQUEST: {"description": "User sign in failed."},
+    status.HTTP_401_UNAUTHORIZED: {"description": "User sign in failed."},
 })
 def sign_in(user: UserSignIn, supabase_client: Client = Depends(get_supabase_client)) -> AuthResponse:
     """Signs in user
@@ -83,12 +83,18 @@ def sign_in(user: UserSignIn, supabase_client: Client = Depends(get_supabase_cli
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
-@router.post("/sign_out", responses={
-    status.HTTP_200_OK: {"description": "User signed out successfully."},
-    status.HTTP_400_BAD_REQUEST: {"description": "User sign out failed."},
-})
-def sign_out(auth: AuthTokens = Depends(get_auth_headers),
-             supabase_client: Client = Depends(get_supabase_client)) -> None:
+@router.post(
+    "/sign_out",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "User signed out successfully."},
+        status.HTTP_401_UNAUTHORIZED: {"description": "User sign out failed."},
+    }
+)
+def sign_out(
+        auth: AuthTokens = Depends(get_auth_headers),
+        supabase_client: Client = Depends(get_supabase_client)
+) -> None:
     """Signs out user
 
     :param auth: AuthHeaders object
@@ -104,7 +110,7 @@ def sign_out(auth: AuthTokens = Depends(get_auth_headers),
 # TODO: fix models such that only that what needs to change is changed
 @router.put("/update_user", responses={
     status.HTTP_200_OK: {"description": "User signed in successfully."},
-    status.HTTP_400_BAD_REQUEST: {"description": "User sign in failed."},
+    status.HTTP_401_UNAUTHORIZED: {"description": "User sign in failed."},
 })
 def update_user(
         user: UserSignIn,
@@ -122,12 +128,18 @@ def update_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
-@router.delete("/delete_user", responses={
-    status.HTTP_200_OK: {"description": "User deleted successfully."},
-    status.HTTP_400_BAD_REQUEST: {"description": "User deletion failed."},
-})
-def delete_user(auth: AuthTokens = Depends(get_auth_headers),
-                supabase_client: Client = Depends(get_supabase_client)) -> None:
+@router.delete(
+    "/delete",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "User deleted successfully."},
+        status.HTTP_401_UNAUTHORIZED: {"description": "User deletion failed."},
+    }
+)
+def delete_user(
+        auth: AuthTokens = Depends(get_auth_headers),
+        supabase_client: Client = Depends(get_supabase_client)
+) -> None:
     """Deletes user account associated with uid
 
     :param auth: AuthHeaders object

@@ -14,7 +14,7 @@ struct ContentView: View {
         Group {
             switch authViewModel.userSessionState {
             case .loggedIn:
-                TabBarView()
+                MainTabView()
             case .loggedOut:
                 LoginView()
             case .none:

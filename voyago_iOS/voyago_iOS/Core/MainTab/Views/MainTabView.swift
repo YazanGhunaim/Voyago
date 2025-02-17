@@ -1,5 +1,5 @@
 //
-//  TabBarView.swift
+//  MainTabView.swift
 //  voyago_iOS
 //
 //  Created by Yazan Ghunaim on 12/25/24.
@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct TabBarView: View {
-    @Environment(\.scenePhase) var scenePhase
-
+struct MainTabView: View {
     var body: some View {
         TabView {
             Tab("", systemImage: "house.fill") {
@@ -21,7 +19,7 @@ struct TabBarView: View {
             }
 
             Tab("", systemImage: "person.fill") {
-                Text("Profile View")
+                ProfileView()
             }
         }
         .tint(.indigo)
@@ -29,5 +27,5 @@ struct TabBarView: View {
 }
 
 #Preview {
-    TabBarView()
+    MainTabView()
 }

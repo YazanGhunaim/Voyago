@@ -31,7 +31,7 @@ extension AuthViewModel {
     // checks if exist valid tokens
     private func validAuthTokens() async -> Bool {
         //        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
-        
+
         let result = await VoyagoService.shared.validateTokens()
 
         switch result {
@@ -41,11 +41,40 @@ extension AuthViewModel {
                 refreshToken: authResponse.session.refreshToken
             )
 
-            VoyagoLogger.shared.logger.info("Existing tokens valid")
+            VoyagoLogger.shared.logger.info("Tokens in hand are valid")
             return true
         case .failure(_):
-            VoyagoLogger.shared.logger.info("Existing tokens are invalid")
+            VoyagoLogger.shared.logger.info("Tokens in hand are invalid")
             return false
+        }
+    }
+}
+
+// MARK: - General auth functions
+extension AuthViewModel {
+    func signOut() async {
+        let result = await VoyagoService.shared.signOut()
+
+        switch result {
+        case .success(_):
+            VoyagoLogger.shared.logger.info("Successfully signed out user")
+
+            self.userSessionState = .loggedOut
+        case .failure(let error):
+            VoyagoLogger.shared.logger.error("Failed to sign out user with error: \(error)")
+        }
+    }
+
+    func deleteAccount() async {
+        let result = await VoyagoService.shared.deleteAccount()
+
+        switch result {
+        case .success(_):
+            VoyagoLogger.shared.logger.info("Successfully deleted user")
+
+            self.userSessionState = .loggedOut
+        case .failure(let error):
+            VoyagoLogger.shared.logger.error("Failed to delete user with error: \(error)")
         }
     }
 }
