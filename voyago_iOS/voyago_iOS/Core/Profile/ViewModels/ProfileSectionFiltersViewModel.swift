@@ -9,8 +9,8 @@ import Foundation
 
 enum ProfileSectionFiltersViewModel: Int, CaseIterable {
     case posts
-    case collections
     case boards
+    case collections
 
     var title: String {
         switch self {

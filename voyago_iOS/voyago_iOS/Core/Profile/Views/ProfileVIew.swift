@@ -8,29 +8,33 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var selectedFilter: ProfileSectionFiltersViewModel = .collections
+    @State private var viewModel = ProfileViewModel()
+    @State private var selectedFilter: ProfileSectionFiltersViewModel = .boards
     @Namespace var animation
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 25) {
-                profileHeader
-                    .padding(.bottom)
-
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 25) {
-                    profileStats
+                    profileHeader
+                        .padding(.bottom)
 
-                    actionButtons
+                    VStack(spacing: 25) {
+                        profileStats
+
+                        actionButtons
+                    }
+                    .padding()
+
+                    sectionFiltersBar
+
+                    sectionContent
+
+                    Spacer()
                 }
-                .padding()
-
-                sectionFiltersBar
-
-                sectionContent
-
-                Spacer()
             }
-            .ignoresSafeArea(.all)
+            .refreshable { await Task { await viewModel.getUserTravelBoards(initial: false) }.value }
+            .ignoresSafeArea(.container, edges: .top)
         }
     }
 }
@@ -154,7 +158,45 @@ extension ProfileView {
     }
 
     var sectionContent: some View {
-        EmptyView()
+        Group {
+            switch selectedFilter {
+            case .posts, .collections:
+                ContentUnavailableView {
+                    Label("You have no \(selectedFilter.title) yet", systemImage: "magnifyingglass")
+                } description: {
+                    Text("create a \(selectedFilter.title) to view it here!")
+                }
+            case .boards:
+                boardsContent
+            }
+        }
+    }
+
+    var boardsContent: some View {
+        Group {
+            switch viewModel.viewState {
+            case .Loading:
+                ProgressView()
+            case .Fetching, .Success:
+                Group {
+                    if viewModel.userBoards.isEmpty {
+                        ContentUnavailableView {
+                            Label("You have no boards yet", systemImage: "magnifyingglass")
+                        } description: {
+                            Text("Visualize a board to view it here!")
+                        }
+                    } else {
+                        VStack(alignment: .leading, spacing: 15) {
+                            ForEach(viewModel.userBoards, id: \.id) { board in
+                                TravelBoardCardButtonView(board: board)
+                            }
+                        }
+                    }
+                }
+            case .Failure(_):
+                ErrorView()
+            }
+        }
     }
 }
 

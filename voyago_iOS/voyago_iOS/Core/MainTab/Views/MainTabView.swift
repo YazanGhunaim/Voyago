@@ -8,21 +8,38 @@
 import SwiftUI
 
 struct MainTabView: View {
+    //    @State private var showingSheet = false
+    @State private var selectedItem = 1
+    //    @State private var oldSelectedItem = 1
+
     var body: some View {
-        TabView {
-            Tab("", systemImage: "house.fill") {
+        TabView(selection: $selectedItem) {
+            Tab("", systemImage: "house.fill", value: 1) {
                 HomeView()
             }
 
-            Tab("", systemImage: "wand.and.stars") {
-                TravelBoardsView()
+            Tab("", systemImage: "plus", value: 2) {
+                VisualizeTravelBoardView()
             }
 
-            Tab("", systemImage: "person.fill") {
+            Tab("", systemImage: "person.fill", value: 3) {
                 ProfileView()
             }
         }
         .tint(.indigo)
+        //        .onChange(of: selectedItem) { old, new in
+        //            if selectedItem == 2 {
+        //                showingSheet.toggle()
+        //            } else {
+        //                oldSelectedItem = new
+        //            }
+        //        }
+        //        .sheet(isPresented: $showingSheet) {
+        //            selectedItem = oldSelectedItem
+        //        } content: {
+        //            VisualizeTravelBoardView()
+        //                .presentationDetents([.medium])
+        //        }
     }
 }
 
