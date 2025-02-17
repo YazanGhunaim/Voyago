@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: User data
 @Observable
 @MainActor
 class ProfileViewModel {

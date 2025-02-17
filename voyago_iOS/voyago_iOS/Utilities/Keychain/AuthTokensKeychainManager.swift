@@ -45,6 +45,7 @@ final class AuthTokensKeychainManager {
     // saves auth tokens to keychain
     func saveAuthTokens(accessToken: String, refreshToken: String) {
         // workaround... only write to keychain if refreshtoken used
+        // TODO: actually doesnt work... most of the times the token expires when user not on app
         guard accessToken != self.accessToken || refreshToken != self.refreshToken else { return }
 
         if authTokensExist() {
