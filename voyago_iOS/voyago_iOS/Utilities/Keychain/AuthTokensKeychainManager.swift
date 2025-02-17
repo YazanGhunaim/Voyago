@@ -54,6 +54,8 @@ final class AuthTokensKeychainManager {
             AuthTokensKeychainManager.shared.saveToken(withKey: .accessToken, token: accessToken)
             AuthTokensKeychainManager.shared.saveToken(withKey: .refreshToken, token: refreshToken)
         }
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
     }
 
     // Checks if user auth tokens already exist in keychain
