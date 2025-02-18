@@ -11,24 +11,36 @@ import SwiftUI
 struct TravelBoardDetailsView: View {
     let travelBoard: GeneratedTravelBoard
 
+    @Environment(TabBarViewModel.self) private var tabBarVM
+
     var body: some View {
         NavigationStack {
-            ScrollView {
-                // MARK: View header titles
-                TravelBoardDetailsHeaderView(
-                    recommendationQuery: travelBoard.recommendationQuery,
-                    image: travelBoard.destinationImage
-                )
-
+            ScrollView(showsIndicators: false) {
                 // MARK: TravelBoard section details
-                TravelBoardSectionDetailsView(dailyPlan: travelBoard.plan)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Plan:")
+                        .padding(.horizontal)
+                        .font(.title)
 
-                // MARK: Places to visit
-                TravelBoardPlacesToVisitView(recommendations: travelBoard.recommendations)
-
-                // MARK: Board Images
-                TravelBoardImagesView(images: travelBoard.images)
+                    TravelBoardPlanDetailsView(dailyPlan: travelBoard.plan)
+                }
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Sights:")
+                        .padding(.horizontal)
+                        .font(.title)
+                    // MARK: Places to visit
+                    TravelBoardSightDetailsView(board: travelBoard)
+                }
             }
+            .navigationTitle("Your trip to \(travelBoard.recommendationQuery.destination)")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            tabBarVM.toggleTabBar()
+        }
+        .onDisappear {
+            tabBarVM.toggleTabBar()
         }
     }
 }

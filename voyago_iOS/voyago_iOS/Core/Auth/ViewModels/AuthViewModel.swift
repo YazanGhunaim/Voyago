@@ -6,6 +6,7 @@
 //
 import Foundation
 
+// TODO: log out when user tokens are invalid
 @Observable
 @MainActor
 class AuthViewModel {
