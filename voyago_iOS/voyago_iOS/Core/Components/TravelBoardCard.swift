@@ -28,8 +28,10 @@ struct TravelBoardCard: View {
                 VStack(alignment: .center) {
                     Text("\(self.recommendationQuery.destination)")
                         .font(.largeTitle)
+                        .shadow(color: .black, radius: 1)  // stroke workaround
 
                     Text(tripDurationString)
+                        .shadow(color: .black, radius: 1)  // stroke workaround
                 }
                 .foregroundColor(.white)
                 .padding()
