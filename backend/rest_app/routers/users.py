@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from gotrue import AuthResponse, UserResponse
-from gotrue.errors import AuthApiError, AuthInvalidCredentialsError, AuthSessionMissingError
+from gotrue.errors import AuthApiError, AuthInvalidCredentialsError
 from supabase import Client
 
 from backend.rest_app.dependencies.auth import get_auth_headers
@@ -12,32 +12,6 @@ from backend.rest_app.models.users import UserSignIn, UserSignUp
 from backend.rest_app.utils.auth import set_supabase_session
 
 router = APIRouter(prefix="/users", tags=["Users"])
-
-
-@router.get("/get_user_session", responses={
-    status.HTTP_200_OK: {"description": "User session retrieved successfully."},
-    status.HTTP_400_BAD_REQUEST: {"description": "User session retrieval failed."},
-    status.HTTP_401_UNAUTHORIZED: {"description": "Invalid or expired session token."}
-})
-def get_user_session(
-        auth: AuthTokens = Depends(get_auth_headers),
-        supabase_client: Client = Depends(get_supabase_client)
-):
-    """
-    Retrieves the logged-in user's session.
-
-    :param auth: AuthHeaders object
-    :param supabase_client: Supabase client dependency
-    :return: User session data if valid
-    """
-    try:
-        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
-        # session = supabase_client.auth.get_session()  # Retrieve the current session
-        return auth_response.session
-    except (AuthSessionMissingError, AuthApiError) as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Session retrieval failed: {e}")
 
 
 # TODO: turn back on email verification at some point

@@ -34,13 +34,23 @@ struct GeneratedTravelBoard: Codable {
     let recommendations: [SightRecommendation]
     let images: [String: [VoyagoImage]]
 
-    let recommendationQuery: RecommendationQuery?
+    let recommendationQuery: RecommendationQuery
     let destinationImage: VoyagoImage
 
     enum CodingKeys: String, CodingKey {
         case plan, recommendations, images
         case destinationImage = "destination_image"
         case recommendationQuery = "recommendation_queries"
+    }
+}
+
+struct GeneratedTravelBoardResponse: Codable {
+    let board: [GeneratedTravelBoard]
+    let count: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case board = "data"
+        case count
     }
 }
 

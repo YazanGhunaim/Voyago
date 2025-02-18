@@ -7,22 +7,25 @@
 
 import SwiftUI
 
-// Form View for itinerary user input
 struct VisualizeTravelBoardView: View {
     @State private var path = NavigationPath()
 
     @Environment(VisualizeTravelBoardViewModel.self) private var viewModel
 
     var body: some View {
-        NavigationStack {
-            switch viewModel.viewState {
-            case .Success, .none:
-                VisualizeTravelBoardFormView()
-            case .Loading:
-                VisualizingProgressView()
-                    .interactiveDismissDisabled()
-            case .Failure(_):
-                ErrorView()
+        NavigationStack(path: $path) {
+            Group {
+                switch viewModel.viewState {
+                case .none:
+                    VisualizeTravelBoardFormView()
+                case .Success:
+                    TravelBoardDetailsView(travelBoard: viewModel.visualizedBoard!)
+                case .Loading:
+                    VisualizingProgressView()
+                        .interactiveDismissDisabled()
+                case .Failure(_):
+                    ErrorView()
+                }
             }
         }
         .onDisappear {

@@ -134,8 +134,8 @@ extension VoyagoService {
 extension VoyagoService {
     /// Fetches the generated travel board based on a recommendation query from the user
     /// - Parameter query: recommendation query
-    func fetchGeneratedTravelBoard(query: RecommendationQuery) async -> Result<GeneratedTravelBoard, APIError> {
-        let res: Result<GeneratedTravelBoard, APIError> = await fetch(
+    func fetchGeneratedTravelBoard(query: RecommendationQuery) async -> Result<GeneratedTravelBoardResponse, APIError> {
+        let res: Result<GeneratedTravelBoardResponse, APIError> = await fetch(
             url: self.baseUrl + "/itinerary",
             method: .POST,
             body: query,

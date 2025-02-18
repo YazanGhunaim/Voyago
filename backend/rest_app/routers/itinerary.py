@@ -7,7 +7,7 @@ from starlette.exceptions import HTTPException
 from supabase import Client
 
 from backend.app.exceptions import TripPlanGenerationError
-from backend.app.models.recommendations import RecommendationQuery, VisualItinerary
+from backend.app.models.recommendations import RecommendationQuery
 from backend.rest_app.config.db_tables import DBTables
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
@@ -52,7 +52,7 @@ def get_visual_itinerary_for_user(auth: AuthTokens = Depends(get_auth_headers),
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
 
 
-@router.post("", response_model=VisualItinerary, status_code=status.HTTP_200_OK)
+@router.post("", status_code=status.HTTP_200_OK)
 def get_visual_itinerary(
         query: RecommendationQuery,
         auth: AuthTokens = Depends(get_auth_headers),
@@ -68,6 +68,8 @@ def get_visual_itinerary(
     :return: VisualItinerary
     """
     try:
+        # TODO: what if query insertion fails? or board insertion fails, need functions to delete
+        # https://github.com/orgs/supabase/discussions/526#discussioncomment-285139
         auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
 
         # get uid
@@ -97,8 +99,21 @@ def get_visual_itinerary(
             .insert(visual_itinerary_model)
             .execute()
         )
-        # TODO: return db data
-        return visual_itinerary_model
+
+        data = (
+            supabase_client
+            .from_(DBTables.TRAVEL_BOARDS)
+            .select(
+                f"plan, images, recommendations, destination_image, {DBTables.RECOMMENDATION_QUERIES}(destination, days)"
+                # TODO: utilize DBTables class?
+            )  # join
+            .eq("user_id", uuid.UUID(uid))
+            .order("created_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+
+        return data
     except TripPlanGenerationError as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")
     except AuthApiError as e:

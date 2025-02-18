@@ -31,13 +31,13 @@ struct CustomTabBar: View {
                         }
                     } label: {
                         VStack(spacing: 3) {
-//                            Spacer()
+                            //                            Spacer()
 
                             Image(systemName: item.iconName)
                                 .font(.system(size: 25))
 
-//                            Text(item.name)
-//                                .font(.caption)
+                            //                            Text(item.name)
+                            //                                .font(.caption)
 
                             if item.rawValue == selectedItem {
                                 Capsule()
@@ -62,7 +62,7 @@ struct CustomTabBar: View {
         .padding(.horizontal)
         .sheet(isPresented: $showSheet) {
             VisualizeTravelBoardView()
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
         }
     }
 }

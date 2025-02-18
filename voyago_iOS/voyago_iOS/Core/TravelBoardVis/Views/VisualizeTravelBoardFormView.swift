@@ -12,12 +12,12 @@ struct VisualizeTravelBoardFormView: View {
     @State private var numberOfDays: Int = 1
 
     @Environment(VisualizeTravelBoardViewModel.self) private var viewModel
-    @Environment(\.dismiss) var dismiss
-    
+    //    @Environment(\.dismiss) var dismiss
+
     var formNotFilled: Bool {
         destination.isEmpty
     }
-    
+
     var numberOfDaysText: String {
         "\(self.numberOfDays)" + (self.numberOfDays > 1 ? " days" : " day")
     }
@@ -25,7 +25,7 @@ struct VisualizeTravelBoardFormView: View {
     func visualize() async {
         let query = RecommendationQuery(destination: destination, days: numberOfDays)
         await viewModel.getGeneratedTravelBoard(query: query)
-        dismiss()
+        //        dismiss()
     }
 
     var body: some View {
@@ -37,18 +37,18 @@ struct VisualizeTravelBoardFormView: View {
                     placeHolderText: "Where to?",
                     text: $destination
                 )
-                
+
                 // MARK: Duration Input
                 VStack(alignment: .leading, spacing: 10) {
                     Text("How long will you be staying?")
                         .font(.headline)
-                    
+
                     Stepper(value: $numberOfDays, in: 1...14) {
                         Text(numberOfDaysText)
                             .font(.body)
                     }
                 }
-                
+
                 // MARK: Submit Button
                 Button {
                     Task { await visualize() }
@@ -61,7 +61,7 @@ struct VisualizeTravelBoardFormView: View {
                         .cornerRadius(15)
                 }
                 .disabled(self.formNotFilled)
-                
+
                 Spacer()
             }
             .padding()
