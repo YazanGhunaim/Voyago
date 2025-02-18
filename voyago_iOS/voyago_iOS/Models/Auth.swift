@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct UserLoginCredintails: Codable {
-    let email: String
-    let password: String
-}
-
 struct AuthResponse: Codable {
     let session: UserTokens
 }

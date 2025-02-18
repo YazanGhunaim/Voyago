@@ -9,12 +9,15 @@ import SwiftUI
 
 // TODO: Fix keyboard covering text field
 // TODO: Dismiss keyboard on screen tap
-// TODO: Buttons disabled if no input
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
 
     @Environment(AuthViewModel.self) private var viewModel
+
+    var formFilled: Bool {
+        !email.isEmpty && !password.isEmpty  // TODO: naive af -> regex for email and password + display to user under input fields
+    }
 
     var body: some View {
         NavigationStack {
@@ -47,7 +50,7 @@ struct LoginView: View {
                         Text("Forgot Password?")
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(Color(.systemIndigo))
+                            .foregroundStyle(.indigo)
                             .padding(.top)
                             .padding(.trailing, 24)
                     }
@@ -61,11 +64,12 @@ struct LoginView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(width: 340, height: 50)
-                        .background(Color(.systemIndigo))
+                        .background(formFilled ? .indigo : .indigo.opacity(0.5))
                         .clipShape(Capsule())
                         .padding()
                 }
                 .shadow(color: .gray.opacity(0.5), radius: 10, x: 0, y: 0)
+                .disabled(!formFilled)
 
                 Spacer()
 
@@ -84,7 +88,7 @@ struct LoginView: View {
                     }
                 }
                 .padding(.bottom, 32)
-                .foregroundStyle(Color(.systemIndigo))
+                .foregroundStyle(.indigo)
             }
             .ignoresSafeArea()
             .toolbar(.hidden, for: .navigationBar)

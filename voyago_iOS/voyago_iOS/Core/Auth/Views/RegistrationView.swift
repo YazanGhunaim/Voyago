@@ -16,6 +16,10 @@ struct RegistrationView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(AuthViewModel.self) private var viewModel
 
+    var formFilled: Bool {
+        !email.isEmpty && !password.isEmpty
+    }
+
     var body: some View {
         VStack {
             // MARK: Header
@@ -37,17 +41,20 @@ struct RegistrationView: View {
             .padding(32)
 
             Button {
-                Task { await viewModel.registerWithEmailAndPassword(email: email, password: password) }
+                Task {
+                    await viewModel.registerWithEmailAndPassword(username: username, email: email, password: password)
+                }
             } label: {
                 Text("Sign up")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(width: 340, height: 50)
-                    .background(Color(.systemIndigo))
+                    .background(formFilled ? .indigo : .indigo.opacity(0.5))
                     .clipShape(Capsule())
                     .padding()
             }
             .shadow(color: .gray.opacity(0.5), radius: 10, x: 0, y: 0)
+            .disabled(!formFilled)
 
             Spacer()
 
@@ -63,7 +70,7 @@ struct RegistrationView: View {
                         .fontWeight(.semibold)
                 }
             }
-            .foregroundStyle(Color(.systemIndigo))
+            .foregroundStyle(.indigo)
             .padding(.bottom, 32)
 
         }

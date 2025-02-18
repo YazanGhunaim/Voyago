@@ -1,30 +1,35 @@
 //
-//  GenTravelBoardFormView.swift
+//  VisualizeTravelBoardFormView.swift
 //  voyago_iOS
 //
-//  Created by Yazan Ghunaim on 1/26/25.
+//  Created by Yazan Ghunaim on 2/17/25.
 //
 
 import SwiftUI
 
-/// Form View for itinerary user input
-struct GenTravelBoardFormView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(GenTravelBoardFormViewModel.self) private var viewModel
-
+struct VisualizeTravelBoardFormView: View {
     @State private var destination: String = ""
     @State private var numberOfDays: Int = 1
+
+    @Environment(VisualizeTravelBoardViewModel.self) private var viewModel
+    //    @Environment(\.dismiss) var dismiss
 
     var formNotFilled: Bool {
         destination.isEmpty
     }
+
     var numberOfDaysText: String {
         "\(self.numberOfDays)" + (self.numberOfDays > 1 ? " days" : " day")
     }
 
+    func visualize() async {
+        let query = RecommendationQuery(destination: destination, days: numberOfDays)
+        await viewModel.getGeneratedTravelBoard(query: query)
+        //        dismiss()
+    }
+
     var body: some View {
         NavigationStack {
-            // MARK: Form
             VStack(alignment: .leading, spacing: 20) {
                 // MARK: Destination Input
                 VoyagoInputField(
@@ -46,7 +51,7 @@ struct GenTravelBoardFormView: View {
 
                 // MARK: Submit Button
                 Button {
-                    Task { await submit() }
+                    Task { await visualize() }
                 } label: {
                     Text("Visualize")
                         .frame(maxWidth: .infinity)
@@ -65,14 +70,6 @@ struct GenTravelBoardFormView: View {
     }
 }
 
-extension GenTravelBoardFormView {
-    func submit() async {
-        let query = RecommendationQuery(destination: destination, days: numberOfDays)
-        await viewModel.getGeneratedTravelBoard(query: query)
-        dismiss()
-    }
+#Preview {
+    VisualizeTravelBoardFormView()
 }
-
-//#Preview {
-//    GenTravelBoardFormView()
-//}

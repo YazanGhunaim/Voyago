@@ -1,24 +1,25 @@
 //
-//  TravelBoardsViewModel.swift
+//  ProfileViewModel.swift
 //  voyago_iOS
 //
-//  Created by Yazan Ghunaim on 2/9/25.
+//  Created by Yazan Ghunaim on 2/17/25.
 //
 
 import Foundation
 
+// TODO: User data
 @Observable
 @MainActor
-class TravelBoardsViewModel {
-    var travelBoards: UserTravelBoards?
-    var viewState: ViewState?
+class ProfileViewModel {
+    var userBoards = [GeneratedTravelBoard]()
+    var viewState: ViewState = .Loading
 
     init() {
-        Task { await self.getUserTravelBoards(initial: true) }
+        Task { await getUserTravelBoards(initial: true) }
     }
 }
 
-extension TravelBoardsViewModel {
+extension ProfileViewModel {
     /// ViewState enum
     enum ViewState: Equatable {
         case Loading
@@ -28,13 +29,10 @@ extension TravelBoardsViewModel {
     }
 }
 
-extension TravelBoardsViewModel {
+extension ProfileViewModel {
     /// Gets user created travel boards from voyago service
     func getUserTravelBoards(initial: Bool = false) async {
-        if initial {
-            guard self.viewState != .Loading else { return }
-            self.viewState = .Loading
-        } else {
+        if !initial {
             guard self.viewState != .Fetching else { return }
             self.viewState = .Fetching
         }
@@ -51,7 +49,7 @@ extension TravelBoardsViewModel {
                 refreshToken: sessionResponse.authTokens.refreshToken
             )
 
-            self.travelBoards = sessionResponse.boards
+            self.userBoards = sessionResponse.boards.data
             self.viewState = .Success
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")

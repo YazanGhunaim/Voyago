@@ -21,11 +21,6 @@ struct VisualizingProgressView: View {
                     .foregroundColor(.gray)
             }
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
-                    .shadow(radius: 4)
-            )
         }
     }
 }

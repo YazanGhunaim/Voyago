@@ -25,8 +25,6 @@ struct TravelBoardCard: View {
 
             // MARK: Destination Data
             HStack {
-                Spacer()
-
                 VStack(alignment: .center) {
                     Text("\(self.recommendationQuery.destination)")
                         .font(.largeTitle)
@@ -35,12 +33,6 @@ struct TravelBoardCard: View {
                 }
                 .foregroundColor(.white)
                 .padding()
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(.white)
-                    .padding(.trailing)
             }
         }
         .frame(height: 150)

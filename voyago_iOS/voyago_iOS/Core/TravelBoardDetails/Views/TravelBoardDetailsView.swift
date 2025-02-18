@@ -16,7 +16,7 @@ struct TravelBoardDetailsView: View {
             ScrollView {
                 // MARK: View header titles
                 TravelBoardDetailsHeaderView(
-                    recommendationQuery: travelBoard.recommendationQuery!,
+                    recommendationQuery: travelBoard.recommendationQuery,
                     image: travelBoard.destinationImage
                 )
 
