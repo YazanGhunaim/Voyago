@@ -12,7 +12,7 @@ struct TravelBoardPlanDetailsView: View {
 
     var body: some View {
         
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal) {
                 HStack {
                     ForEach(dailyPlan, id: \.hashValue) { plan in
                         VStack(alignment: .leading, spacing: 10) {
@@ -26,10 +26,10 @@ struct TravelBoardPlanDetailsView: View {
                         .padding()
                         .containerRelativeFrame(.horizontal, count: 1, spacing: 10)
                         .background {
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: 15)
                                 .fill(.thinMaterial)
                                 .stroke(.primary, lineWidth: 0.5)
-                                .shadow(color: .indigo, radius: 2)
+                                .shadow(color: .primary, radius: 1)
                         }
                     }
                 }
@@ -41,6 +41,6 @@ struct TravelBoardPlanDetailsView: View {
     
 }
 
-#Preview {
-    TravelBoardPlanDetailsView(dailyPlan: mockTravelBoard.plan)
-}
+//#Preview {
+//    TravelBoardPlanDetailsView(dailyPlan: mockTravelBoard.plan)
+//}

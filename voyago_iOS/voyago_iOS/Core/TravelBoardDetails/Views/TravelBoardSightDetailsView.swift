@@ -11,7 +11,7 @@ struct TravelBoardSightDetailsView: View {
     let board: GeneratedTravelBoard
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        ScrollView(.horizontal) {
             HStack {
                 ForEach(board.recommendations, id: \.id) { recommendation in
                     VStack(alignment: .leading, spacing: 10) {
@@ -20,17 +20,17 @@ struct TravelBoardSightDetailsView: View {
 
                         Text(recommendation.brief)
 
-                        VoyagoImageCard(image: board.images[recommendation.sight]!.first!)
+                        VoyagoImageCard(image: board.images[recommendation.sight]!.first!, cornerRadius: 15)
                             .frame(height: 250)
                             .scaledToFit()
                     }
                     .padding()
                     .containerRelativeFrame(.horizontal, count: 1, spacing: 10)
                     .background {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: 15)
                             .fill(.thinMaterial)
                             .stroke(.primary, lineWidth: 0.5)
-                            .shadow(color: .indigo, radius: 2)
+                            .shadow(color: .primary, radius: 1)
                     }
                 }
             }
