@@ -10,9 +10,16 @@ import SwiftUI
 
 struct TravelBoardDetailsView: View {
     let travelBoard: GeneratedTravelBoard
+    let toggleTabbar: Bool
 
     @Environment(TabBarViewModel.self) private var tabBarVM
+    @Environment(\.presentationMode) var presentationMode
 
+    init(travelBoard: GeneratedTravelBoard, toggleTabbar: Bool = true) {
+        self.travelBoard = travelBoard
+        self.toggleTabbar = toggleTabbar
+    }
+    
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -37,10 +44,15 @@ struct TravelBoardDetailsView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .onAppear {
-            tabBarVM.toggleTabBar()
+            if toggleTabbar {
+                tabBarVM.toggleTabBar()
+            }
+
         }
         .onDisappear {
-            tabBarVM.toggleTabBar()
+            if toggleTabbar {
+                tabBarVM.toggleTabBar()
+            }
         }
     }
 }

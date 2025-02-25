@@ -1,7 +1,7 @@
 """Auth dependencies"""
 from fastapi import Header
 
-from backend.rest_app.models.auth import AuthTokens
+from backend.schemas.auth_tokens import AuthTokens
 
 
 def get_auth_headers(access_token: str = Header(..., alias="Authorization"),

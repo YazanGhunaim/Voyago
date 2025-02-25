@@ -1,7 +1,7 @@
 """generate visual plan view"""
 import streamlit as st
 
-from backend.app.models.recommendations import RecommendationQuery
+from backend.schemas import BoardQuery
 from backend.rest_app.dependencies import get_voyago
 
 voyago = get_voyago()
@@ -18,11 +18,11 @@ with st.form("Trip plan"):
     submitted = st.form_submit_button("generate")
 
     if submitted:
-        query = RecommendationQuery(destination=destination, days=duration)
+        query = BoardQuery(destination=destination, days=duration)
 
         with st.spinner("Generating..."):
             itinerary = voyago.generate_visual_itinerary(query=query)
-            plan, recommendations, sight_with_image = itinerary.plan, itinerary.recommendations, itinerary.images
+            plan, recommendations, sight_with_image = itinerary.plan, itinerary.sight_recommendations, itinerary.images
 
         st.snow()  # celebration xd
 

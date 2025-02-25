@@ -1,8 +1,8 @@
 """response related utils"""
+from backend.schemas.voyago_session_response import VoyagoSessionResponse
 from gotrue import AuthResponse
 
-from backend.rest_app.models.auth import AuthTokens
-from backend.rest_app.models.response import VoyagoSessionResponse
+from backend.schemas.auth_tokens import AuthTokens
 
 
 def create_voyago_session_response(response, auth_response: AuthResponse) -> VoyagoSessionResponse:

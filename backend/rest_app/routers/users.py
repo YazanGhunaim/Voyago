@@ -7,9 +7,9 @@ from supabase import Client
 
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
-from backend.rest_app.models.auth import AuthTokens
-from backend.rest_app.models.users import UserSignIn, UserSignUp
 from backend.rest_app.utils.auth import set_supabase_session
+from backend.schemas.auth_tokens import AuthTokens
+from backend.schemas.users import UserSignIn, UserSignUp, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -30,8 +30,7 @@ def sign_up(user: UserSignUp, supabase_client: Client = Depends(get_supabase_cli
     public.users table
     """
     try:
-        # TODO: check if username already used BLOOM FILTER + make username unique in db
-        response = supabase_client.auth.sign_up(user.model_dump())
+        response = supabase_client.auth.sign_up(user.model_dump(exclude_unset=True))
         return response
     except AuthApiError as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"{e}")
@@ -81,13 +80,12 @@ def sign_out(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
 
 
-# TODO: fix models such that only that what needs to change is changed
-@router.put("/update_user", responses={
+@router.put("/update", responses={
     status.HTTP_200_OK: {"description": "User signed in successfully."},
     status.HTTP_401_UNAUTHORIZED: {"description": "User sign in failed."},
 })
 def update_user(
-        user: UserSignIn,
+        user: UserUpdate,
         auth: AuthTokens = Depends(get_auth_headers),
         supabase_client: Client = Depends(get_supabase_client)) -> UserResponse:
     """Updates user data
@@ -96,7 +94,7 @@ def update_user(
     """
     try:
         set_supabase_session(auth=auth, supabase_client=supabase_client)
-        response = supabase_client.auth.update_user(user.model_dump())
+        response = supabase_client.auth.update_user(user.model_dump(exclude_unset=True))
         return response
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")

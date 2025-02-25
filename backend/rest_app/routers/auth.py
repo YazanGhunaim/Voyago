@@ -7,8 +7,8 @@ from gotrue.errors import AuthApiError, AuthSessionMissingError
 
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
-from backend.rest_app.models.auth import AuthTokens
 from backend.rest_app.utils.auth import set_supabase_session
+from backend.schemas.auth_tokens import AuthTokens
 
 log = logging.getLogger(__name__)
 

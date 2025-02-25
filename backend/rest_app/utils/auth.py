@@ -2,7 +2,7 @@
 from gotrue import AuthResponse
 from supabase import Client
 
-from backend.rest_app.models.auth import AuthTokens
+from backend.schemas.auth_tokens import AuthTokens
 
 
 def set_supabase_session(auth: AuthTokens, supabase_client: Client) -> AuthResponse:
