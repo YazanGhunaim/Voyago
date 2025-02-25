@@ -13,7 +13,7 @@ struct NoResponse: Codable {
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.0.100:8000"
+    private let baseUrl = "http://192.168.0.101:8000"
 
     // singleton
     static let shared = VoyagoService()

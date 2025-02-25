@@ -7,54 +7,21 @@ from starlette.exceptions import HTTPException
 from supabase import Client
 
 from backend.app.exceptions import TripPlanGenerationError
-from backend.app.models.recommendations import RecommendationQuery
-from backend.rest_app.config.db_tables import DBTables
+from backend.models.travel_board import UserTravelBoardModel
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
 from backend.rest_app.dependencies.voyago_client import get_voyago
-from backend.rest_app.models.auth import AuthTokens
-from backend.rest_app.models.response import VoyagoSessionResponse
 from backend.rest_app.utils.auth import set_supabase_session
-from backend.rest_app.utils.response import create_voyago_session_response
+from backend.rest_app.utils.db_tables import DBTables
+from backend.schemas.auth_tokens import AuthTokens
+from backend.schemas.board_query import BoardQuery
 
-# TODO: Database migrations
 router = APIRouter(prefix="/itinerary", tags=["itinerary"])
 
 
-@router.get("/user", response_model=VoyagoSessionResponse, status_code=status.HTTP_200_OK)
-def get_visual_itinerary_for_user(auth: AuthTokens = Depends(get_auth_headers),
-                                  supabase_client: Client = Depends(get_supabase_client)):
-    """Retrieves all user generated itineraries
-
-    :param auth: AuthHeaders
-    :param supabase_client: Supabase client
-    :return: List of visual itineraries + query details that generated them + auth tokens
-    """
-    try:
-        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
-        uid = auth_response.session.user.id  # extract current uid
-        data = (
-            supabase_client
-            .from_(DBTables.TRAVEL_BOARDS)
-            .select(
-                f"plan, images, recommendations, destination_image, {DBTables.RECOMMENDATION_QUERIES}(destination, days)"
-                # TODO: utilize DBTables class?
-            )  # join
-            .eq("user_id", uuid.UUID(uid))
-            .execute()
-        )
-
-        response = create_voyago_session_response(response=data, auth_response=auth_response)
-        return response
-    except AuthApiError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
-
-
-@router.post("", status_code=status.HTTP_200_OK)
+@router.post("", response_model=UserTravelBoardModel, status_code=status.HTTP_200_OK)
 def get_visual_itinerary(
-        query: RecommendationQuery,
+        query: BoardQuery,
         auth: AuthTokens = Depends(get_auth_headers),
         voyago=Depends(get_voyago),
         supabase_client: Client = Depends(get_supabase_client)
@@ -68,54 +35,61 @@ def get_visual_itinerary(
     :return: VisualItinerary
     """
     try:
-        # TODO: what if query insertion fails? or board insertion fails, need functions to delete
-        # https://github.com/orgs/supabase/discussions/526#discussioncomment-285139
         auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
-
-        # get uid
-        uid = auth_response.session.user.id
+        uid = auth_response.session.user.id  # get uid
 
         # get models
         visual_itinerary_model = voyago.generate_visual_itinerary(query=query).model_dump()
         query_model = query.model_dump()
 
-        # append uid to models
-        query_model["user_id"] = uid
-        visual_itinerary_model["user_id"] = uid
+        supabase_client.rpc(
+            "insert_travel_board_and_query",
+            {
+                "user_id": uid,
+                "plan": visual_itinerary_model["plan"],
+                "images": visual_itinerary_model["images"],
+                "sight_recommendations": visual_itinerary_model["sight_recommendations"],
+                "destination_image": visual_itinerary_model["destination_image"],
+                "destination": query_model["destination"],
+                "days": query_model["days"],
+            },
+        ).execute()
 
-        query_id = (
-            supabase_client
-            .table(DBTables.RECOMMENDATION_QUERIES)
-            .insert(query_model)
-            .execute()
-        ).data[0]["id"]
+        return UserTravelBoardModel(**visual_itinerary_model, board_queries=[query])
+    except TripPlanGenerationError as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")
+    except AuthApiError as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e}")
 
-        # append query_id
-        visual_itinerary_model["query_id"] = query_id
 
-        # insert travel board
-        (
-            supabase_client.table("travel_boards")
-            .insert(visual_itinerary_model)
-            .execute()
-        )
+@router.get("/user", response_model=list[UserTravelBoardModel], status_code=status.HTTP_200_OK)
+def get_visual_itinerary_for_user(
+        auth: AuthTokens = Depends(get_auth_headers),
+        supabase_client: Client = Depends(get_supabase_client)
+):
+    """Retrieves all user generated itineraries
 
-        data = (
+    :param auth: AuthHeaders
+    :param supabase_client: Supabase client
+    :return: List of visual itineraries + query details that generated them + auth tokens
+    """
+    try:
+        auth_response = set_supabase_session(auth=auth, supabase_client=supabase_client)
+        uid = auth_response.session.user.id  # extract current uid
+
+        response = (
             supabase_client
             .from_(DBTables.TRAVEL_BOARDS)
             .select(
-                f"plan, images, recommendations, destination_image, {DBTables.RECOMMENDATION_QUERIES}(destination, days)"
-                # TODO: utilize DBTables class?
+                f"plan, images, sight_recommendations, destination_image, {DBTables.BOARD_QUERIES}(destination, days)"
             )  # join
             .eq("user_id", uuid.UUID(uid))
-            .order("created_at", desc=True)
-            .limit(1)
             .execute()
         )
 
-        return data
-    except TripPlanGenerationError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"{e}")
+        return response.data
     except AuthApiError as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"{e}")
     except Exception as e:

@@ -7,12 +7,12 @@ from starlette import status
 from starlette.exceptions import HTTPException
 from supabase import Client
 
-from backend.app.models.images import VoyagoImage
 from backend.rest_app.dependencies.auth import get_auth_headers
 from backend.rest_app.dependencies.supabase_client import get_supabase_client
 from backend.rest_app.dependencies.voyago_client import get_voyago
-from backend.rest_app.models.auth import AuthTokens
 from backend.rest_app.utils.auth import set_supabase_session
+from backend.schemas.auth_tokens import AuthTokens
+from backend.schemas.voyago_image import VoyagoImage
 
 router = APIRouter(prefix="/images", tags=["Images"])
 

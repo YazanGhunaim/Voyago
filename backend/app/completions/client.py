@@ -5,10 +5,11 @@ from logging import getLogger
 import openai
 from openai import LengthFinishReasonError
 
-from backend.app.config.config import get_config
 from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, VoyagoError
-from backend.app.models.recommendations import Itinerary, RecommendationQuery
 from backend.app.prompts.prompts import GET_SIGHT_RECOMMENDATIONS_AND_PLAN
+from backend.schemas.board_query import BoardQuery
+from backend.schemas.travel_board import TravelBoard
+from backend.utils.config import get_config
 
 log = getLogger(__name__)
 
@@ -23,7 +24,7 @@ class AIClient:
         self.config = get_config()
         self._client = openai.OpenAI(api_key=self.config.openai_key)
 
-    def send_recommendation_query(self, query: RecommendationQuery) -> Itinerary:
+    def send_recommendation_query(self, query: BoardQuery) -> TravelBoard:
         """
         Takes in a RecommendationsQuery model using openAi's completion parsing
         returns a SightRecommendation model
@@ -43,7 +44,7 @@ class AIClient:
                         "content": f"destination: {query.destination} days: {query.days}"
                     }
                 ],
-                response_format=Itinerary,
+                response_format=TravelBoard,
                 # max_tokens=50
             )
             sight_recommendations = completion.choices[0].message

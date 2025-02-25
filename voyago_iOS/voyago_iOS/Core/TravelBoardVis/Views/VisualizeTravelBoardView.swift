@@ -18,7 +18,7 @@ struct VisualizeTravelBoardView: View {
                 case .none:
                     VisualizeTravelBoardFormView(viewModel: viewModel)
                 case .Success:
-                    TravelBoardDetailsView(travelBoard: viewModel.visualizedBoard!)
+                    TravelBoardDetailsView(travelBoard: viewModel.visualizedBoard!, toggleTabbar: false)
                 case .Loading:
                     VisualizingProgressView()
                         .interactiveDismissDisabled()
