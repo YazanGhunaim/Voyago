@@ -2,8 +2,11 @@
 import logging
 
 from backend.app.completions.client import AIClient
-from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, \
-    VoyagoError
+from backend.app.exceptions import (
+    ClientRefusalError,
+    ClientTokenLimitExceededError,
+    TripPlanGenerationError,
+    VoyagoError)
 from backend.app.services.unsplash.unsplash_service import UnsplashService
 from backend.schemas.board_query import BoardQuery
 from backend.schemas.travel_board import TravelBoard, VisualTravelBoard
