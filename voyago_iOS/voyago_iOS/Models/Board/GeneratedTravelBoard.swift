@@ -1,30 +1,11 @@
 //
-//  TravelBoard.swift
+//  GeneratedTravelBoard.swift
 //  voyago_iOS
 //
-//  Created by Yazan Ghunaim on 1/26/25.
+//  Created by Yazan Ghunaim on 3/16/25.
 //
 
 import Foundation
-
-/// A model for a single sight recommendation
-struct SightRecommendation: Codable {
-    var id = UUID()
-
-    let sight: String
-    let brief: String
-
-    enum CodingKeys: String, CodingKey {
-        case sight
-        case brief
-    }
-}
-
-/// A model for a single day plan
-struct DayPlan: Codable, Hashable {
-    let day: Int
-    let plan: String
-}
 
 /// Model of the generated travel board, without query metadata ( straight after generation )
 struct GeneratedTravelBoard: Codable {
@@ -35,6 +16,12 @@ struct GeneratedTravelBoard: Codable {
     let recommendations: [SightRecommendation]
     let images: [String: [VoyagoImage]]
     let queries: [BoardQuery]
+
+    // getter for the singular query used to generate this board
+    // its a list due to supabase return format, but only 1 query generates a board
+    var query: BoardQuery {
+        queries.first!
+    }
 
     enum CodingKeys: String, CodingKey {
         case destinationImage = "destination_image"

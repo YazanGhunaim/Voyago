@@ -18,8 +18,8 @@ struct TravelBoardCardButtonView: View {
             // MARK: TravelBoard card
             TravelBoardCard(
                 boardQuery: BoardQuery(
-                    destination: board.queries.first!.destination,
-                    days: board.queries.first!.days
+                    destination: board.query.destination,
+                    days: board.query.days
                 ),
                 image: board.destinationImage
             )
