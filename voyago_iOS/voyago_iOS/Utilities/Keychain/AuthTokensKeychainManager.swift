@@ -44,10 +44,6 @@ final class AuthTokensKeychainManager {
 
     // saves auth tokens to keychain
     func saveAuthTokens(accessToken: String, refreshToken: String) {
-        // workaround... only write to keychain if refreshtoken used
-        // TODO: actually doesnt work... most of the times the token expires when user not on app
-        guard accessToken != self.accessToken || refreshToken != self.refreshToken else { return }
-
         if authTokensExist() {
             VoyagoLogger.shared.logger.debug("Updating user tokens")
             AuthTokensKeychainManager.shared.updateToken(forKey: .accessToken, token: accessToken)
@@ -64,7 +60,7 @@ final class AuthTokensKeychainManager {
     }
 
     // Checks if user auth tokens already exist in keychain
-    private func authTokensExist() -> Bool {
+    func authTokensExist() -> Bool {
         guard AuthTokensKeychainManager.shared.getToken(forKey: .accessToken) != nil else { return false }
         return true
     }

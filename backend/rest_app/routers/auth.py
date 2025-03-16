@@ -15,16 +15,16 @@ log = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.get("/validate_tokens", response_model=AuthResponse, status_code=status.HTTP_200_OK, responses={
-    status.HTTP_200_OK: {"description": "Token validation successful."},
-    status.HTTP_400_BAD_REQUEST: {"description": "Token validation failed."},
+@router.get("/set_user_session", response_model=AuthResponse, status_code=status.HTTP_200_OK, responses={
+    status.HTTP_200_OK: {"description": "Setting session successful."},
+    status.HTTP_400_BAD_REQUEST: {"description": "Setting session failed."},
     status.HTTP_401_UNAUTHORIZED: {"description": "Invalid or expired tokens."}
 })
 def validate_tokens(
         auth: AuthTokens = Depends(get_auth_headers),
         supabase_client=Depends(get_supabase_client)
 ):
-    """validates user auth tokens, used to check if user should stay logged in
+    """Sets the user session, refreshes the access token if expired, given refresh token is passed
 
     :param auth: user auth tokens
     :param supabase_client: supabase client

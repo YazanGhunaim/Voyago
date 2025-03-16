@@ -43,16 +43,10 @@ extension TravelBoardsViewModel {
 
         switch result {
         case .success(let sessionResponse):
-            VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
-
-            // saving auth tokens
-            AuthTokensKeychainManager.shared.saveAuthTokens(
-                accessToken: sessionResponse.authTokens.accessToken,
-                refreshToken: sessionResponse.authTokens.refreshToken
-            )
-
             self.travelBoards = sessionResponse.boards
             self.viewState = .Success
+            
+            VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")            
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")
 

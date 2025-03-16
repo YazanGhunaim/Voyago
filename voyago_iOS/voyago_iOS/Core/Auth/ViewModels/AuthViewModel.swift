@@ -25,15 +25,16 @@ extension AuthViewModel {
 
     // Sets the user session state
     private func setUserSessionState() async {
-        let validTokens = await validAuthTokens()
-        self.userSessionState = validTokens ? .loggedIn : .loggedOut
+        let userSessionIsValid = await setUserSession()
+        self.userSessionState = userSessionIsValid ? .loggedIn : .loggedOut
     }
 
-    // checks if exist valid tokens
-    private func validAuthTokens() async -> Bool {
-        //        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
+    // Checks if user session exists, if so saves the returned AuthTokens to keychain
+    // If valid tokens already in hand, refreshed access token if need be
+    private func setUserSession() async -> Bool {
+        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
 
-        let result = await VoyagoService.shared.validateTokens()
+        let result = await VoyagoService.shared.setUserSession()
 
         switch result {
         case .success(let authResponse):
@@ -42,10 +43,10 @@ extension AuthViewModel {
                 refreshToken: authResponse.session.refreshToken
             )
 
-            VoyagoLogger.shared.logger.info("Tokens in hand are valid")
+            VoyagoLogger.shared.logger.info("Successfully set user session.")
             return true
-        case .failure(_):
-            VoyagoLogger.shared.logger.info("Tokens in hand are invalid")
+        case .failure(let error):
+            VoyagoLogger.shared.logger.error("\(error.localizedDescription)")
             return false
         }
     }
