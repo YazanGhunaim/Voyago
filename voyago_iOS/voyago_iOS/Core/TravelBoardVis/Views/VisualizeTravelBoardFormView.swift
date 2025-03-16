@@ -22,7 +22,7 @@ struct VisualizeTravelBoardFormView: View {
     }
 
     func visualize() async {
-        let query = RecommendationQuery(destination: destination, days: numberOfDays)
+        let query = BoardQuery(destination: destination, days: numberOfDays)
         await viewModel.getGeneratedTravelBoard(query: query)
     }
 }

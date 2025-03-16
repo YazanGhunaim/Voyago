@@ -30,42 +30,17 @@ struct DayPlan: Codable, Hashable {
 struct GeneratedTravelBoard: Codable {
     var id = UUID()
 
+    let destinationImage: VoyagoImage
     let plan: [DayPlan]
     let recommendations: [SightRecommendation]
     let images: [String: [VoyagoImage]]
-
-    let recommendationQuery: RecommendationQuery
-    let destinationImage: VoyagoImage
+    let queries: [BoardQuery]
 
     enum CodingKeys: String, CodingKey {
-        case plan, recommendations, images
         case destinationImage = "destination_image"
-        case recommendationQuery = "recommendation_queries"
-    }
-}
+        case queries = "board_queries"
+        case recommendations = "sight_recommendations"
 
-struct GeneratedTravelBoardResponse: Codable {
-    let board: [GeneratedTravelBoard]
-    let count: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case board = "data"
-        case count
-    }
-}
-
-struct UserTravelBoards: Codable {
-    let data: [GeneratedTravelBoard]
-    let count: Int?
-}
-
-// User travel boards alongside his auth tokens
-struct UserTravelBoardsSessionResponse: Codable {
-    let boards: UserTravelBoards
-    let authTokens: UserTokens
-
-    enum CodingKeys: String, CodingKey {
-        case boards = "response"
-        case authTokens = "auth_tokens"
+        case plan, images
     }
 }

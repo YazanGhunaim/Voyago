@@ -10,7 +10,7 @@ import Foundation
 @Observable
 @MainActor
 class TravelBoardsViewModel {
-    var travelBoards: UserTravelBoards?
+    var travelBoards = [GeneratedTravelBoard]()
     var viewState: ViewState?
 
     init() {
@@ -42,8 +42,8 @@ extension TravelBoardsViewModel {
         let result = await VoyagoService.shared.fetchUserTravelBoards()
 
         switch result {
-        case .success(let sessionResponse):
-            self.travelBoards = sessionResponse.boards
+        case .success(let boards):
+            self.travelBoards = boards
             self.viewState = .Success
             
             VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")            

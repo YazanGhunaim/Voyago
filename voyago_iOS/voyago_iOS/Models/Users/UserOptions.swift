@@ -14,14 +14,3 @@ struct UserData: Codable {
 struct UserOptions: Codable {
     let data: UserData
 }
-
-struct UserSignUpCredentials: Codable {
-    let options: UserOptions
-    let email: String
-    let password: String
-}
-
-struct UserSignInCredentials: Codable {
-    let email: String
-    let password: String
-}

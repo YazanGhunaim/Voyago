@@ -40,13 +40,13 @@ extension ProfileViewModel {
         let result = await VoyagoService.shared.fetchUserTravelBoards()
 
         switch result {
-        case .success(let sessionResponse):
-            self.userBoards = sessionResponse.boards.data
+        case .success(let boards):
+            self.userBoards = boards
             self.viewState = .Success
             
             VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
         case .failure(let error):
-            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")
+            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error)")
 
             self.viewState = .Failure(errorMessage: error.localizedDescription)
         }

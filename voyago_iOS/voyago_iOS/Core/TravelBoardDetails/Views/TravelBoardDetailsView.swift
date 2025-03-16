@@ -39,7 +39,7 @@ struct TravelBoardDetailsView: View {
                     TravelBoardSightDetailsView(board: travelBoard)
                 }
             }
-            .navigationTitle("Your trip to \(travelBoard.recommendationQuery.destination)")
+            .navigationTitle("Your trip to \(travelBoard.queries.first!.destination)")
             .navigationBarTitleDisplayMode(.inline)
         }
         .toolbar(.hidden, for: .tabBar)
