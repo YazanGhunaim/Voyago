@@ -95,6 +95,7 @@ extension HomeViewModel {
 
             self.images += images
             self.viewState = .Success
+            VoyagoLogger.shared.logger.info("Successfully fetched images for page \(self.page)")
         case .failure(let error):
             VoyagoLogger.shared.logger.info("Failed to fetch images with error: \(error)")
 
