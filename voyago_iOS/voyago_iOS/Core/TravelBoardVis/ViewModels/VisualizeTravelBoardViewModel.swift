@@ -36,15 +36,15 @@ extension VisualizeTravelBoardViewModel {
 
         switch result {
         case .success(let board):
-            VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
-
             self.visualizedBoard = board
             self.viewState = .Success
+            
+            VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
         case .failure(let error):
-            VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
-
             self.visualizedBoard = nil
             self.viewState = .Failure(errorMessage: "Itinerary generation failed. Please try again later.")
+            
+            VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
         }
     }
 

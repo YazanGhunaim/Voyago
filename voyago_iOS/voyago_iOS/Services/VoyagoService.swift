@@ -13,7 +13,7 @@ struct NoResponse: Codable {
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.1.137:8000"
+    private let baseUrl = "http://192.168.1.196:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -43,7 +43,7 @@ extension VoyagoService {
     ) async -> Result<T, APIError> where T: Decodable {
         // Construct URL
         guard var urlComponents = URLComponents(string: url) else {
-            return .failure(APIError.invalidURL)
+            return .failure(.invalidURL)
         }
 
         // Add query parameters for GET requests
@@ -70,21 +70,26 @@ extension VoyagoService {
                 request.httpBody = try JSONEncoder().encode(body)
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
-                return .failure(APIError.encodingError(error))
+                return .failure(.encodingError(error))
             }
         }
 
         // Execute request
         do {
             VoyagoLogger.shared.logger.info("Voyago Service requesting: \(request)")
-            
+
             let (data, response) = try await self.session.data(for: request)
 
             // Validate HTTP status code
+
             guard let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                return .failure(APIError.invalidResponse)
+                return .failure(.invalidResponse)
+            }
+
+            if httpResponse.statusCode == 401 {
+                return .failure(.unauthorized)
             }
 
             if httpResponse.statusCode == 204 {
@@ -95,7 +100,7 @@ extension VoyagoService {
             let result = try JSONDecoder().decode(T.self, from: data)
             return .success(result)
         } catch {
-            return .failure(APIError.networkError(error))
+            return .failure(.networkError(error))
         }
     }
 }
@@ -217,13 +222,13 @@ extension VoyagoService {
         return res
     }
 
-    func signUpWithEmailAndPassword(username: String, email: String, password: String)
+    func signUpWithEmailAndPassword(name: String, username: String, email: String, password: String)
         async -> Result<AuthResponse, APIError>
     {
         let credentials = UserSignUpCredentials(
-            options: UserOptions(data: UserData(username: username)),
             email: email,
-            password: password
+            password: password,
+            options: UserOptions(data: UserData(name: name, username: username))
         )
         let res: Result<AuthResponse, APIError> = await fetch(
             url: self.baseUrl + "/users/sign_up",

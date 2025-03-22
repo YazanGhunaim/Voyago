@@ -45,8 +45,8 @@ extension AuthViewModel {
 
             VoyagoLogger.shared.logger.info("Successfully set user session.")
             return true
-        case .failure(let error):
-            VoyagoLogger.shared.logger.error("\(error.localizedDescription)")
+        case .failure(_):
+            VoyagoLogger.shared.logger.error("Failed to set user session.")
             return false
         }
     }
@@ -62,6 +62,9 @@ extension AuthViewModel {
             VoyagoLogger.shared.logger.info("Successfully signed out user")
 
             self.userSessionState = .loggedOut
+            if !AuthTokensKeychainManager.shared.deleteAuthTokens() {
+                VoyagoLogger.shared.logger.error("Failed to delete Auth Tokens from keychain.")
+            }
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Failed to sign out user with error: \(error)")
         }
@@ -103,9 +106,10 @@ extension AuthViewModel {
         }
     }
 
-    func registerWithEmailAndPassword(username: String, email: String, password: String) async -> Bool {
+    func registerWithEmailAndPassword(name: String, username: String, email: String, password: String) async -> Bool {
         let result = await VoyagoService.shared.signUpWithEmailAndPassword(
-            username: username, email: email, password: password)
+            name: name, username: username, email: email, password: password
+        )
 
         switch result {
         case .success(let authResponse):

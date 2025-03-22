@@ -8,7 +8,7 @@
 import Foundation
 
 struct UserSignUpCredentials: Codable {
-    let options: UserOptions
     let email: String
     let password: String
+    let options: UserOptions
 }

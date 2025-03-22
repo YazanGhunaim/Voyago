@@ -91,15 +91,14 @@ extension HomeViewModel {
 
         switch result {
         case .success(let images):
-            VoyagoLogger.shared.logger.info("Successfully fetched images for page \(self.page)")
-
             self.images += images
             self.viewState = .Success
+            
             VoyagoLogger.shared.logger.info("Successfully fetched images for page \(self.page)")
         case .failure(let error):
-            VoyagoLogger.shared.logger.info("Failed to fetch images with error: \(error)")
-
             self.viewState = .Failure(errorMessage: "An unexpected error occurred while loading data.")
+            
+            VoyagoLogger.shared.logger.info("Failed to fetch images with error: \(error)")
         }
     }
 }

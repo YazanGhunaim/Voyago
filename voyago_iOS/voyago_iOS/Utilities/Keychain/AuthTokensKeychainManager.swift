@@ -58,6 +58,14 @@ final class AuthTokensKeychainManager {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }
+    
+    func deleteAuthTokens() -> Bool {
+        VoyagoLogger.shared.logger.debug("Deleting user tokens")
+        self.accessToken = nil
+        self.refreshToken = nil
+        
+        return self.deleteToken(forKey: .accessToken) && self.deleteToken(forKey: .refreshToken)
+    }
 
     // Checks if user auth tokens already exist in keychain
     func authTokensExist() -> Bool {
@@ -126,5 +134,14 @@ extension AuthTokensKeychainManager {
 
         VoyagoLogger.shared.logger.debug("Succesffully got auth token with key \(key.rawValue)")
         return token
+    }
+    
+    private func deleteToken(forKey key: AuthTokenKey) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key.rawValue,
+        ]
+        
+        return KeychainManager.shared.deleteData(query: query)
     }
 }

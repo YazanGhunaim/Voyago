@@ -10,9 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @Environment(AuthViewModel.self) private var authViewModel
 
-    //    @State private var authViewModel = AuthViewModel()
-    //    @State private var tabBarViewModel = TabBarViewModel()
-
     var body: some View {
         Group {
             switch authViewModel.userSessionState {
@@ -24,8 +21,6 @@ struct ContentView: View {
                 ProgressView()
             }
         }
-        //        .environment(authViewModel)
-        //        .environment(tabBarViewModel)
     }
 }
 

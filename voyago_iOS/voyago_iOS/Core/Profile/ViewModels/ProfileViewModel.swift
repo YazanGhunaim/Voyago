@@ -46,9 +46,9 @@ extension ProfileViewModel {
             
             VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
         case .failure(let error):
-            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error)")
-
             self.viewState = .Failure(errorMessage: error.localizedDescription)
+            
+            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error)")
         }
     }
 }
