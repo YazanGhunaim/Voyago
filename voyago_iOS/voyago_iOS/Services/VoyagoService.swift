@@ -13,7 +13,7 @@ struct NoResponse: Codable {
 /// Service class to communicate with the Voyago REST API
 class VoyagoService: APIClient {
     private let session: URLSession
-    private let baseUrl = "http://192.168.1.196:8000"
+    private let baseUrl = "http://192.168.0.107:8000"
 
     // singleton
     static let shared = VoyagoService()
@@ -81,15 +81,15 @@ extension VoyagoService {
             let (data, response) = try await self.session.data(for: request)
 
             // Validate HTTP status code
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
+            guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(.invalidResponse)
             }
 
-            if httpResponse.statusCode == 401 {
-                return .failure(.unauthorized)
+            if !(200...299).contains(httpResponse.statusCode) {
+                if httpResponse.statusCode == 401 {
+                    return .failure(.unauthorized)
+                }
+                return .failure(.invalidResponse)
             }
 
             if httpResponse.statusCode == 204 {
