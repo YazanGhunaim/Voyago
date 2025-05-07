@@ -34,7 +34,7 @@ class AIClient:
         """
         try:
             completion = self._client.beta.chat.completions.parse(
-                model="gpt-4o-2024-08-06",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
