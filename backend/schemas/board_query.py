@@ -1,33 +1,8 @@
-"""pydantic models related to sight recommendations"""
+"""Board query model"""
 from pydantic import BaseModel, Field, field_validator
 
-from backend.app.models.images import VoyagoImage
 
-
-class SightRecommendation(BaseModel):
-    """model of a single sight recommendation"""
-    sight: str
-    brief: str
-
-
-class DayPlan(BaseModel):
-    day: int
-    plan: str
-
-
-class Itinerary(BaseModel):
-    """model of what is expected from the LLM to return"""
-    plan: list[DayPlan]
-    recommendations: list[SightRecommendation]
-
-
-class VisualItinerary(Itinerary):
-    """model of a full trip plan provided to users"""
-    images: dict[str, list[VoyagoImage]]
-    destination_image: VoyagoImage
-
-
-class RecommendationQuery(BaseModel):
+class BoardQuery(BaseModel):
     """model of the query the user should send the LLM"""
     destination: str = Field(...,
                              examples=["Tokyo", "France", "California"],
@@ -36,6 +11,7 @@ class RecommendationQuery(BaseModel):
                              )
     days: int = Field(..., gt=0, description="Number of days must be greater than 0.")
 
+    @classmethod
     @field_validator("destination")
     def validate_destination(cls, value: str) -> str:
         if not value.strip():

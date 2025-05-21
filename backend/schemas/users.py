@@ -1,6 +1,10 @@
 """user related models"""
+from typing import Optional
+
 from pydantic import BaseModel
 from pydantic import EmailStr
+
+from backend.schemas.location import BaseLocation
 
 
 class BaseUser(BaseModel):
@@ -13,7 +17,11 @@ class BaseUser(BaseModel):
 
 class UserData(BaseModel):
     """User data model"""
+    name: str
     username: str
+    profile_pic: Optional[str] = None
+    bio: Optional[str] = None
+    location: Optional[BaseLocation] = None
 
 
 class UserOptions(BaseModel):
@@ -36,3 +44,8 @@ class UserSignUp(BaseUser):
     """
     password: str
     options: UserOptions
+
+
+class UserUpdate(BaseUser):
+    password: Optional[str] = None
+    data: Optional[UserData] = None

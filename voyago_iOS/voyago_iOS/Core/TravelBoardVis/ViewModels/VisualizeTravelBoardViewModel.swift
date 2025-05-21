@@ -26,7 +26,7 @@ extension VisualizeTravelBoardViewModel {
 
 extension VisualizeTravelBoardViewModel {
     // Gets the generated travel board from the voyago service
-    func getGeneratedTravelBoard(query: RecommendationQuery) async {
+    func getGeneratedTravelBoard(query: BoardQuery) async {
         guard self.viewState != .Loading else { return }
         self.viewState = .Loading
 
@@ -35,16 +35,16 @@ extension VisualizeTravelBoardViewModel {
         let result = await VoyagoService.shared.fetchGeneratedTravelBoard(query: query)
 
         switch result {
-        case .success(let response):
-            VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
-
-            self.visualizedBoard = response.board.first
+        case .success(let board):
+            self.visualizedBoard = board
             self.viewState = .Success
+            
+            VoyagoLogger.shared.logger.info("Generated itinerary fetched successfully")
         case .failure(let error):
-            VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
-
             self.visualizedBoard = nil
             self.viewState = .Failure(errorMessage: "Itinerary generation failed. Please try again later.")
+            
+            VoyagoLogger.shared.logger.info("Generated itinerary fetch failed with error: \(error)")
         }
     }
 

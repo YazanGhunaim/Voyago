@@ -10,14 +10,14 @@ import SwiftUI
 // Main entry point to the app
 @main
 struct voyago_iOSApp: App {
-    @State private var genTravelBoardFormViewModel = VisualizeTravelBoardViewModel()
     @State private var authViewModel = AuthViewModel()
+    @State private var tabBarViewModel = TabBarViewModel()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(genTravelBoardFormViewModel)
                 .environment(authViewModel)
+                .environment(tabBarViewModel)
         }
     }
 }

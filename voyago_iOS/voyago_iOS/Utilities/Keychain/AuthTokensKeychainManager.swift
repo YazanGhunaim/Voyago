@@ -44,10 +44,6 @@ final class AuthTokensKeychainManager {
 
     // saves auth tokens to keychain
     func saveAuthTokens(accessToken: String, refreshToken: String) {
-        // workaround... only write to keychain if refreshtoken used
-        // TODO: actually doesnt work... most of the times the token expires when user not on app
-        guard accessToken != self.accessToken || refreshToken != self.refreshToken else { return }
-
         if authTokensExist() {
             VoyagoLogger.shared.logger.debug("Updating user tokens")
             AuthTokensKeychainManager.shared.updateToken(forKey: .accessToken, token: accessToken)
@@ -62,9 +58,17 @@ final class AuthTokensKeychainManager {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }
+    
+    func deleteAuthTokens() -> Bool {
+        VoyagoLogger.shared.logger.debug("Deleting user tokens")
+        self.accessToken = nil
+        self.refreshToken = nil
+        
+        return self.deleteToken(forKey: .accessToken) && self.deleteToken(forKey: .refreshToken)
+    }
 
     // Checks if user auth tokens already exist in keychain
-    private func authTokensExist() -> Bool {
+    func authTokensExist() -> Bool {
         guard AuthTokensKeychainManager.shared.getToken(forKey: .accessToken) != nil else { return false }
         return true
     }
@@ -130,5 +134,14 @@ extension AuthTokensKeychainManager {
 
         VoyagoLogger.shared.logger.debug("Succesffully got auth token with key \(key.rawValue)")
         return token
+    }
+    
+    private func deleteToken(forKey key: AuthTokenKey) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key.rawValue,
+        ]
+        
+        return KeychainManager.shared.deleteData(query: query)
     }
 }

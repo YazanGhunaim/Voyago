@@ -8,20 +8,10 @@
 import Foundation
 
 struct UserData: Codable {
+    let name: String
     let username: String
 }
 
 struct UserOptions: Codable {
     let data: UserData
-}
-
-struct UserSignUpCredentials: Codable {
-    let options: UserOptions
-    let email: String
-    let password: String
-}
-
-struct UserSignInCredentials: Codable {
-    let email: String
-    let password: String
 }

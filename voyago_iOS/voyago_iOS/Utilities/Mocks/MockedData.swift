@@ -20,10 +20,11 @@ let mockVoyagoImage = VoyagoImage(
     ]
 )
 
-let mockRecommendationQuery = RecommendationQuery(
+let mockRecommendationQuery = BoardQuery(
     destination: "Czech Republic", days: 3)
 
 let mockTravelBoard = GeneratedTravelBoard(
+    destinationImage: mockVoyagoImage,
     plan: [
         DayPlan(
             day: 1,
@@ -46,14 +47,13 @@ let mockTravelBoard = GeneratedTravelBoard(
             brief: "A masterpiece of French Gothic architecture."
         ),
         SightRecommendation(
-            sight: "Notre-Dame Cathedral",
+            sight: "Louvre Museum",
             brief: "A masterpiece of French Gothic architecture."
         ),
     ],
     images: [
-        "Eiffel Tower": [mockVoyagoImage],
+        "Notre-Dame Cathedral": [mockVoyagoImage],
         "Louvre Museum": [mockVoyagoImage],
     ],
-    recommendationQuery: RecommendationQuery(destination: "Paris", days: 2),
-    destinationImage: mockVoyagoImage
+    queries: [BoardQuery(destination: "Paris", days: 2)]
 )

@@ -10,24 +10,48 @@ import SwiftUI
 
 struct TravelBoardDetailsView: View {
     let travelBoard: GeneratedTravelBoard
+    let toggleTabbar: Bool
 
+    @Environment(TabBarViewModel.self) private var tabBarVM
+    @Environment(\.presentationMode) var presentationMode
+
+    init(travelBoard: GeneratedTravelBoard, toggleTabbar: Bool = true) {
+        self.travelBoard = travelBoard
+        self.toggleTabbar = toggleTabbar
+    }
+    
     var body: some View {
         NavigationStack {
-            ScrollView {
-                // MARK: View header titles
-                TravelBoardDetailsHeaderView(
-                    recommendationQuery: travelBoard.recommendationQuery,
-                    image: travelBoard.destinationImage
-                )
-
+            ScrollView(showsIndicators: false) {
                 // MARK: TravelBoard section details
-                TravelBoardSectionDetailsView(dailyPlan: travelBoard.plan)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Plan:")
+                        .padding(.horizontal)
+                        .font(.title)
 
-                // MARK: Places to visit
-                TravelBoardPlacesToVisitView(recommendations: travelBoard.recommendations)
+                    TravelBoardPlanDetailsView(dailyPlan: travelBoard.plan)
+                }
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Sights:")
+                        .padding(.horizontal)
+                        .font(.title)
+                    // MARK: Places to visit
+                    TravelBoardSightDetailsView(board: travelBoard)
+                }
+            }
+            .navigationTitle("Your trip to \(travelBoard.query.destination)")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            if toggleTabbar {
+                tabBarVM.toggleTabBar()
+            }
 
-                // MARK: Board Images
-                TravelBoardImagesView(images: travelBoard.images)
+        }
+        .onDisappear {
+            if toggleTabbar {
+                tabBarVM.toggleTabBar()
             }
         }
     }

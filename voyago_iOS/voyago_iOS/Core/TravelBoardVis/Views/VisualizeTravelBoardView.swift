@@ -9,17 +9,16 @@ import SwiftUI
 
 struct VisualizeTravelBoardView: View {
     @State private var path = NavigationPath()
-
-    @Environment(VisualizeTravelBoardViewModel.self) private var viewModel
+    @State private var viewModel = VisualizeTravelBoardViewModel()
 
     var body: some View {
         NavigationStack(path: $path) {
             Group {
                 switch viewModel.viewState {
                 case .none:
-                    VisualizeTravelBoardFormView()
+                    VisualizeTravelBoardFormView(viewModel: viewModel)
                 case .Success:
-                    TravelBoardDetailsView(travelBoard: viewModel.visualizedBoard!)
+                    TravelBoardDetailsView(travelBoard: viewModel.visualizedBoard!, toggleTabbar: false)
                 case .Loading:
                     VisualizingProgressView()
                         .interactiveDismissDisabled()

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedItem = 0
+    @State private var isTabBarHidden = false
+
+    @Environment(TabBarViewModel.self) private var viewModel
 
     var body: some View {
         TabView(selection: $selectedItem) {
@@ -16,7 +19,7 @@ struct MainTabView: View {
                 HomeView()
                     .tag(0)
 
-                EmptyView() // sheet for visualization form... check customTabBar
+                EmptyView()  // sheet for visualization form... check customTabBar
                     .tag(1)
 
                 ProfileView()
@@ -27,7 +30,9 @@ struct MainTabView: View {
         .tint(.indigo)
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .overlay(alignment: .bottom) {
-            CustomTabBar(selectedItem: $selectedItem)
+            if viewModel.showSheet {
+                CustomTabBar(selectedItem: $selectedItem)
+            }
         }
     }
 }

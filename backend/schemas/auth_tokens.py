@@ -1,4 +1,4 @@
-"""Auth related models"""
+"""Auth token related models"""
 from pydantic import BaseModel
 
 

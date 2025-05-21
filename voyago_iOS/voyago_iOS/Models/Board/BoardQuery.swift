@@ -8,7 +8,7 @@
 import Foundation
 
 /// Model of the query used to generate a Travel Board
-struct RecommendationQuery: Codable {
+struct BoardQuery: Codable {
     let destination: String
     let days: Int
 }

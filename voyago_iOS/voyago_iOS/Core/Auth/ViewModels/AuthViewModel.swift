@@ -6,6 +6,7 @@
 //
 import Foundation
 
+// TODO: log out when user tokens are invalid
 @Observable
 @MainActor
 class AuthViewModel {
@@ -24,15 +25,16 @@ extension AuthViewModel {
 
     // Sets the user session state
     private func setUserSessionState() async {
-        let validTokens = await validAuthTokens()
-        self.userSessionState = validTokens ? .loggedIn : .loggedOut
+        let userSessionIsValid = await setUserSession()
+        self.userSessionState = userSessionIsValid ? .loggedIn : .loggedOut
     }
 
-    // checks if exist valid tokens
-    private func validAuthTokens() async -> Bool {
-        //        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
+    // Checks if user session exists, if so saves the returned AuthTokens to keychain
+    // If valid tokens already in hand, refreshed access token if need be
+    private func setUserSession() async -> Bool {
+        guard AuthTokensKeychainManager.shared.authTokensExist() else { return false }
 
-        let result = await VoyagoService.shared.validateTokens()
+        let result = await VoyagoService.shared.setUserSession()
 
         switch result {
         case .success(let authResponse):
@@ -41,11 +43,18 @@ extension AuthViewModel {
                 refreshToken: authResponse.session.refreshToken
             )
 
-            VoyagoLogger.shared.logger.info("Tokens in hand are valid")
+            VoyagoLogger.shared.logger.info("Successfully set user session.")
             return true
         case .failure(_):
-            VoyagoLogger.shared.logger.info("Tokens in hand are invalid")
+            VoyagoLogger.shared.logger.error("Failed to set user session.")
             return false
+        }
+    }
+
+    private func handleSessionExpiration() {
+        self.userSessionState = .loggedOut
+        if !AuthTokensKeychainManager.shared.deleteAuthTokens() {
+            VoyagoLogger.shared.logger.error("Failed to delete Auth Tokens from keychain.")
         }
     }
 }
@@ -57,9 +66,8 @@ extension AuthViewModel {
 
         switch result {
         case .success(_):
+            handleSessionExpiration()
             VoyagoLogger.shared.logger.info("Successfully signed out user")
-
-            self.userSessionState = .loggedOut
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Failed to sign out user with error: \(error)")
         }
@@ -70,9 +78,8 @@ extension AuthViewModel {
 
         switch result {
         case .success(_):
+            handleSessionExpiration()
             VoyagoLogger.shared.logger.info("Successfully deleted user")
-
-            self.userSessionState = .loggedOut
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Failed to delete user with error: \(error)")
         }
@@ -86,14 +93,14 @@ extension AuthViewModel {
 
         switch result {
         case .success(let authResponse):
-            VoyagoLogger.shared.logger.info("Successfully logged in with email and password")
-
             AuthTokensKeychainManager.shared.saveAuthTokens(
                 accessToken: authResponse.session.accessToken,
                 refreshToken: authResponse.session.refreshToken
             )
-
             self.userSessionState = .loggedIn
+            
+            VoyagoLogger.shared.logger.info("Successfully logged in with email and password")
+            
             return true
         case .failure(let error):
             VoyagoLogger.shared.logger.error("Failed to login with email and password: \(error)")
@@ -101,18 +108,19 @@ extension AuthViewModel {
         }
     }
 
-    func registerWithEmailAndPassword(username: String, email: String, password: String) async -> Bool {
+    func registerWithEmailAndPassword(name: String, username: String, email: String, password: String) async -> Bool {
         let result = await VoyagoService.shared.signUpWithEmailAndPassword(
-            username: username, email: email, password: password)
+            name: name, username: username, email: email, password: password
+        )
 
         switch result {
         case .success(let authResponse):
-            VoyagoLogger.shared.logger.info("Successfully Signed up with email and password")
-
             AuthTokensKeychainManager.shared.saveAuthTokens(
                 accessToken: authResponse.session.accessToken,
                 refreshToken: authResponse.session.refreshToken
             )
+            
+            VoyagoLogger.shared.logger.info("Successfully Signed up with email and password")
 
             self.userSessionState = .loggedIn
             return true

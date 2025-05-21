@@ -9,13 +9,13 @@ import Kingfisher
 import SwiftUI
 
 struct TravelBoardCard: View {
-    let recommendationQuery: RecommendationQuery
+    let boardQuery: BoardQuery
     let image: VoyagoImage
 
     private var tripDurationString: String {
-        recommendationQuery.days > 1
-            ? "\(self.recommendationQuery.days) days"
-            : "\(self.recommendationQuery.days) day"
+        boardQuery.days > 1
+            ? "\(self.boardQuery.days) days"
+            : "\(self.boardQuery.days) day"
     }
 
     var body: some View {
@@ -26,10 +26,12 @@ struct TravelBoardCard: View {
             // MARK: Destination Data
             HStack {
                 VStack(alignment: .center) {
-                    Text("\(self.recommendationQuery.destination)")
+                    Text("\(self.boardQuery.destination)")
                         .font(.largeTitle)
+                        .shadow(color: .black, radius: 0.25)  // stroke workaround
 
                     Text(tripDurationString)
+                        .shadow(color: .black, radius: 0.25)  // stroke workaround
                 }
                 .foregroundColor(.white)
                 .padding()
@@ -43,7 +45,7 @@ struct TravelBoardCard: View {
 
 #Preview {
     TravelBoardCard(
-        recommendationQuery: RecommendationQuery(destination: "Czech Republic", days: 5),
+        boardQuery: BoardQuery(destination: "Czech Republic", days: 5),
         image: mockVoyagoImage
     )
 }

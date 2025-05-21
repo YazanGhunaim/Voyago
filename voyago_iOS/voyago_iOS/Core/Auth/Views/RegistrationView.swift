@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RegistrationView: View {
     @State private var email = ""
+    @State private var name = ""
     @State private var username = ""
     @State private var fullname = ""
     @State private var password = ""
@@ -27,6 +28,10 @@ struct RegistrationView: View {
 
             VStack(spacing: 40) {
                 VoyagoInputField(
+                    imageName: "person", placeHolderText: "name",
+                    text: $name)
+
+                VoyagoInputField(
                     imageName: "person", placeHolderText: "Username",
                     text: $username)
 
@@ -42,7 +47,8 @@ struct RegistrationView: View {
 
             Button {
                 Task {
-                    await viewModel.registerWithEmailAndPassword(username: username, email: email, password: password)
+                    await viewModel.registerWithEmailAndPassword(
+                        name: name, username: username, email: email, password: password)
                 }
             } label: {
                 Text("Sign up")
@@ -75,10 +81,6 @@ struct RegistrationView: View {
 
         }
         .ignoresSafeArea()
-        //            .navigationDestination(isPresented: $viewModel.didAuthenticateUser)
-        //            {
-        //                ProfilePhotoSelectorView()
-        //            }
     }
 }
 

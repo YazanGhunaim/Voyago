@@ -10,7 +10,7 @@ import Foundation
 @Observable
 @MainActor
 class TravelBoardsViewModel {
-    var travelBoards: UserTravelBoards?
+    var travelBoards = [GeneratedTravelBoard]()
     var viewState: ViewState?
 
     init() {
@@ -42,21 +42,15 @@ extension TravelBoardsViewModel {
         let result = await VoyagoService.shared.fetchUserTravelBoards()
 
         switch result {
-        case .success(let sessionResponse):
-            VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
-
-            // saving auth tokens
-            AuthTokensKeychainManager.shared.saveAuthTokens(
-                accessToken: sessionResponse.authTokens.accessToken,
-                refreshToken: sessionResponse.authTokens.refreshToken
-            )
-
-            self.travelBoards = sessionResponse.boards
+        case .success(let boards):
+            self.travelBoards = boards
             self.viewState = .Success
+            
+            VoyagoLogger.shared.logger.info("Successfully retrieved user travel boards")
         case .failure(let error):
-            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")
-
             self.viewState = .Failure(errorMessage: error.localizedDescription)
+            
+            VoyagoLogger.shared.logger.error("Error getting user travel boards: \(error.localizedDescription)")
         }
     }
 }

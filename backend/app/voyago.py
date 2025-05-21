@@ -2,11 +2,15 @@
 import logging
 
 from backend.app.completions.client import AIClient
-from backend.app.exceptions import ClientRefusalError, ClientTokenLimitExceededError, TripPlanGenerationError, \
-    VoyagoError
-from backend.app.models.images import VoyagoImage
-from backend.app.models.recommendations import Itinerary, RecommendationQuery, VisualItinerary
+from backend.app.exceptions import (
+    ClientRefusalError,
+    ClientTokenLimitExceededError,
+    TripPlanGenerationError,
+    VoyagoError)
 from backend.app.services.unsplash.unsplash_service import UnsplashService
+from backend.schemas.board_query import BoardQuery
+from backend.schemas.travel_board import TravelBoard, VisualTravelBoard
+from backend.schemas.voyago_image import VoyagoImage
 
 log = logging.getLogger(__name__)
 
@@ -19,7 +23,7 @@ class Voyago:
         self.client = client
         self.unsplash = unsplash
 
-    def _get_itinerary(self, query: RecommendationQuery) -> Itinerary | None:
+    def _get_itinerary(self, query: BoardQuery) -> TravelBoard | None:
         """private method for getting an itinerary pydantic model
 
         :param query: A RecommendationQuery model from the user
@@ -33,14 +37,14 @@ class Voyago:
             log.error(f"Error occurred while getting itinerary: {e}")
             return None
 
-    def _get_images_from_itinerary(self, itinerary: Itinerary) -> dict[str, list[VoyagoImage]]:
+    def _get_images_from_itinerary(self, itinerary: TravelBoard) -> dict[str, list[VoyagoImage]]:
         """private method for getting images of sights in a specific itinerary
 
         :param itinerary: The itinerary model holding the sights
         :return: A dictionary of key: sight name and a value: list of image url's
         """
         log.info("Getting images for the sights in the itinerary.")
-        recommended_sights = [recommendation.sight for recommendation in itinerary.recommendations]
+        recommended_sights = [recommendation.sight for recommendation in itinerary.sight_recommendations]
         images = {
             sight: self.get_images(query=sight, count=3)
             for sight in recommended_sights
@@ -70,7 +74,7 @@ class Voyago:
         images = self.unsplash.fetch_image_collection_for(topic=topic, count=count, page=page)
         return images
 
-    def generate_visual_itinerary(self, query: RecommendationQuery) -> VisualItinerary:
+    def generate_visual_itinerary(self, query: BoardQuery) -> VisualTravelBoard:
         """generates a full trip plan for the user
 
         :param query: The recommendation query from the user
@@ -85,7 +89,7 @@ class Voyago:
 
         images = self._get_images_from_itinerary(itinerary=itinerary)
         destination_image = self.get_images(query=query.destination, count=1, page=1)[0]
-        plan = VisualItinerary(**itinerary.model_dump(), images=images, destination_image=destination_image)
+        plan = VisualTravelBoard(**itinerary.model_dump(), images=images, destination_image=destination_image)
 
         return plan
 
@@ -98,7 +102,7 @@ if __name__ == "__main__":
 
     voyago = Voyago(client=client, unsplash=unsplash)
 
-    recommendation_query = RecommendationQuery(destination="Vienna", days=3)
+    recommendation_query = BoardQuery(destination="Vienna", days=3)
     plan = voyago.generate_visual_itinerary(query=recommendation_query)
 
     pprint(plan.model_dump())
