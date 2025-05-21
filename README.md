@@ -3,7 +3,7 @@
 
 **Voyago** is a personalized AI-powered travel planning app that helps users effortlessly create beautiful, day-by-day travel boards. Just enter your destination, and Voyago generates your ideal travel plan — complete with must-see sights, image-rich cards, and user-friendly organization.
 
-## 🌍 Demo
+## 🌍 Features
 - 🧠 **Travel Board Generation**  
   Instantly generate complete travel plans for any city or destination just by prompting the location and number of days.
 
